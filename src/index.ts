@@ -6,7 +6,9 @@ import bodyParser from 'body-parser'
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000
-const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/
+//const urlValidator = /^(http(s)?:\/\/)?([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+\/[/a-zA-Z0-9_-]+$/
+const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
+
 
 app.use(jsonBodyMiddleware)
 app.use(cors())
@@ -17,47 +19,23 @@ type PostType = {
     shortDescription: string | null;
     content: string | null;
     blogId: number;
-    blog: BloggerType | null | undefined;
+    bloggerName: string | null;
 }
 
 type BloggerType = {
     id: number;
     name: string | null;
     youtubeUrl: string | null;
-    posts: BloggersPostType[];
-}
-
-type BloggersPostType = {
-    id: number;
-    title: string | null;
-    shortDescription: string | null;
-    content: string | null;
-    blogId: number;
-}
-
-const updateBloggersPosts = (bloggerId: number): BloggersPostType[] => {
-    let personalPosts: BloggersPostType[] = []
-    let filteredPosts: PostType[] = posts.filter(p => p.blogId === bloggerId)
-    filteredPosts.forEach(e=>{
-        personalPosts.push({
-            id: e.id,
-            title: e.title,
-            shortDescription: e.shortDescription,
-            content: e.content,
-            blogId: e.blogId
-        })
-    })
-    return personalPosts
 }
 
 let posts: PostType[] = [
-    {id: 1, title: 'Rahaz', shortDescription: '', content: '', blogId: 1, blog: null},
-    {id: 2, title: 'Adlitam', shortDescription: '', content: '', blogId: 2, blog: null}
+    {id: 1, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 1, bloggerName: 'Zahar'},
+    {id: 2, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 2, bloggerName: 'Matilda'}
 ]
 
 let bloggers: BloggerType[] = [
-    {id: 1, name: 'Zahar', youtubeUrl: 'https://youtube.com/zahar', posts: []},
-    {id: 2, name: 'Matilda', youtubeUrl: 'https://youtube.com/matilda', posts: []},
+    {id: 1, name: 'Zahar', youtubeUrl: 'https://youtube.com'},
+    {id: 2, name: 'Matilda', youtubeUrl: 'https://youtube.com'},
 ]
 
 //---------------------------------Bloggers---------------------------------
@@ -76,8 +54,7 @@ app.post('/api/bloggers', (req: Request, res: Response) => {
         const newBlogger = {
             id: +(new Date()),
             name: req.body.name,
-            youtubeUrl: req.body.youtubeUrl,
-            posts: []
+            youtubeUrl: req.body.youtubeUrl
         }
         bloggers.push(newBlogger)
         res.statusCode = 201;
@@ -101,13 +78,13 @@ app.put('/api/bloggers/:bloggerId', (req: Request, res: Response) => {
     const blogger = bloggers.find(b => b.id === id)
     if (!blogger) {
         res.send(404)
-    } else if(!urlValidator.test(req.body.youtubeUrl)
-        || !id
-        || req.body.name.length < 2){
+    } else if (!urlValidator.test(req.body.youtubeUrl)
+        && !id
+        && req.body.name.length < 2) {
         res.send(400)
-    }else {
-        blogger.name = req.body.name
-        blogger.youtubeUrl = req.body.youtubeUrl
+    } else {
+        if(req.body.name)blogger.name = req.body.name
+        if(req.body.youtubeUrl)blogger.youtubeUrl = req.body.youtubeUrl
         res.send(204)
     }
 })
@@ -115,7 +92,7 @@ app.put('/api/bloggers/:bloggerId', (req: Request, res: Response) => {
 app.delete('/api/bloggers/:postId', (req: Request, res: Response) => {
     const id = +req.params.postId
     const newBloggers = bloggers.filter(b => b.id != id)
-    if (newBloggers.length < bloggers.length ) {
+    if (newBloggers.length < bloggers.length) {
         bloggers = newBloggers
         res.send(204)
     } else {
@@ -131,22 +108,21 @@ app.get('/api/posts', (req: Request, res: Response) => {
 //Create new post
 app.post('/api/posts', (req: Request, res: Response) => {
     const blogger = bloggers.find(b => b.id === req.body.blogId)
-    if (!req.body.shortDescription || req.body.shortDescription.length > 100
-        || !req.body.content || !req.body.title) {
+    if (!req.body.shortDescription && req.body.shortDescription.length > 100
+        && !req.body.content && !req.body.title) {
         res.send(400)
-    } else if(!blogger){
+    } else if (!blogger) {
         res.send(400)
-    }else {
+    } else {
         const newPost: PostType = {
             id: +(new Date()),
             title: req.body.title,
             shortDescription: req.body.shortDescription,
             content: req.body.content,
             blogId: req.body.blogId,
-            blog: blogger
+            bloggerName: blogger.name
         }
         posts.push(newPost)
-        blogger.posts = updateBloggersPosts(req.body.blogId)
         res.send(newPost)
     }
 
@@ -165,13 +141,13 @@ app.get('/api/posts/:postId', (req: Request, res: Response) => {
 app.put('/api/posts/:postsId', (req: Request, res: Response) => {
     const id = +req.params.postsId
     const post = posts.find(p => p.id === id)
-    if (post) {
-        post.title = req.body.title
-        post.shortDescription = req.body.youtubeUrl
-        post.content = req.body.content
-        res.send(post)
-    } else {
+    if (!post) {
         res.send(404)
+    } else {
+        if (req.body.title) post.title = req.body.title
+        if (req.body.youtubeUrl) post.shortDescription = req.body.youtubeUrl
+        if (req.body.content) post.content = req.body.content
+        res.send(post)
     }
 })
 
@@ -188,7 +164,12 @@ app.delete('/api/posts/:postId', (req: Request, res: Response) => {
 })
 //Home
 app.get('/*', (req: Request, res: Response) => {
-    res.send('Endpoint')
+    res.send({
+        "/api/bloggers": "GET, POST",
+        "/api/bloggers/:postId": "GET, PUT, DELETE",
+        "/api/posts": "GET, POST",
+        "/api/posts/:postId": "GET, PUT, DELETE"
+    })
 })
 
 app.listen(port, () => {
