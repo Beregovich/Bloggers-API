@@ -13,6 +13,35 @@ const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 app.use(jsonBodyMiddleware)
 app.use(cors())
 
+class Problem {
+    private type: string;
+    private title: string;
+    private status: number;
+    private detail: string;
+    private instance: string;
+
+    constructor(type: string,
+                title: string,
+                status: number,
+                detail: string,
+                instance: string) {
+        this.type = type;
+        this.title = title;
+        this.status = status;
+        this.detail = detail;
+        this.instance = instance;
+    }
+
+}
+
+type ProblemType = {
+    type: string;
+    title: string;
+    status: number;
+    detail: string;
+    instance: string;
+}
+
 type PostType = {
     id: number;
     title: string | null;
@@ -37,6 +66,11 @@ let bloggers: BloggerType[] = [
     {id: 1, name: 'Zahar', youtubeUrl: 'https://youtube.com'},
     {id: 2, name: 'Matilda', youtubeUrl: 'https://youtube.com'},
 ]
+
+const updateBloggerName = (id: number, newName: string): void=>{
+   let postToChange = posts.find(b=>b.blogId===id)
+    if(postToChange)postToChange.bloggerName = newName
+}
 
 //---------------------------------Bloggers---------------------------------
 //Returns all bloggers
@@ -83,8 +117,11 @@ app.put('/api/bloggers/:bloggerId', (req: Request, res: Response) => {
         && req.body.name.length < 2) {
         res.send(400)
     } else {
-        if(req.body.name)blogger.name = req.body.name
-        if(req.body.youtubeUrl)blogger.youtubeUrl = req.body.youtubeUrl
+        if (req.body.name) {
+            blogger.name = req.body.name
+            updateBloggerName(id, req.body.name)
+        }
+        if (req.body.youtubeUrl) blogger.youtubeUrl = req.body.youtubeUrl
         res.send(204)
     }
 })
@@ -130,9 +167,9 @@ app.post('/api/posts', (req: Request, res: Response) => {
 //Return post by id
 app.get('/api/posts/:postId', (req: Request, res: Response) => {
     const id = +req.params.postId
-    const blogger = posts.find(p => p.id === id)
-    if (blogger) {
-        res.send(blogger)
+    const post = posts.find(p => p.id === id)
+    if (post) {
+        res.send(post)
     } else {
         res.send(404)
     }
@@ -145,7 +182,7 @@ app.put('/api/posts/:postsId', (req: Request, res: Response) => {
         res.send(404)
     } else {
         if (req.body.title) post.title = req.body.title
-        if (req.body.youtubeUrl) post.shortDescription = req.body.youtubeUrl
+        if (req.body.shortDescription) post.shortDescription = req.body.shortDescription
         if (req.body.content) post.content = req.body.content
         res.send(post)
     }
