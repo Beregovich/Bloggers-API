@@ -24,7 +24,7 @@ type PostType = {
     shortDescription: string | null;
     content: string | null;
     blogId: number;
-   bloggerName?: string | null | undefined;
+    bloggerName?: string | null | undefined;
 }
 
 type BloggerType = {
@@ -112,7 +112,7 @@ app.put('/api/bloggers/:bloggerId', (req: Request, res: Response) => {
     const id = +req.params.bloggerId
     const blogger = bloggers.find(b => b.id === id)
     if (!blogger) {
-        isValid = true;
+        isValid = false;
         res.status(404)
         res.send({
             "data": {},
@@ -183,22 +183,48 @@ app.delete('/api/bloggers/:postId', (req: Request, res: Response) => {
 app.get('/api/posts', (req: Request, res: Response) => {
     const postsWithNames: PostType[] = [];
     posts.forEach(p => {
-            postsWithNames.push({
-                ...p,
-                bloggerName: bloggers.find(b => b.id === p.blogId)?.name
-            })
+        postsWithNames.push({
+            ...p,
+            bloggerName: bloggers.find(b => b.id === p.blogId)?.name
+        })
     })
+    res.status(200)
     res.send(postsWithNames)
 })
 //Create new post
 app.post('/api/posts', (req: Request, res: Response) => {
     const blogger = bloggers.find(b => b.id === req.body.blogId)
-    if (!req.body.shortDescription && req.body.shortDescription.length > 100
-        && !req.body.content && !req.body.title) {
-        res.send(400)
-    } else if (!blogger) {
-        res.status(400).send({})
-    } else {
+    let isValid = true;
+    let trobblesOccured: ErrorMessageType[] = [];
+    if (!req.body.title) {
+        isValid = false
+        trobblesOccured.push({
+            message: "title required",
+            field: "title"
+        })
+    }
+    if (!req.body.shortDescription) {
+        isValid = false
+        trobblesOccured.push({
+            message: "shortDescription required",
+            field: "shortDescription"
+        })
+    }
+    if (!req.body.content) {
+        isValid = false
+        trobblesOccured.push({
+            message: "content required",
+            field: "content"
+        })
+    }
+    if (!blogger) {
+        isValid = false
+        trobblesOccured.push({
+            message: "blogger not found",
+            field: "blogger"
+        })
+    }
+    if (isValid) {
         const newPost: PostType = {
             id: +(new Date()),
             title: req.body.title,
@@ -207,9 +233,14 @@ app.post('/api/posts', (req: Request, res: Response) => {
             blogId: req.body.blogId,
         }
         posts.push(newPost)
-        res.send(newPost)
+        res.status(200).send(newPost)
+    } else {
+        res.status(400).send({
+            "data": {},
+            "errorsMessages": trobblesOccured,
+            "resultCode": 1
+        })
     }
-
 })
 //Return post by id
 app.get('/api/posts/:postId', (req: Request, res: Response) => {
@@ -221,33 +252,71 @@ app.get('/api/posts/:postId', (req: Request, res: Response) => {
             bloggerName: bloggers.find(b => b.id === id)?.name
         })
     } else {
-        res.send(404)
+        res.status(404).send({
+            "data": {},
+            "errorsMessages": [{
+                message: "post not found",
+                field: "id"
+            }],
+            "resultCode": 1
+        })
     }
 })
 //Update existing post by id with InputModel
 app.put('/api/posts/:postsId', (req: Request, res: Response) => {
     const id = +req.params.postsId
-
-    if (!req.body.title) {
-
-        res.status(400).send({
-            errors: [{filed: 'title', message: 'Title firled is required'}]
+    const post = posts.find(p => p.id === id)
+    let isValid = true;
+    let trobblesOccured: ErrorMessageType[] = [];
+    if (!post) {
+        isValid = false;
+        res.status(404)
+        res.send({
+            "data": {},
+            "errorsMessages": [{
+                message: "post not found",
+                field: "id"
+            }],
+            "resultCode": 0
         })
-        return;
+        return
+    }
+    if (!req.body.title) {
+        isValid = false
+        trobblesOccured.push({
+            message: "title required",
+            field: "title"
+        })
+    }
+    if (!req.body.shortDescription) {
+        isValid = false
+        trobblesOccured.push({
+            message: "shortDescription required",
+            field: "shortDescription"
+        })
+    }
+    if (!req.body.content) {
+        isValid = false
+        trobblesOccured.push({
+            message: "content required",
+            field: "content"
+        })
     }
 
-
-    const post = posts.find(p => p.id === id)
-    if (!post) {
-        res.send(404)
+    if (isValid) {
+        post.title = req.body.title
+        post.shortDescription = req.body.shortDescription
+        post.content = req.body.content
+        res.status(200).send(post)
     } else {
-        if (req.body.title) post.title = req.body.title
-        if (req.body.shortDescription) post.shortDescription = req.body.shortDescription
-        if (req.body.content) post.content = req.body.content
-        res.send(post)
+        res.status(400)
+        res.send({
+            "data": {},
+            "errorsMessages": trobblesOccured,
+            "resultCode": 1
+        })
     }
 })
-
 //Delete post specified by id
 app.delete('/api/posts/:postId', (req: Request, res: Response) => {
     const id = +req.params.postId
@@ -256,7 +325,15 @@ app.delete('/api/posts/:postId', (req: Request, res: Response) => {
         posts = newPosts
         res.send(204)
     } else {
-        res.send(404)
+        res.status(404)
+        res.send({
+            "data": {},
+            "errorsMessages": [{
+                message: "post not found or post's id invalid",
+                field: "id"
+            }],
+            "resultCode": 1
+        })
     }
 })
 //Home
