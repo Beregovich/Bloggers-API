@@ -24,7 +24,7 @@ type PostType = {
     shortDescription: string | null;
     content: string | null;
     blogId: number;
-    bloggerName: string | null;
+   bloggerName?: string | null | undefined;
 }
 
 type BloggerType = {
@@ -34,8 +34,8 @@ type BloggerType = {
 }
 
 let posts: PostType[] = [
-    {id: 1, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 1, bloggerName: 'Zahar'},
-    {id: 2, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 2, bloggerName: 'Matilda'}
+    {id: 1, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 1},
+    {id: 2, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 2}
 ]
 
 let bloggers: BloggerType[] = [
@@ -43,15 +43,10 @@ let bloggers: BloggerType[] = [
     {id: 2, name: 'Matilda', youtubeUrl: 'https://youtube.com'},
 ]
 
-const updateBloggerName = (id: number, newName: string): void => {
-    let postToChange = posts.find(b => b.blogId === id)
-    if (postToChange) postToChange.bloggerName = newName
-}
-
 //---------------------------------Bloggers---------------------------------
 //Returns all bloggers
 app.get('/api/bloggers', (req: Request, res: Response) => {
-    res.statusCode = 200;
+    res.status(200)
     res.send(bloggers)
 })
 //Create new blogger
@@ -154,7 +149,7 @@ app.put('/api/bloggers/:bloggerId', (req: Request, res: Response) => {
         blogger.name = req.body.name
         blogger.youtubeUrl = req.body.youtubeUrl
         res.send(204)
-    }else{
+    } else {
         res.status(400)
         res.send({
             "data": {},
@@ -186,7 +181,14 @@ app.delete('/api/bloggers/:postId', (req: Request, res: Response) => {
 //---------------------------------Posts---------------------------------
 //Returns all posts
 app.get('/api/posts', (req: Request, res: Response) => {
-    res.send(posts)
+    const postsWithNames: PostType[] = [];
+    posts.forEach(p => {
+            postsWithNames.push({
+                ...p,
+                bloggerName: bloggers.find(b => b.id === p.blogId)?.name
+            })
+    })
+    res.send(postsWithNames)
 })
 //Create new post
 app.post('/api/posts', (req: Request, res: Response) => {
@@ -203,7 +205,6 @@ app.post('/api/posts', (req: Request, res: Response) => {
             shortDescription: req.body.shortDescription,
             content: req.body.content,
             blogId: req.body.blogId,
-            bloggerName: blogger.name
         }
         posts.push(newPost)
         res.send(newPost)
@@ -215,7 +216,10 @@ app.get('/api/posts/:postId', (req: Request, res: Response) => {
     const id = +req.params.postId
     const post = posts.find(p => p.id === id)
     if (post) {
-        res.send(post)
+        res.send({
+            ...post,
+            bloggerName: bloggers.find(b => b.id === id)?.name
+        })
     } else {
         res.send(404)
     }
