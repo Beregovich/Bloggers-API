@@ -13,33 +13,9 @@ const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 app.use(jsonBodyMiddleware)
 app.use(cors())
 
-class Problem {
-    private type: string;
-    private title: string;
-    private status: number;
-    private detail: string;
-    private instance: string;
-
-    constructor(type: string,
-                title: string,
-                status: number,
-                detail: string,
-                instance: string) {
-        this.type = type;
-        this.title = title;
-        this.status = status;
-        this.detail = detail;
-        this.instance = instance;
-    }
-
-}
-
-type ProblemType = {
-    type: string;
-    title: string;
-    status: number;
-    detail: string;
-    instance: string;
+type ErrorMessageType = {
+    message: string;
+    field: string;
 }
 
 type PostType = {
@@ -67,9 +43,9 @@ let bloggers: BloggerType[] = [
     {id: 2, name: 'Matilda', youtubeUrl: 'https://youtube.com'},
 ]
 
-const updateBloggerName = (id: number, newName: string): void=>{
-   let postToChange = posts.find(b=>b.blogId===id)
-    if(postToChange)postToChange.bloggerName = newName
+const updateBloggerName = (id: number, newName: string): void => {
+    let postToChange = posts.find(b => b.blogId === id)
+    if (postToChange) postToChange.bloggerName = newName
 }
 
 //---------------------------------Bloggers---------------------------------
@@ -80,11 +56,24 @@ app.get('/api/bloggers', (req: Request, res: Response) => {
 })
 //Create new blogger
 app.post('/api/bloggers', (req: Request, res: Response) => {
+    let isValid = true;
+    let trobblesOccured: ErrorMessageType[] = [];
     if (!req.body.name && req.body.name.length < 1) {
-        res.send(400)
-    } else if (!urlValidator.test(req.body.youtubeUrl)) {
-        res.send(400)
-    } else {
+        isValid = false
+        trobblesOccured.push({
+            message: "name required",
+            field: "name"
+        })
+    }
+    if (!urlValidator.test(req.body.youtubeUrl)) {
+        isValid = false
+        trobblesOccured.push({
+            message: "The field YoutubeUrl must match the regular expression" +
+                " '^https://([a-zA-Z0-9_-]+\\\\.)+[a-zA-Z0-9_-]+(\\\\/[a-zA-Z0-9_-]+)*\\\\/?$'.\"",
+            field: "youtubeUrl"
+        })
+    }
+    if (isValid) {
         const newBlogger = {
             id: +(new Date()),
             name: req.body.name,
@@ -93,6 +82,13 @@ app.post('/api/bloggers', (req: Request, res: Response) => {
         bloggers.push(newBlogger)
         res.statusCode = 201;
         res.send(newBlogger)
+    } else {
+        res.status(400)
+        res.send({
+            "data": {},
+            "errorsMessages": trobblesOccured,
+            "resultCode": 1
+        })
     }
 })
 //Returns blogger by id
@@ -103,26 +99,68 @@ app.get('/api/bloggers/:bloggerId', (req: Request, res: Response) => {
         res.statusCode = 200;
         res.send(blogger)
     } else {
-        res.send(404)
+        res.status(404)
+        res.send({
+            "data": {},
+            "errorsMessages": [{
+                message: "blogger not found or blogger's id invalid",
+                field: "id"
+            }],
+            "resultCode": 1
+        })
     }
 })
 //Update existing Blogger by id with InputModel
 app.put('/api/bloggers/:bloggerId', (req: Request, res: Response) => {
+    let isValid = true;
+    let trobblesOccured: ErrorMessageType[] = [];
     const id = +req.params.bloggerId
     const blogger = bloggers.find(b => b.id === id)
     if (!blogger) {
-        res.send(404)
-    } else if (!urlValidator.test(req.body.youtubeUrl)
-        && !id
-        && req.body.name.length < 2) {
-        res.send(400)
-    } else {
-        if (req.body.name) {
-            blogger.name = req.body.name
-            updateBloggerName(id, req.body.name)
-        }
-        if (req.body.youtubeUrl) blogger.youtubeUrl = req.body.youtubeUrl
+        isValid = true;
+        res.status(404)
+        res.send({
+            "data": {},
+            "errorsMessages": [{
+                message: "blogger not found",
+                field: "id"
+            }],
+            "resultCode": 0
+        })
+        return
+    }
+    if (!urlValidator.test(req.body.youtubeUrl)) {
+        isValid = false;
+        trobblesOccured.push({
+            message: "blogger's youtube URL invalid",
+            field: "youtubeUrl"
+        })
+    }
+    if (!id) {
+        isValid = false;
+        trobblesOccured.push({
+            message: "blogger's id is invalid",
+            field: "id"
+        })
+    }
+    if (!req.body.name) {
+        isValid = false;
+        trobblesOccured.push({
+            message: "blogger's name is invalid",
+            field: "name"
+        })
+    }
+    if (isValid) {
+        blogger.name = req.body.name
+        blogger.youtubeUrl = req.body.youtubeUrl
         res.send(204)
+    }else{
+        res.status(400)
+        res.send({
+            "data": {},
+            "errorsMessages": trobblesOccured,
+            "resultCode": 1
+        })
     }
 })
 //Delete blogger specified by id
@@ -133,7 +171,15 @@ app.delete('/api/bloggers/:postId', (req: Request, res: Response) => {
         bloggers = newBloggers
         res.send(204)
     } else {
-        res.send(404)
+        res.status(404)
+        res.send({
+            "data": {},
+            "errorsMessages": [{
+                message: "blogger not found",
+                field: "id"
+            }],
+            "resultCode": 0
+        })
     }
 })
 
@@ -149,7 +195,7 @@ app.post('/api/posts', (req: Request, res: Response) => {
         && !req.body.content && !req.body.title) {
         res.send(400)
     } else if (!blogger) {
-        res.send(400)
+        res.status(400).send({})
     } else {
         const newPost: PostType = {
             id: +(new Date()),
@@ -177,6 +223,16 @@ app.get('/api/posts/:postId', (req: Request, res: Response) => {
 //Update existing post by id with InputModel
 app.put('/api/posts/:postsId', (req: Request, res: Response) => {
     const id = +req.params.postsId
+
+    if (!req.body.title) {
+
+        res.status(400).send({
+            errors: [{filed: 'title', message: 'Title firled is required'}]
+        })
+        return;
+    }
+
+
     const post = posts.find(p => p.id === id)
     if (!post) {
         res.send(404)
