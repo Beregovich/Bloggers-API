@@ -7,12 +7,11 @@ import {
     getBloggers,
     updateBloggerById
 } from "../repositories/bloggers-repository";
+import {inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
+import {body} from "express-validator";
 
 const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
-type ErrorMessageType = {
-    message: string;
-    field: string;
-}
+
 
 export const bloggersRouter = Router()
 
@@ -22,25 +21,14 @@ bloggersRouter
         res.status(200).send(getBloggers())
     })
     //Create new blogger
-    .post('/', (req: Request, res: Response) => {
-        let isValid = true;
-        let trobblesOccured: ErrorMessageType[] = [];
-        if (!req.body.name && req.body.name.trim()) {
-            isValid = false
-            trobblesOccured.push({
-                message: "name required",
-                field: "name"
-            })
-        }
-        if (!urlValidator.test(req.body.youtubeUrl)) {
-            isValid = false
-            trobblesOccured.push({
-                message: "The field YoutubeUrl must match the regular expression" +
-                    " '^https://([a-zA-Z0-9_-]+\\\\.)+[a-zA-Z0-9_-]+(\\\\/[a-zA-Z0-9_-]+)*\\\\/?$'.\"",
-                field: "youtubeUrl"
-            })
-        }
-        if (isValid) {
+    .post('/',
+        body('name').isString().withMessage('Name should be a string')
+            .not().isEmpty().withMessage('Name should be not empty')
+            .matches(/[^\s]/).withMessage('not only whitespaces'),
+        body('youtubeUrl').matches(urlValidator)
+            .withMessage('URL invalid'),
+        inputValidatorMiddleware,
+        (req: Request, res: Response) => {
             const newBlogger = {
                 id: +(new Date()),
                 name: req.body.name,
@@ -51,15 +39,7 @@ bloggersRouter
                 name: req.body.name,
                 youtubeUrl: req.body.youtubeUrl
             }))
-        } else {
-            res.status(400)
-            res.send({
-                "data": {},
-                "errorsMessages": trobblesOccured,
-                "resultCode": 1
-            })
-        }
-    })
+        })
     //Returns blogger by id
     .get('/:bloggerId', (req: Request, res: Response) => {
         const id = +req.params.bloggerId
@@ -78,58 +58,33 @@ bloggersRouter
         }
     })
     //Update existing Blogger by id with InputModel
-    .put('/:bloggerId', (req: Request, res: Response) => {
-        let isValid = true;
-        let trobblesOccured: ErrorMessageType[] = [];
-        const id = +req.params.bloggerId
-        const blogger = bloggers.find(b => b.id === id)
-        if (!blogger) {
-            res.status(404)
-            res.send({
-                "data": {},
-                "errorsMessages": [{
-                    message: "blogger not found",
-                    field: "id"
-                }],
-                "resultCode": 0
-            })
-            return
-        }
-        if (!urlValidator.test(req.body.youtubeUrl)) {
-            isValid = false;
-            trobblesOccured.push({
-                message: "blogger's youtube URL invalid",
-                field: "youtubeUrl"
-            })
-        }
-        if (!id) {
-            isValid = false;
-            trobblesOccured.push({
-                message: "blogger's id is invalid",
-                field: "id"
-            })
-        }
-        if (!req.body.name) {
-            isValid = false;
-            trobblesOccured.push({
-                message: "blogger's name is invalid",
-                field: "name"
-            })
-        }
-        if (isValid) {
-            updateBloggerById(id,
-                req.body.name,
-                req.body)
-            res.send(204)
-        } else {
-            res.status(400)
-            res.send({
-                "data": {},
-                "errorsMessages": trobblesOccured,
-                "resultCode": 1
-            })
-        }
-    })
+    .put('/:bloggerId',
+        body('name').isString().withMessage('Name should be a string')
+            .not().isEmpty().withMessage('Name should be not empty')
+            .matches(/[^\s]/).withMessage('not only whitespaces'),
+        body('youtubeUrl').matches(urlValidator)
+            .withMessage('URL invalid'),
+        inputValidatorMiddleware,
+        (req: Request, res: Response) => {
+            const id = +req.params.bloggerId
+            const blogger = bloggers.find(b => b.id === id)
+            if (!blogger) {
+                res.status(404)
+                res.send({
+                    "data": {},
+                    "errorsMessages": [{
+                        message: "blogger not found",
+                        field: "id"
+                    }],
+                    "resultCode": 0
+                })
+            } else {
+                updateBloggerById(id,
+                    req.body.name,
+                    req.body)
+                res.send(204)
+            }
+        })
     //Delete blogger specified by id
     .delete('/:postId', (req: Request, res: Response) => {
         const id = +req.params.postId
