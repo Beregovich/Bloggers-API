@@ -8,10 +8,9 @@ import {
     updateBloggerById
 } from "../repositories/bloggers-repository";
 import {inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
-import {body} from "express-validator";
+import {body, check} from "express-validator";
 
 const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
-
 
 export const bloggersRouter = Router()
 
@@ -22,11 +21,12 @@ bloggersRouter
     })
     //Create new blogger
     .post('/',
+        check('bloggerId').isNumeric().withMessage('id should be numeric value'),
         body('name').isString().withMessage('Name should be a string')
-            .not().isEmpty().withMessage('Name should be not empty')
-            .matches(/[^\s]/).withMessage('not only whitespaces'),
+            .trim().not().isEmpty().withMessage('Name should be not empty'),
         body('youtubeUrl').matches(urlValidator)
             .withMessage('URL invalid'),
+
         inputValidatorMiddleware,
         (req: Request, res: Response) => {
             const newBlogger = {
@@ -41,7 +41,10 @@ bloggersRouter
             }))
         })
     //Returns blogger by id
-    .get('/:bloggerId', (req: Request, res: Response) => {
+    .get('/:bloggerId',
+        check('bloggerId').isNumeric().withMessage('id should be numeric value'),
+        inputValidatorMiddleware,
+        (req: Request, res: Response) => {
         const id = +req.params.bloggerId
         if (id) {
             res.status(200).send(getBloggerById(id))
@@ -59,11 +62,11 @@ bloggersRouter
     })
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
-        body('name').isString().withMessage('Name should be a string')
-            .not().isEmpty().withMessage('Name should be not empty')
-            .matches(/[^\s]/).withMessage('not only whitespaces'),
-        body('youtubeUrl').matches(urlValidator)
-            .withMessage('URL invalid'),
+        check('bloggerId').isNumeric().withMessage('id should be numeric value'),
+         body('name').isString().withMessage('Name should be a string')
+             .trim().not().isEmpty().withMessage('Name should be not empty'),
+         body('youtubeUrl').matches(urlValidator)
+             .withMessage('URL invalid'),
         inputValidatorMiddleware,
         (req: Request, res: Response) => {
             const id = +req.params.bloggerId
@@ -81,7 +84,7 @@ bloggersRouter
             } else {
                 updateBloggerById(id,
                     req.body.name,
-                    req.body)
+                    req.body.youtubeUrl)
                 res.send(204)
             }
         })
