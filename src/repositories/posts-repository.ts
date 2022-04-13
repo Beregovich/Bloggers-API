@@ -1,59 +1,64 @@
 import {bloggers, posts, PostType} from "./db";
 
-type NewPostType = {
+export type NewPostType = {
     title: string | null;
     shortDescription: string | null;
     content: string | null;
     blogId: number;
 }
 
-export const getPosts = () => {
-    const postsWithNames: PostType[] = [];
-    posts.forEach(p => {
-        postsWithNames.push({
-            ...p,
-            bloggerName: bloggers.find(b => b.id === p.blogId)?.name
+export type PostToPushType = {
+    id: number;
+    title: string | null;
+    shortDescription: string | null;
+    content: string | null;
+    blogId: number;
+}
+
+export const postsRepository = {
+
+    async getPosts() {
+        const postsWithNames: PostType[] = [];
+        await posts.forEach(p => {
+            postsWithNames.push({
+                ...p,
+                bloggerName: bloggers.find(b => b.id === p.blogId)?.name
+            })
         })
-    })
-    return postsWithNames
-}
+        return postsWithNames
+    },
+    async getPostById(id: number) {
+        const post = await posts.find(p => p.id === id)
+        if (post) {
+            return {
+                ...post,
+                bloggerName: bloggers.find(b => b.id === id)?.name
+            }
+        } else return false
+    },
 
+    async createPost(newPost: PostToPushType) {
+        await posts.push(newPost)
+        return newPost
+    },
 
-export const getPostById = (id: number) => {
-    const post = posts.find(p => p.id === id)
-    if (post) {
-        return {
-            ...post,
-            bloggerName: bloggers.find(b => b.id === id)?.name
+    async updatePostById (newPost: PostToPushType) {
+        const post = await posts.find(p => p.id === newPost.id)
+        if(post){
+            post.title = newPost.title
+            post.shortDescription = newPost.shortDescription
+            post.content = newPost.content
+            return post
+        }else return false
+    },
+
+    async deletePostById(id: number) {
+        const PostToDel = posts.find(p => p.id === id)
+        if (PostToDel) {
+            posts.splice(posts.indexOf(PostToDel), 1)
+            return true
+        } else {
+            return false
         }
-    } else return false
-}
-
-export const createPost = (newPost: NewPostType) => {
-    const postToPush = {
-        id: +(new Date()),
-        ...newPost
-    }
-    posts.push(postToPush)
-    return postToPush
-}
-
-export const updatePostById = (newPost: NewPostType) => {
-    const post = posts.find(p => p.id === newPost.blogId)
-    if(post){
-        post.title = newPost.title
-        post.shortDescription = newPost.shortDescription
-        post.content = newPost.content
-        return post
-    }
-}
-
-export const deletePostById = (id: number) => {
-    const PostToDel = posts.find(p => p.id === id)
-    if (PostToDel) {
-        posts.splice(posts.indexOf(PostToDel), 1)
-        return true
-    } else {
-        return false
     }
 }
