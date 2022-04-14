@@ -1,5 +1,4 @@
 import {Request, Response, Router} from 'express'
-import {bloggers} from '../repositories/db'
 import {inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
 import {body, check} from "express-validator";
 import {bloggersService} from "../domain/bloggers-service";
@@ -60,7 +59,9 @@ bloggersRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.bloggerId
-            const blogger = bloggers.find(b => b.id === id)
+            const blogger = await bloggersService.updateBloggerById(id,
+                req.body.name,
+                req.body.youtubeUrl)
             if (!blogger) {
                 res.status(404)
                 res.send({
@@ -72,9 +73,6 @@ bloggersRouter
                     "resultCode": 0
                 })
             } else {
-                await bloggersService.updateBloggerById(id,
-                    req.body.name,
-                    req.body.youtubeUrl)
                 res.send(204)
             }
         })

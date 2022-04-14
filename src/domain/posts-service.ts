@@ -1,4 +1,4 @@
-import {NewPostType, postsRepository} from "../repositories/posts-repository";
+import {NewPostType, postsRepository} from "../repositories/posts-db-repository";
 
 export const postsService = {
     async getPosts() {

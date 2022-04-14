@@ -1,4 +1,4 @@
-import {bloggersRepository} from "../repositories/bloggers-repository";
+import {bloggersRepository} from "../repositories/bloggers-db-repository";
 
 export const bloggersService = {
     async getBloggers() {

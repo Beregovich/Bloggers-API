@@ -1,3 +1,5 @@
+import 'dotenv/config'
+const {MongoClient} = require('mongodb');
 
 export type PostType = {
     id: number;
@@ -13,6 +15,25 @@ type BloggerType = {
     name: string | null;
     youtubeUrl: string | null;
 }
+
+const mongoUri =
+    process.env.mongoURI
+
+const client = new MongoClient(mongoUri)
+export const bloggersCollection = client.db().collection("bloggers")
+export const postsCollection = client.db().collection("posts")
+
+export async function runDb() {
+    try {
+        await client.connect()
+        await client.db("bloggersDB").command({ping: 1})
+        console.log("Connection complete")
+    } catch (e) {
+        await client.close()
+        console.log("no connection")
+    }
+}
+
 
 export let posts: PostType[] = [
     {id: 1, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 1},

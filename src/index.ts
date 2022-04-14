@@ -3,14 +3,13 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import {bloggersRouter} from "./routes/bloggers-router";
 import {postsRouter} from "./routes/posts-router";
-
+import {runDb} from "./repositories/db";
 
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000
 //const urlValidator = /^(http(s)?:\/\/)?([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+\/[/a-zA-Z0-9_-]+$/
 const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
-
 
 app.use(jsonBodyMiddleware)
 app.use(cors())
@@ -28,6 +27,11 @@ app.get('/*', (req: Request, res: Response) => {
     })
 })
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+async function startServer() {
+    await runDb()
+    await app.listen(port, () => {
+        console.log(`App listening on port ${port}`)
+    })
+}
+
+startServer()
