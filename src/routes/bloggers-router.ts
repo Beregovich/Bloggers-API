@@ -21,7 +21,7 @@ bloggersRouter
             .withMessage('URL invalid'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            res.status(200).send(
+            res.status(201).send(
                 await bloggersService.createBlogger(
                     req.body.name,
                     req.body.youtubeUrl
@@ -36,7 +36,7 @@ bloggersRouter
             const id = +req.params.bloggerId
             const blogger = await bloggersService.getBloggerById(id)
             if (blogger) {
-                res.status(201).send(blogger)
+                res.status(200).send(blogger)
             } else {
                 res.status(404)
                 res.send({
