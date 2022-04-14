@@ -46,6 +46,6 @@ export const postsRepository = {
 
     async deletePostById(id: number) {
         const result = await postsCollection.deleteOne({id})
-        return result.acknowledged === 1
+        return result.deletedCount === 1
     }
 }

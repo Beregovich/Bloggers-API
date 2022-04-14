@@ -12,7 +12,9 @@ export const bloggersRepository = {
     },
     async getBloggerById(id: number) {
         const blogger = await bloggersCollection.findOne({id})
-        if (blogger) return blogger
+        if (blogger) {
+            return blogger
+        }else return false
     },
 
     async createBlogger(newBlogger: newBloggerType) {

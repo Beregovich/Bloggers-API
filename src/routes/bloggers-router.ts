@@ -36,7 +36,7 @@ bloggersRouter
             const id = +req.params.bloggerId
             const blogger = await bloggersService.getBloggerById(id)
             if (blogger) {
-                res.status(200).send(blogger)
+                res.status(201).send(blogger)
             } else {
                 res.status(404)
                 res.send({

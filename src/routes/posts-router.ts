@@ -3,7 +3,7 @@ import {inputValidatorMiddleware} from "../middlewares/input-validator-middlewar
 import {body, check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
-import {bloggersRepository} from "../repositories/bloggers-repository";
+import {bloggersService} from "../domain/bloggers-service";
 
 type ErrorMessageType = {
     message: string;
@@ -30,9 +30,9 @@ postsRouter
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
-            const blogger = await bloggersRepository.getBloggerById(req.body.blogId)
+            const blogger = await bloggersService.getBloggerById(req.body.blogId)
             if (!blogger) {
-                res.status(404).send({
+                res.status(400).send({
                     "data": {},
                     "errorsMessages": [
                         {
