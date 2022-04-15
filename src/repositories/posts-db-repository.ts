@@ -50,7 +50,7 @@ export const postsRepository = {
             "shortDescription": postToReturn.shortDescription,
             "content": postToReturn.content,
             "blogId": postToReturn.blogId,
-            "id": postToReturn.id
+            "id": +postToReturn.id
         }
     },
     async updatePostById (newPost: PostToPushType) {
