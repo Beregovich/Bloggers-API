@@ -1,4 +1,6 @@
 import {bloggersCollection, postsCollection, PostType} from "./db";
+import {bloggersService} from "../domain/bloggers-service";
+import {bloggersRepository} from "./bloggers-db-repository";
 
 export type NewPostType = {
     title: string | null;
@@ -24,7 +26,9 @@ export const postsRepository = {
             title: p.title,
             shortDescription: p.shortDescription,
             content: p.content,
-            blogId: p.blogId
+            blogId: p.blogId,
+            bloggerName: "Prohor"
+            //bloggerName: bloggersCollection.findOne({id: p.blogId}).name
         }))
     },
     async getPostById(id: number) {
