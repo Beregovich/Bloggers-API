@@ -1,5 +1,4 @@
 import {bloggersCollection, postsCollection, PostType} from "./db";
-import {bloggersService} from "../domain/bloggers-service";
 import {bloggersRepository} from "./bloggers-db-repository";
 
 export type NewPostType = {
@@ -28,17 +27,22 @@ export const postsRepository = {
             content: p.content,
             bloggerId: p.bloggerId,
             bloggerName: "Prohor"
-            //bloggerName: bloggersCollection.findOne({id: p.blogId}).name
+            //bloggerName: bloggersCollection.findOne({id: p.bloggerId}).name
         }))
         return allPostsWithNames
     },
     async getPostById(id: number) {
         const post = await postsCollection.findOne({id: id})
-        if (post) {
+        const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
+        if (post && blogger) {
             delete post._id
             return {
-                ...post,
-                bloggerName: await bloggersCollection.findOne({id: post.blogId})
+                "id": post.id,
+                "title": post.title,
+                "shortDescription": post.shortDescription,
+                "content": post.content,
+                "bloggerId": post.bloggerId,
+                "bloggerName": blogger.name
             }
         } else return false
     },
@@ -46,13 +50,14 @@ export const postsRepository = {
         await postsCollection.insertOne(newPost)
         const postToReturn = await postsCollection.findOne({id: newPost.id})
         delete postToReturn._id
-        return  newPost /*{
+        return   {
             "id": postToReturn.id,
             "title": postToReturn.title,
             "shortDescription": postToReturn.shortDescription,
             "content": postToReturn.content,
-            "blogId": postToReturn.blogId
-        }*/
+            "blogId": postToReturn.bloggerId,
+            "bloggerName": await bloggersCollection.findOne({id: postToReturn.bloggerId})
+        }
     },
     async updatePostById (newPost: PostToPushType) {
         const id = newPost.id

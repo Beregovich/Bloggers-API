@@ -8,14 +8,13 @@ export const postsService = {
 
     },
     async getPostById(id: number) {
+
         const post = await postsRepository.getPostById(id)
-        const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
-        if(post && blogger){
+        if (post) {
             return {
-                ...post,
-                bloggerName: blogger.name
+                post
             }
-        }else return false
+        } else return false
     },
     async createPost(newPost: NewPostType) {
         const postToPush = {
