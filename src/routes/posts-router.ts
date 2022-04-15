@@ -20,8 +20,8 @@ postsRouter
     .get('/',
         requestsSaverMiddleware,
         async (req: Request, res: Response) => {
-        res.status(200).send(await postsService.getPosts())
-    })
+            res.status(200).send(await postsService.getPosts())
+        })
     //Create new post
     .post('/',
         requestsSaverMiddleware,
@@ -34,7 +34,8 @@ postsRouter
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
-            const blogger = await bloggersService.getBloggerById(req.body.blogId)
+            const id = +req.body.blogId
+            const blogger = await bloggersService.getBloggerById(id)
             if (!blogger) {
                 res.status(400).send({
                     "data": {},
@@ -119,18 +120,18 @@ postsRouter
     .delete('/:postId',
         requestsSaverMiddleware,
         async (req: Request, res: Response) => {
-        const id = +req.params.postId
-        const isDeleted = await postsService.deletePostById(id)
-        if (isDeleted) {
-            res.sendStatus(204)
-        } else {
-            res.status(404).send({
-                "data": {},
-                "errorsMessages": [{
-                    message: "post not found",
-                    field: "id"
-                }],
-                "resultCode": 1
-            })
-        }
-    })
+            const id = +req.params.postId
+            const isDeleted = await postsService.deletePostById(id)
+            if (isDeleted) {
+                res.sendStatus(204)
+            } else {
+                res.status(404).send({
+                    "data": {},
+                    "errorsMessages": [{
+                        message: "post not found",
+                        field: "id"
+                    }],
+                    "resultCode": 1
+                })
+            }
+        })

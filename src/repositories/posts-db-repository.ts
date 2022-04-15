@@ -46,11 +46,11 @@ export const postsRepository = {
         const postToReturn = await postsCollection.findOne({id: newPost.id})
         delete postToReturn._id
         return   {
+            "id": postToReturn.id,
             "title": postToReturn.title,
             "shortDescription": postToReturn.shortDescription,
             "content": postToReturn.content,
-            "blogId": postToReturn.blogId,
-            "id": +postToReturn.id
+            "blogId": postToReturn.blogId
         }
     },
     async updatePostById (newPost: PostToPushType) {
