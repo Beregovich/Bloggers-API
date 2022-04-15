@@ -22,6 +22,7 @@ const mongoUri =
 const client = new MongoClient(mongoUri)
 export const bloggersCollection = client.db().collection("bloggers")
 export const postsCollection = client.db().collection("posts")
+export const requestCollection = client.db().collection("requests")
 
 export async function runDb() {
     try {

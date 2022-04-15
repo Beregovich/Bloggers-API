@@ -4,6 +4,7 @@ import {body, check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
+import {requestsSaverMiddleware} from "../middlewares/request-saver-midleware";
 
 type ErrorMessageType = {
     message: string;
@@ -16,11 +17,14 @@ export const postsRouter = Router()
 
 postsRouter
     //Returns all posts
-    .get('/', async (req: Request, res: Response) => {
+    .get('/',
+        requestsSaverMiddleware,
+        async (req: Request, res: Response) => {
         res.status(200).send(await postsService.getPosts())
     })
     //Create new post
     .post('/',
+        requestsSaverMiddleware,
         body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
         body('shortDescription').isString().withMessage('shortDescription should be a string')
@@ -57,6 +61,7 @@ postsRouter
         })
     //Return post by id
     .get('/:postId',
+        requestsSaverMiddleware,
         check('postId').isNumeric().withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
@@ -77,6 +82,7 @@ postsRouter
         })
     //Update existing post by id with InputModel
     .put('/:postId',
+        requestsSaverMiddleware,
         body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
         body('shortDescription').isString().withMessage('shortDescription should be a string')
@@ -110,7 +116,9 @@ postsRouter
             }
         })
     //Delete post specified by id
-    .delete('/:postId', async (req: Request, res: Response) => {
+    .delete('/:postId',
+        requestsSaverMiddleware,
+        async (req: Request, res: Response) => {
         const id = +req.params.postId
         const isDeleted = await postsService.deletePostById(id)
         if (isDeleted) {
