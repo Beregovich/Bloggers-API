@@ -21,7 +21,7 @@ export const postsRepository = {
 
     async getPosts() {
         const allPosts: PostType[] = await postsCollection.find().toArray();
-        return allPosts.map(p=>({
+        const allPostsWithNames = allPosts.map(p=>({
             id: p.id,
             title: p.title,
             shortDescription: p.shortDescription,
@@ -30,6 +30,7 @@ export const postsRepository = {
             bloggerName: "Prohor"
             //bloggerName: bloggersCollection.findOne({id: p.blogId}).name
         }))
+        return allPostsWithNames
     },
     async getPostById(id: number) {
         const post = await postsCollection.findOne({id: id})
