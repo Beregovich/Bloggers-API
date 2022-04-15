@@ -34,7 +34,7 @@ postsRouter
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.body.blogId
+            const id: number = parseInt(req.body.blogId)
             const blogger = await bloggersService.getBloggerById(id)
             if (!blogger) {
                 res.status(400).send({
