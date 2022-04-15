@@ -19,10 +19,10 @@ type BloggerType = {
 const mongoUri =
     process.env.mongoURI
 
-const client = new MongoClient(mongoUri)
-export const bloggersCollection = client.db().collection("bloggers")
-export const postsCollection = client.db().collection("posts")
-export const requestCollection = client.db().collection("requests")
+export const client = new MongoClient(mongoUri)
+export const bloggersCollection = client.db("bloggersDB").collection("bloggers")
+export const postsCollection = client.db("bloggersDB").collection("posts")
+export const requestCollection = client.db("bloggersDB").collection("requests")
 
 export async function runDb() {
     try {
