@@ -100,7 +100,7 @@ postsRouter
                 title: req.body.title,
                 shortDescription: req.body.shortDescription,
                 content: req.body.content,
-                bloggerId: req.body.blogId
+                bloggerId: req.body.bloggerId
             }
             const updatedPost = await postsService.updatePostById(id, updatePost)
             if (!updatedPost) {
