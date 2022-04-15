@@ -52,7 +52,7 @@ postsRouter
                     title: req.body.title,
                     shortDescription: req.body.shortDescription,
                     content: req.body.content,
-                    blogId: req.body.blogId,
+                    blogId: +req.body.blogId,
                 })
                 res.status(200).send({
                     ...newPost,
