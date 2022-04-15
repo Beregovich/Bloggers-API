@@ -20,7 +20,8 @@ postsRouter
     .get('/',
         requestsSaverMiddleware,
         async (req: Request, res: Response) => {
-            res.status(200).send(await postsService.getPosts())
+            const allPosts = await postsService.getPosts()
+                res.status(200).send(allPosts)
         })
     //Create new post
     .post('/',
@@ -54,7 +55,7 @@ postsRouter
                     content: req.body.content,
                     blogId: +req.body.blogId,
                 })
-                res.status(200).send({
+                res.status(201).send({
                     ...newPost,
                     bloggerName: blogger.name
                 })

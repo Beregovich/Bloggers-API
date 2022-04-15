@@ -46,13 +46,13 @@ export const postsRepository = {
         await postsCollection.insertOne(newPost)
         const postToReturn = await postsCollection.findOne({id: newPost.id})
         delete postToReturn._id
-        return   {
+        return  newPost /*{
             "id": postToReturn.id,
             "title": postToReturn.title,
             "shortDescription": postToReturn.shortDescription,
             "content": postToReturn.content,
             "blogId": postToReturn.blogId
-        }
+        }*/
     },
     async updatePostById (newPost: PostToPushType) {
         const id = newPost.id
