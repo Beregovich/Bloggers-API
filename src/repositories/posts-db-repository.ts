@@ -43,12 +43,14 @@ export const postsRepository = {
     },
     async createPost(newPost: PostToPushType) {
         await postsCollection.insertOne(newPost)
-        return  {
-            "title": newPost.title,
-            "shortDescription": newPost.shortDescription,
-            "content": newPost.content,
-            "blogId": newPost.blogId,
-            "id": newPost.id
+        const postToReturn = await postsCollection.findOne({id: newPost.id})
+        delete postToReturn._id
+        return   {
+            "title": postToReturn.title,
+            "shortDescription": postToReturn.shortDescription,
+            "content": postToReturn.content,
+            "blogId": postToReturn.blogId,
+            "id": postToReturn.id
         }
     },
     async updatePostById (newPost: PostToPushType) {
