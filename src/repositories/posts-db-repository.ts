@@ -6,7 +6,7 @@ export type NewPostType = {
     title: string | null;
     shortDescription: string | null;
     content: string | null;
-    blogId: number;
+    bloggerId: number;
 }
 
 export type PostToPushType = {
@@ -14,19 +14,19 @@ export type PostToPushType = {
     title: string | null;
     shortDescription: string | null;
     content: string | null;
-    blogId: number;
+    bloggerId: number;
 }
 
 export const postsRepository = {
 
     async getPosts() {
-        const allPosts: PostType[] = await postsCollection.find().toArray();
+        const allPosts: PostType[] = await postsCollection.find().toArray()
         const allPostsWithNames = allPosts.map(p=>({
             id: p.id,
             title: p.title,
             shortDescription: p.shortDescription,
             content: p.content,
-            blogId: p.blogId,
+            bloggerId: p.bloggerId,
             bloggerName: "Prohor"
             //bloggerName: bloggersCollection.findOne({id: p.blogId}).name
         }))

@@ -26,13 +26,13 @@ postsRouter
     //Create new post
     .post('/',
         requestsSaverMiddleware,
-      /*  body('title').isString().withMessage('Name should be a string')
+        body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
         body('shortDescription').isString().withMessage('shortDescription should be a string')
             .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
         body('content').isString().withMessage('shortDescription should be a string')
             .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        inputValidatorMiddleware,*/
+        inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
             const id: number = parseInt(req.body.blogId)
@@ -53,7 +53,7 @@ postsRouter
                     title: req.body.title,
                     shortDescription: req.body.shortDescription,
                     content: req.body.content,
-                    blogId: +req.body.blogId,
+                    bloggerId: +req.body.blogId,
                 })
                 res.status(201).send({
                     ...newPost,
@@ -100,7 +100,7 @@ postsRouter
                 title: req.body.title,
                 shortDescription: req.body.shortDescription,
                 content: req.body.content,
-                blogId: req.body.blogId
+                bloggerId: req.body.blogId
             }
             const updatedPost = await postsService.updatePostById(id, updatePost)
             if (!updatedPost) {
