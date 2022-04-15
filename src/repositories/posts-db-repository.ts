@@ -18,12 +18,19 @@ export type PostToPushType = {
 export const postsRepository = {
 
     async getPosts() {
-        const postsWithNames: PostType[] = await postsCollection.find().toArray();
-        return postsWithNames
+        const allPosts: PostType[] = await postsCollection.find().toArray();
+        return allPosts.map(p=>({
+            id: p.id,
+            title: p.title,
+            shortDescription: p.shortDescription,
+            content: p.content,
+            blogId: p.blogId
+        }))
     },
     async getPostById(id: number) {
         const post = await postsCollection.findOne({id: id})
         if (post) {
+            delete post._id
             return {
                 ...post,
                 bloggerName: await bloggersCollection.findOne({id: post.blogId})
@@ -32,7 +39,13 @@ export const postsRepository = {
     },
     async createPost(newPost: PostToPushType) {
         await postsCollection.insertOne(newPost)
-        return newPost
+        return  {
+            "title": newPost.title,
+            "shortDescription": newPost.shortDescription,
+            "content": newPost.content,
+            "blogId": newPost.blogId,
+            "id": newPost.id
+        }
     },
     async updatePostById (newPost: PostToPushType) {
         const id = newPost.id

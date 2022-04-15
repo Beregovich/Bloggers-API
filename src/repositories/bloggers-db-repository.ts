@@ -13,13 +13,18 @@ export const bloggersRepository = {
     async getBloggerById(id: number) {
         const blogger = await bloggersCollection.findOne({id})
         if (blogger) {
+            delete blogger._id
             return blogger
         }else return false
     },
 
     async createBlogger(newBlogger: newBloggerType) {
         await bloggersCollection.insertOne(newBlogger)
-        return newBlogger
+        return {
+            id: newBlogger.id,
+            name: newBlogger.name,
+            youtubeUrl: newBlogger.youtubeUrl
+        }
     },
     async updateBloggerById(id: number, name: string, youtubeUrl: string) {
         const result = await bloggersCollection.updateOne({id},
