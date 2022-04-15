@@ -102,6 +102,18 @@ postsRouter
                 content: req.body.content,
                 bloggerId: req.body.bloggerId
             }
+            const bloggerToUpdate = await bloggersService.getBloggerById(updatePost.bloggerId)
+            if(!bloggerToUpdate){
+                res.status(400).send({
+                    "data": {},
+                    "errorsMessages": [{
+                        message: "blogger not found",
+                        field: "bloggerId"
+                    }],
+                    "resultCode": 0
+                })
+                return
+            }
             const updatedPost = await postsService.updatePostById(id, updatePost)
             if (!updatedPost) {
                 res.status(404)
