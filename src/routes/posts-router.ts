@@ -20,7 +20,7 @@ postsRouter
     .get('/',
         requestsSaverMiddleware,
         async (req: Request, res: Response) => {
-            res.status(200).send(postsService.getPosts())
+            res.status(200).send(await postsService.getPosts())
         })
     //Create new post
     .post('/',
