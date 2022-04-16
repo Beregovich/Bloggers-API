@@ -8,12 +8,9 @@ export const postsService = {
 
     },
     async getPostById(id: number) {
-
         const post = await postsRepository.getPostById(id)
         if (post) {
-            return {
-                post
-            }
+            return  post
         } else return false
     },
     async createPost(newPost: NewPostType) {

@@ -6,7 +6,7 @@ export type PostType = {
     title: string | null;
     shortDescription: string | null;
     content: string | null;
-    bloggerId: number;
+    blogId: number;
     bloggerName?: string | null | undefined;
 }
 
@@ -37,8 +37,8 @@ export async function runDb() {
 
 
 export let posts: PostType[] = [
-    {id: 1, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', bloggerId: 1},
-    {id: 2, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', bloggerId: 2}
+    {id: 1, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 1},
+    {id: 2, title: 'lorem', shortDescription: '', content: 'lorem ipsum sens', blogId: 2}
 ]
 
 export let bloggers: BloggerType[] = [
