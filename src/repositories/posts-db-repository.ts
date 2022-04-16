@@ -5,7 +5,7 @@ export type NewPostType = {
     title: string | null;
     shortDescription: string | null;
     content: string | null;
-    blogId: number;
+    bloggerId: number;
 }
 
 export type PostToPushType = {
@@ -13,7 +13,7 @@ export type PostToPushType = {
     title: string | null;
     shortDescription: string | null;
     content: string | null;
-    blogId: number;
+    bloggerId: number;
 }
 
 export const postsRepository = {
