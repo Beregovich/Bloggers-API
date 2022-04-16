@@ -25,7 +25,7 @@ export const postsRepository = {
             title: p.title,
             shortDescription: p.shortDescription,
             content: p.content,
-            blogId: p.blogId,
+            blogId: p.bloggerId,
             bloggerName: "Prohor"
             //bloggerName: bloggersCollection.findOne({id: p.bloggerId}).name
         }))
@@ -33,9 +33,9 @@ export const postsRepository = {
     },
     async getPostById(id: number) {
         const post = await postsCollection.findOne({id: id})
+        if(!post) return false
         const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
         if(!blogger) return false
-        if (post) {
             delete post._id
             return ({
                 id: post.id,
@@ -45,7 +45,6 @@ export const postsRepository = {
                 bloggerId: post.bloggerId,
                 bloggerName: blogger.name
             })
-        } else return false
     },
     async createPost(newPost: PostToPushType) {
         await postsCollection.insertOne(newPost)

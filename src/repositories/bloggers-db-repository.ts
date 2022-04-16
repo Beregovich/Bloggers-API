@@ -1,4 +1,4 @@
-import {bloggers, bloggersCollection} from "./db";
+import { bloggersCollection} from "./db";
 
 type newBloggerType = {
     id: number;
