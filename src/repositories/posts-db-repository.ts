@@ -33,7 +33,7 @@ export const postsRepository = {
     },
     async getPostById(id: number) {
         const post = await postsCollection.findOne({id: id})
-        const blogger = await bloggersRepository.getBloggerById(post.blogId)
+        const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
         if(!blogger) return false
         if (post) {
             delete post._id
@@ -42,7 +42,7 @@ export const postsRepository = {
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
-                blogId: post.blogId,
+                bloggerId: post.bloggerId,
                 bloggerName: blogger.name
             })
         } else return false
@@ -56,7 +56,7 @@ export const postsRepository = {
             title: postToReturn.title,
             shortDescription: postToReturn.shortDescription,
             content: postToReturn.content,
-            blogId: postToReturn.blogId,
+            bloggerId: postToReturn.bloggerId,
             bloggerName: await bloggersCollection.findOne({id: postToReturn.bloggerId})
         })
     },
