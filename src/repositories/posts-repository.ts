@@ -12,7 +12,7 @@ export type PostToPushType = {
     title: string | null;
     shortDescription: string | null;
     content: string | null;
-    bloggerId: number;
+    blogId: number;
 }
 
 export const postsRepository = {
@@ -22,7 +22,7 @@ export const postsRepository = {
         await posts.forEach(p => {
             postsWithNames.push({
                 ...p,
-                bloggerName: bloggers.find(b => b.id === p.bloggerId)?.name
+                bloggerName: bloggers.find(b => b.id === p.blogId)?.name
             })
         })
         return postsWithNames
