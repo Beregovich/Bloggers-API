@@ -9,11 +9,11 @@ export const postsService = {
     },
     async getPostById(id: number) {
         const post = await postsRepository.getPostById(id)
-        const blogger = await bloggersRepository.getBloggerById(post.blogId)
-        if(post && blogger){
+        //const blogger = await bloggersRepository.getBloggerById(post.blogId)
+        if(post){
             return {
                 ...post,
-                bloggerName: blogger.name
+                //bloggerName: blogger.name
             }
         }else return false
     },
