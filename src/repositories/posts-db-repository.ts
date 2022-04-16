@@ -25,7 +25,7 @@ export const postsRepository = {
             title: p.title,
             shortDescription: p.shortDescription,
             content: p.content,
-            blogId: p.bloggerId,
+            bloggerId: p.bloggerId,
             bloggerName: "Prohor"
             //bloggerName: bloggersCollection.findOne({id: p.bloggerId}).name
         }))
@@ -62,9 +62,10 @@ export const postsRepository = {
     async updatePostById (newPost: PostToPushType) {
         const id = newPost.id
         const result = await postsCollection.updateOne({id}, {$set:{
-            "title": newPost.title,
-            "shortDescription": newPost.shortDescription,
-            "content": newPost.content
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            bloggerId: newPost.bloggerId
         }})
        return result.modifiedCount === 1
     },
