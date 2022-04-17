@@ -2,7 +2,7 @@ import 'dotenv/config'
 const {MongoClient} = require('mongodb');
 
 export type PostType = {
-    id: number;
+    id?: number;
     title: string | null;
     shortDescription: string | null;
     content: string | null;

@@ -55,10 +55,7 @@ postsRouter
                     content: req.body.content,
                     bloggerId: +req.body.bloggerId,
                 })
-                res.status(201).send({
-                    ...newPost,
-                    bloggerName: blogger.name
-                })
+                res.status(201).send(newPost)
             }
         })
     //Return post by id

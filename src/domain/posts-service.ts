@@ -1,8 +1,9 @@
-import {NewPostType, postsRepository} from "../repositories/posts-db-repository";
+import { postsRepository} from "../repositories/posts-db-repository";
+import {PostType} from "../repositories/db";
 
 export const postsService = {
     async getPosts() {
-        const posts = await postsRepository.getPosts()
+        const posts: PostType[] = await postsRepository.getPosts()
         return posts
 
     },
@@ -12,15 +13,15 @@ export const postsService = {
             return post
         }else return false
     },
-    async createPost(newPost: NewPostType) {
-        const postToPush = {
-            ...newPost,
+    async createPost(newPostData: PostType) {
+        const postToCreate = {
+            ...newPostData,
             id: +(new Date()),
         }
-        return await postsRepository.createPost(postToPush)
+        return await postsRepository.createPost(postToCreate)
 
     },
-    async updatePostById(id: number, newPost: NewPostType) {
+    async updatePostById(id: number, newPost: PostType) {
         return await postsRepository.updatePostById({
             id,
             ...newPost
@@ -28,5 +29,9 @@ export const postsService = {
     },
     async deletePostById(id: number) {
         return await postsRepository.deletePostById(id)
-    }
+    },
+
+    async getPostsByBloggerId(bloggerId: number){
+        return await postsRepository.getPostsByBloggerId(bloggerId)
+}
 }

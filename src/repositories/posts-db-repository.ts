@@ -1,35 +1,11 @@
 import {bloggersCollection, postsCollection, PostType} from "./db";
 import {bloggersRepository} from "./bloggers-db-repository";
 
-export type NewPostType = {
-    title: string | null;
-    shortDescription: string | null;
-    content: string | null;
-    bloggerId: number;
-}
-
-export type PostToPushType = {
-    id: number;
-    title: string | null;
-    shortDescription: string | null;
-    content: string | null;
-    bloggerId: number;
-}
-
 export const postsRepository = {
 
     async getPosts() {
         const allPosts: PostType[] = await postsCollection.find().toArray()
-        const allPostsWithNames = allPosts.map(p=>({
-            id: p.id,
-            title: p.title,
-            shortDescription: p.shortDescription,
-            content: p.content,
-            bloggerId: p.bloggerId,
-            bloggerName: "Prohor"
-            //bloggerName: bloggersCollection.findOne({id: p.bloggerId}).name
-        }))
-        return allPostsWithNames
+        return allPosts
     },
     async getPostById(id: number) {
         const post = await postsCollection.findOne({id: id})
@@ -46,20 +22,17 @@ export const postsRepository = {
                 bloggerName: blogger.name
             })
     },
-    async createPost(newPost: PostToPushType) {
-        await postsCollection.insertOne(newPost)
+    async createPost(newPost: PostType) {
+        const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
+        await postsCollection.insertOne({
+            ...newPost,
+            bloggerName: blogger.name
+        })
         const postToReturn = await postsCollection.findOne({id: newPost.id})
         delete postToReturn._id
-        return   ({
-            id: postToReturn.id,
-            title: postToReturn.title,
-            shortDescription: postToReturn.shortDescription,
-            content: postToReturn.content,
-            bloggerId: postToReturn.bloggerId,
-            bloggerName: await bloggersCollection.findOne({id: postToReturn.bloggerId})
-        })
+        return   (postToReturn)
     },
-    async updatePostById (newPost: PostToPushType) {
+    async updatePostById (newPost: PostType) {
         const id = newPost.id
         const result = await postsCollection.updateOne({id}, {$set:{
             title: newPost.title,
@@ -73,5 +46,8 @@ export const postsRepository = {
     async deletePostById(id: number) {
         const result = await postsCollection.deleteOne({id})
         return result.deletedCount === 1
+    },
+    async getPostsByBloggerId(bloggerId: number){
+        return await postsCollection.find({bloggerId}).toArray()
     }
 }
