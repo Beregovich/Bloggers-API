@@ -1,13 +1,14 @@
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
+import {BloggerType} from "../repositories/db";
 
 export const bloggersService = {
     async getBloggers() {
         return await bloggersRepository.getBloggers()
     },
-    async getBloggerById(id: number) {
+    async getBloggerById(id: number): Promise<BloggerType | boolean> {
         return await bloggersRepository.getBloggerById(id)
     },
-    async createBlogger(name: string, youtubeUrl: string) {
+    async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType> {
         const bloggerToPush = {
             id: +(new Date()),
             name,
@@ -16,13 +17,12 @@ export const bloggersService = {
         return await bloggersRepository.createBlogger(bloggerToPush)
     },
 
-    async updateBloggerById(id: number, name: string, youtubeUrl: string) {
+    async updateBloggerById(id: number, name: string, youtubeUrl: string): Promise<BloggerType | boolean> {
         return await bloggersRepository.updateBloggerById(id, name, youtubeUrl)
     },
 
-    async deleteBloggerById(id: number) {
+    async deleteBloggerById(id: number): Promise<boolean> {
         return await bloggersRepository.deleteBloggerById(id)
-
     }
 }
 

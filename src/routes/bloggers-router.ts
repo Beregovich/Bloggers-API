@@ -21,8 +21,7 @@ bloggersRouter
     .post('/',
         body('name').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('youtubeUrl').matches(urlValidator)
-            .withMessage('URL invalid'),
+        body('youtubeUrl').matches(urlValidator).withMessage('URL invalid'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             res.status(201).send(
@@ -44,13 +43,13 @@ bloggersRouter
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.bloggerId
+            const bloggerId = +req.params.bloggerId
             res.status(201).send(
                 await postsService.createPost({
                     title: req.body.title,
                     shortDescription: req.body.shortDescription,
                     content: req.body.content,
-                    bloggerId: id,
+                    bloggerId,
                 })
             )
         })
@@ -59,8 +58,8 @@ bloggersRouter
         check('bloggerId').isNumeric().withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.bloggerId
-            const blogger = await bloggersService.getBloggerById(id)
+            const bloggerId = +req.params.bloggerId
+            const blogger = await bloggersService.getBloggerById(bloggerId)
             if (blogger) {
                 res.status(200).send(blogger)
             } else {
@@ -80,10 +79,10 @@ bloggersRouter
         check('bloggerId').isNumeric().withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.bloggerId
-            const blogger = await bloggersService.getBloggerById(id)
-            const posts: PostType[] = await postsService.getPostsByBloggerId(id)
-            if (posts) {
+            const bloggerId = +req.params.bloggerId
+            const blogger = await bloggersService.getBloggerById(bloggerId)
+            const posts: PostType[] = await postsService.getPostsByBloggerId(bloggerId)
+            if (blogger) {
                 res.status(200).send(posts)
             } else {
                 res.status(404)
@@ -106,8 +105,9 @@ bloggersRouter
             .withMessage('URL invalid'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.bloggerId
-            const blogger = await bloggersService.updateBloggerById(id,
+            const bloggerId = +req.params.bloggerId
+            const blogger = await bloggersService.updateBloggerById(
+                bloggerId,
                 req.body.name,
                 req.body.youtubeUrl)
             if (!blogger) {
@@ -129,8 +129,8 @@ bloggersRouter
         check('bloggerId').isNumeric().withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.bloggerId
-            const isDeleted = await bloggersService.deleteBloggerById(id)
+            const bloggerId = +req.params.bloggerId
+            const isDeleted = await bloggersService.deleteBloggerById(bloggerId)
             if (isDeleted) {
                 res.send(204)
             } else {

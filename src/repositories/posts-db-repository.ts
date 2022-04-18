@@ -1,4 +1,4 @@
-import {bloggersCollection, postsCollection, PostType} from "./db";
+import {bloggersCollection, BloggerType, postsCollection, PostType} from "./db";
 import {bloggersRepository} from "./bloggers-db-repository";
 
 export const postsRepository = {
@@ -12,6 +12,7 @@ export const postsRepository = {
         if(!post) return false
         const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
         if(!blogger) return false
+        const bloggerName = blogger.name
             delete post._id
             return ({
                 id: post.id,
@@ -19,10 +20,10 @@ export const postsRepository = {
                 shortDescription: post.shortDescription,
                 content: post.content,
                 bloggerId: post.bloggerId,
-                bloggerName: blogger.name
+                bloggerName
             })
     },
-    async createPost(newPost: PostType) {
+    async createPost(newPost: PostType): Promise<PostType> {
         const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
         await postsCollection.insertOne({
             ...newPost,

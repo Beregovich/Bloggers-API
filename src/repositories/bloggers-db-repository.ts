@@ -1,24 +1,17 @@
-import { bloggersCollection} from "./db";
-
-type newBloggerType = {
-    id: number;
-    name: string;
-    youtubeUrl: string;
-}
+import {bloggersCollection, BloggerType} from "./db";
 
 export const bloggersRepository = {
     async getBloggers() {
         return await bloggersCollection.find().toArray()
     },
-    async getBloggerById(id: number) {
-        const blogger = await bloggersCollection.findOne({id})
+    async getBloggerById(bloggerId: number): Promise<BloggerType | false> {
+        const blogger = await bloggersCollection.findOne({bloggerId})
         if (blogger) {
             delete blogger._id
             return blogger
         }else return false
     },
-
-    async createBlogger(newBlogger: newBloggerType) {
+    async createBlogger(newBlogger: BloggerType) {
         await bloggersCollection.insertOne(newBlogger)
         return {
             id: newBlogger.id,
@@ -36,8 +29,7 @@ export const bloggersRepository = {
             })
         return result.modifiedCount === 1
     },
-
-    async deleteBloggerById(id: number) {
+    async deleteBloggerById(id: number): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id})
             return result.deletedCount === 1
         }

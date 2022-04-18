@@ -5,22 +5,16 @@ import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {requestsSaverMiddleware} from "../middlewares/request-saver-midleware";
-
-type ErrorMessageType = {
-    message: string;
-    field: string;
-}
+import {PostType} from "../repositories/db";
 
 export const postsRouter = Router()
-
-//---------------------------------Posts---------------------------------
 
 postsRouter
     //Returns all posts
     .get('/',
         requestsSaverMiddleware,
         async (req: Request, res: Response) => {
-            const allPosts = await postsService.getPosts()
+            const allPosts: PostType[] = await postsService.getPosts()
                 res.status(200).send(allPosts)
         })
     //Create new post
@@ -35,8 +29,8 @@ postsRouter
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
-            const id: number = parseInt(req.body.bloggerId)
-            const blogger = await bloggersService.getBloggerById(id)
+            const bloggerId: number = parseInt(req.body.bloggerId)
+            const blogger = await bloggersService.getBloggerById(bloggerId)
             if (!blogger) {
                 res.status(400).send({
                     "data": {},
@@ -53,7 +47,7 @@ postsRouter
                     title: req.body.title,
                     shortDescription: req.body.shortDescription,
                     content: req.body.content,
-                    bloggerId: +req.body.bloggerId,
+                    bloggerId,
                 })
                 res.status(201).send(newPost)
             }
@@ -64,8 +58,8 @@ postsRouter
         check('postId').isNumeric().withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.postId
-            const returnedPost = await postsService.getPostById(id)
+            const postId = +req.params.postId
+            const returnedPost = await postsService.getPostById(postId)
             if (returnedPost) {
                 res.send(returnedPost)
             } else {
@@ -88,6 +82,7 @@ postsRouter
             .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
         body('content').isString().withMessage('shortDescription should be a string')
             .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        body('content').isString().withMessage('shortDescription should be a string'),
         check('postId').isNumeric().withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         authMiddleware,

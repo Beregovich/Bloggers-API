@@ -7,10 +7,10 @@ export type PostType = {
     shortDescription: string | null;
     content: string | null;
     bloggerId: number;
-    bloggerName?: string | null | undefined;
+    bloggerName?: string | null;
 }
 
-type BloggerType = {
+export type BloggerType = {
     id: number;
     name: string | null;
     youtubeUrl: string | null;

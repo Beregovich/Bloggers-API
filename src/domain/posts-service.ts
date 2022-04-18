@@ -7,13 +7,13 @@ export const postsService = {
         return posts
 
     },
-    async getPostById(id: number) {
+    async getPostById(id: number): Promise<PostType | false> {
         const post = await postsRepository.getPostById(id)
         if(post){
             return post
         }else return false
     },
-    async createPost(newPostData: PostType) {
+    async createPost(newPostData: PostType): Promise<PostType> {
         const postToCreate = {
             ...newPostData,
             id: +(new Date()),
