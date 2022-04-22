@@ -1,5 +1,13 @@
 import 'dotenv/config'
+
 const {MongoClient} = require('mongodb');
+
+export const getPaginationData = (query: any) => {
+    const page = typeof query.page === 'string' ? +query.page : 1
+    const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 5
+    const searchNameTerm = typeof query.searchNameTerm === 'string' ? query.searchNameTerm : ""
+    return {page, pageSize, searchNameTerm}
+}
 
 export type PostType = {
     id?: number;
@@ -8,6 +16,14 @@ export type PostType = {
     content: string | null;
     bloggerId: number;
     bloggerName?: string | null;
+}
+
+export type PostWithPaginationType = {
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: PostType[];
 }
 
 export type BloggerType = {

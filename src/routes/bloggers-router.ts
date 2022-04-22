@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express'
 import {inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
 import {body, check} from "express-validator";
 import {bloggersService} from "../domain/bloggers-service";
-import {bloggersCollection, PostType} from "../repositories/db";
+import {bloggersCollection, getPaginationData, PostType} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {requestsSaverMiddleware} from "../middlewares/request-saver-midleware";
 import {authMiddleware} from "../middlewares/auth-middleware";
@@ -12,9 +12,19 @@ export const bloggersRouter = Router()
 
 bloggersRouter
     //Returns all bloggers
-    .get('/', async (req: Request, res: Response) => {
+    .get('/',
+        check('page').optional({ checkFalsy: true })
+            .isNumeric().withMessage('page should be numeric value'),
+        check('pageSize').optional({ checkFalsy: true })
+            .isNumeric().withMessage('pageSize should be numeric value'),
+        inputValidatorMiddleware,
+        async (req: Request, res: Response) => {
+            const queryString = req.query
+            const page = typeof queryString.page === 'string'?+queryString.page:1
+            const pageSize = typeof queryString.pageSize === 'string'?+queryString.pageSize:5
+            const searchNameTerm = queryString.SearchNameTerm === 'string'?queryString.SearchNameTerm:""
         res.status(200).send(
-            await bloggersService.getBloggers()
+            await bloggersService.getBloggers(page, pageSize, searchNameTerm)
         )
     })
     //Create new blogger
@@ -79,10 +89,11 @@ bloggersRouter
         check('bloggerId').isNumeric().withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
+            const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
             const bloggerId = +req.params.bloggerId
             const blogger = await bloggersService.getBloggerById(bloggerId)
-            const posts: PostType[] = await postsService.getPostsByBloggerId(bloggerId)
             if (blogger) {
+                const posts = await postsService.getPosts(page, pageSize, searchNameTerm, bloggerId)
                 res.status(200).send(posts)
             } else {
                 res.status(404)

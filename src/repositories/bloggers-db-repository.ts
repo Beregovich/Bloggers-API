@@ -1,11 +1,21 @@
 import {bloggersCollection, BloggerType} from "./db";
 
 export const bloggersRepository = {
-    async getBloggers() {
-        return await bloggersCollection.find().toArray()
+    async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
+        let allBloggers = await bloggersCollection.find().toArray()
+        const totalCount = allBloggers.length
+        const pagesCount = Math.ceil(allBloggers.length / pageSize)
+
+        return ({
+            pagesCount,
+            page,
+            pageSize,
+            totalCount,
+            items: allBloggers.slice((page - 1) * pageSize, page * pageSize)
+        })
     },
     async getBloggerById(bloggerId: number): Promise<BloggerType | false> {
-        const blogger = await bloggersCollection.findOne({bloggerId})
+        const blogger = await bloggersCollection.findOne({id: bloggerId})
         if (blogger) {
             delete blogger._id
             return blogger
