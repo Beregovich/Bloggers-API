@@ -12,9 +12,9 @@ postsRouter
     //Returns all posts
     .get('/',
         check('page').optional({checkFalsy: true})
-            .isNumeric().withMessage('page should be numeric value'),
+            .isInt({min: 1}).withMessage('page should be numeric value'),
         check('pageSize').optional({checkFalsy: true})
-            .isNumeric().withMessage('pageSize should be numeric value'),
+            .isInt({min: 1}).withMessage('pageSize should be numeric value'),
         check('searchNameTerm').optional({checkFalsy: true})
             .isString().withMessage('searchNameTerm should be string'),
         inputValidatorMiddleware,
@@ -60,7 +60,7 @@ postsRouter
         })
     //Return post by id
     .get('/:postId',
-        check('postId').isNumeric().withMessage('id should be numeric value'),
+        check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const postId = +req.params.postId
@@ -87,7 +87,7 @@ postsRouter
         body('content').isString().withMessage('shortDescription should be a string')
             .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
         body('content').isString().withMessage('shortDescription should be a string'),
-        check('postId').isNumeric().withMessage('id should be numeric value'),
+        check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {

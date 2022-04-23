@@ -14,9 +14,9 @@ bloggersRouter
     //Returns all bloggers
     .get('/',
         check('page').optional({ checkFalsy: true })
-            .isNumeric().withMessage('page should be numeric value'),
+            .isInt({min: 1}).withMessage('page should be numeric positive value'),
         check('pageSize').optional({ checkFalsy: true })
-            .isNumeric().withMessage('pageSize should be numeric value'),
+            .isInt({min: 1}).withMessage('pageSize should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const queryString = req.query
@@ -65,7 +65,7 @@ bloggersRouter
         })
     //Returns blogger by id
     .get('/:bloggerId',
-        check('bloggerId').isNumeric().withMessage('id should be numeric value'),
+        check('bloggerId').isInt({min: 1}).withMessage('id should be integer positive value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
@@ -86,7 +86,7 @@ bloggersRouter
         })
     //return exact blogger's all posts
     .get('/:bloggerId/posts',
-        check('bloggerId').isNumeric().withMessage('id should be numeric value'),
+        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
@@ -109,7 +109,7 @@ bloggersRouter
         })
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
-        check('bloggerId').isNumeric().withMessage('id should be numeric value'),
+        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         body('name').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
         body('youtubeUrl').matches(urlValidator)
@@ -137,7 +137,7 @@ bloggersRouter
         })
     //Delete blogger specified by id
     .delete('/:bloggerId',
-        check('bloggerId').isNumeric().withMessage('id should be numeric value'),
+        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
