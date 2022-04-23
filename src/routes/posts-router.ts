@@ -1,22 +1,21 @@
 import {Request, Response, Router} from 'express'
-import {inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
-import {body, check} from "express-validator";
+import {
+    inputValidatorMiddleware,
+    paginationRules,
+    postValidationRules
+} from "../middlewares/input-validator-middleware";
+import {check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
-import {getPaginationData, PostType, PostWithPaginationType} from "../repositories/db";
+import {getPaginationData, PostWithPaginationType} from "../repositories/db";
 
 export const postsRouter = Router()
 
 postsRouter
     //Returns all posts
     .get('/',
-        check('page').optional({checkFalsy: true})
-            .isInt({min: 1}).withMessage('page should be numeric value'),
-        check('pageSize').optional({checkFalsy: true})
-            .isInt({min: 1}).withMessage('pageSize should be numeric value'),
-        check('searchNameTerm').optional({checkFalsy: true})
-            .isString().withMessage('searchNameTerm should be string'),
+        paginationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
@@ -26,12 +25,7 @@ postsRouter
         })
     //Create new post
     .post('/',
-        body('title').isString().withMessage('Name should be a string')
-            .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('shortDescription').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        body('content').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        postValidationRules,
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
@@ -80,13 +74,7 @@ postsRouter
         })
     //Update existing post by id with InputModel
     .put('/:postId',
-        body('title').isString().withMessage('Name should be a string')
-            .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('shortDescription').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        body('content').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        body('content').isString().withMessage('shortDescription should be a string'),
+        postValidationRules,
         check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         authMiddleware,

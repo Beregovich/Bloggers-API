@@ -1,22 +1,21 @@
 import {Request, Response, Router} from 'express'
-import {inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
-import {body, check} from "express-validator";
+import {
+    bloggerValidationRules,
+    inputValidatorMiddleware,
+    paginationRules,
+    postValidationRules
+} from "../middlewares/input-validator-middleware";
+import {check} from "express-validator";
 import {bloggersService} from "../domain/bloggers-service";
-import {bloggersCollection, getPaginationData, PostType} from "../repositories/db";
+import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
-import {requestsSaverMiddleware} from "../middlewares/request-saver-midleware";
 import {authMiddleware} from "../middlewares/auth-middleware";
-
-const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 export const bloggersRouter = Router()
 
 bloggersRouter
     //Returns all bloggers
     .get('/',
-        check('page').optional({ checkFalsy: true })
-            .isInt({min: 1}).withMessage('page should be numeric positive value'),
-        check('pageSize').optional({ checkFalsy: true })
-            .isInt({min: 1}).withMessage('pageSize should be numeric value'),
+        paginationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const queryString = req.query
@@ -29,9 +28,7 @@ bloggersRouter
     })
     //Create new blogger
     .post('/',
-        body('name').isString().withMessage('Name should be a string')
-            .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('youtubeUrl').matches(urlValidator).withMessage('URL invalid'),
+        bloggerValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             res.status(201).send(
@@ -43,13 +40,7 @@ bloggersRouter
         })
     //Create new post by blogger ID from uri
     .post('/:bloggerId/posts',
-        requestsSaverMiddleware,
-        body('title').isString().withMessage('Name should be a string')
-            .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('shortDescription').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        body('content').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        postValidationRules,
         inputValidatorMiddleware,
         authMiddleware,
         async (req: Request, res: Response) => {
@@ -87,6 +78,7 @@ bloggersRouter
     //return exact blogger's all posts
     .get('/:bloggerId/posts',
         check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        paginationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
@@ -110,10 +102,7 @@ bloggersRouter
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
         check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
-        body('name').isString().withMessage('Name should be a string')
-            .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('youtubeUrl').matches(urlValidator)
-            .withMessage('URL invalid'),
+        bloggerValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
