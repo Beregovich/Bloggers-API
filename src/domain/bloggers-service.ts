@@ -18,7 +18,8 @@ export const bloggersService = {
     },
 
     async updateBloggerById(id: number, name: string, youtubeUrl: string): Promise<BloggerType | boolean> {
-        return await bloggersRepository.updateBloggerById(id, name, youtubeUrl)
+        const bloggerResult = await bloggersRepository.updateBloggerById(id, name, youtubeUrl)
+        return bloggerResult
     },
 
     async deleteBloggerById(id: number): Promise<boolean> {

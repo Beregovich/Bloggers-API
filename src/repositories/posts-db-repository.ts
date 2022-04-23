@@ -61,12 +61,12 @@ export const postsRepository = {
         })
         return result.modifiedCount === 1
     },
-
     async deletePostById(id: number) {
         const result = await postsCollection.deleteOne({id})
         return result.deletedCount === 1
     },
-    async getPostsByBloggerId(bloggerId: number) {
+    async updatePostsByBloggerId(bloggerId: number, newName: string) {
+
         return await postsCollection.find({bloggerId}).toArray()
     }
 }

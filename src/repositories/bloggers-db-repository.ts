@@ -41,6 +41,11 @@ export const bloggersRepository = {
                     "youtubeUrl": youtubeUrl
                 }
             })
+         await postsCollection.updateMany( {bloggerId: id},
+            {$set: {
+                    "bloggerName": name
+                }}
+        )
         return result.modifiedCount === 1
     },
     async deleteBloggerById(id: number): Promise<boolean> {

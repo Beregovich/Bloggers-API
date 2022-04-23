@@ -10,6 +10,7 @@ import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+
 export const bloggersRouter = Router()
 
 bloggersRouter
@@ -19,13 +20,13 @@ bloggersRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const queryString = req.query
-            const page = typeof queryString.page === 'string'?+queryString.page:1
-            const pageSize = typeof queryString.pageSize === 'string'?+queryString.pageSize:5
-            const searchNameTerm = queryString.SearchNameTerm === 'string'?queryString.SearchNameTerm:""
-        res.status(200).send(
-            await bloggersService.getBloggers(page, pageSize, searchNameTerm)
-        )
-    })
+            const page = typeof queryString.page === 'string' ? +queryString.page : 1
+            const pageSize = typeof queryString.pageSize === 'string' ? +queryString.pageSize : 5
+            const searchNameTerm = queryString.SearchNameTerm === 'string' ? queryString.SearchNameTerm : ""
+            res.status(200).send(
+                await bloggersService.getBloggers(page, pageSize, searchNameTerm)
+            )
+        })
     //Create new blogger
     .post('/',
         bloggerValidationRules,
@@ -88,8 +89,7 @@ bloggersRouter
                 const posts = await postsService.getPosts(page, pageSize, searchNameTerm, bloggerId)
                 res.status(200).send(posts)
             } else {
-                res.status(404)
-                res.send({
+                res.status(404).send({
                     "data": {},
                     "errorsMessages": [{
                         message: "posts not found",
