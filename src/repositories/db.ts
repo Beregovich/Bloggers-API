@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import {ObjectId} from "mongodb";
 
 const {MongoClient} = require('mongodb');
 
@@ -32,6 +33,13 @@ export type BloggerType = {
     youtubeUrl: string | null;
 }
 
+export type UserType = {
+    id?: ObjectId;
+    username: string;
+    passwordHash: string;
+    passwordSalt?: string;
+}
+
 const mongoUri =
     process.env.mongoURI
 
@@ -39,6 +47,7 @@ export const client = new MongoClient(mongoUri)
 export const bloggersCollection = client.db("bloggersDB").collection("bloggers")
 export const postsCollection = client.db("bloggersDB").collection("posts")
 export const requestCollection = client.db("bloggersDB").collection("requests")
+export const usersCollection = client.db("bloggersDB").collection("users")
 
 export async function runDb() {
     try {

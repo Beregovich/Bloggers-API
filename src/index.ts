@@ -4,17 +4,20 @@ import bodyParser from 'body-parser'
 import {bloggersRouter} from "./routes/bloggers-router";
 import {postsRouter} from "./routes/posts-router";
 import {runDb} from "./repositories/db";
+import {usersRouter} from "./routes/users-router";
+import {authRouter} from "./routes/auth-router";
 
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000
 //const urlValidator = /^(http(s)?:\/\/)?([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+\/[/a-zA-Z0-9_-]+$/
-const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
 app.use(jsonBodyMiddleware)
 app.use(cors())
 app.use('/api/bloggers', bloggersRouter)
 app.use('/api/posts', postsRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/auth', authRouter)
 
 
 //Home
