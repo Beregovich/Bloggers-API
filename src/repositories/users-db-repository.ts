@@ -1,14 +1,17 @@
-import {bloggersCollection, BloggerType, postsCollection, usersCollection, UserType} from "./db";
+import {usersCollection, UserType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const usersRepository = {
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
-        const filter = {username : {$regex : searchNameTerm ? searchNameTerm : ""}}
+        const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const users = await usersCollection
-            .find(filter)
-            .skip((page - 1) * pageSize)
+            .find(filter).project({_id:0, passwordHash: 0,passwordSalt: 0 })
             .limit(pageSize)
             .toArray()
-        const totalCount = (await usersCollection.find(filter).toArray()).length //Плохо, 2й вызов БД
+        delete users.passwordHash
+        delete users.passwordSalt
+        delete users._id
+        const totalCount = await usersCollection.countDocuments(filter) //Плохо, 2й вызов БД
         const pagesCount = Math.ceil(totalCount / pageSize)
         return ({
             pagesCount,
@@ -20,28 +23,22 @@ export const usersRepository = {
     },
     async createUser(newUser: UserType) {
         await usersCollection.insertOne(newUser)
+        const createdUser = await usersCollection.findOne({id: newUser.id})
         return {
-            id: newUser.id,
-            username: newUser.username,
-            passwordHash: newUser.passwordHash
+            id: createdUser.id,
+            login: createdUser.login,
         }
     },
-    async updateUser(id: number, username: string, passwordHash: string) {
-        const result = await usersCollection.updateOne({id},
-            {
-                $set: {
-                    "username": username,
-                    "passwordHash": passwordHash
-                }
-            })
-        return result.modifiedCount === 1
-    },
-    async deleteUser(id: number): Promise<boolean> {
-        const result = await usersCollection.deleteOne({id})
+    async deleteUser(id: string): Promise<boolean> {
+        const result = await usersCollection.deleteOne({id: new ObjectId(id)})
             return result.deletedCount === 1
         },
-    findUserByUsername(username: string) {
-        const user = usersCollection.findOne({username})
+    findUserById(id: ObjectId) {
+        const user = usersCollection.findOne({id})
+        return user
+    },
+    findUserByLogin(login: string) {
+        const user = usersCollection.findOne({login})
         return user
     }
 }

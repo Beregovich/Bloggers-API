@@ -35,8 +35,8 @@ export type BloggerType = {
 
 export type UserType = {
     id?: ObjectId;
-    username: string;
-    passwordHash: string;
+    login: string;
+    passwordHash?: string;
     passwordSalt?: string;
 }
 

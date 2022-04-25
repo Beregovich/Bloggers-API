@@ -9,33 +9,27 @@ export const usersService = {
         const users = await usersRepository.getUsers(page, pageSize, searchNameTerm)
         return users
     },
-    async createUser(username: string, password: string): Promise<UserType> {
+    async createUser(login: string, password: string): Promise<UserType> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
         const newUser = {
             id: new ObjectId(),
-            username,
+            login,
             passwordHash,
             passwordSalt
         }
         const result = await usersRepository.createUser(newUser)
         return result
     },
-
-    async updateUserById(id: number, name: string, youtubeUrl: string): Promise<UserType | boolean> {
-        const result = await usersRepository.updateUser(id, name, youtubeUrl)
-        return result
-    },
-
-    async deleteUserById(id: number): Promise<boolean> {
+    async deleteUserById(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
         return hash
     },
-    async checkCredentials(username: string, password: string) {
-        const user = await usersRepository.findUserByUsername(username)
+    async checkCredentials(login: string, password: string) {
+        const user = await usersRepository.findUserByLogin(login)
         if (!user) return {
             resultCode: 1,
             data: {
@@ -45,7 +39,7 @@ export const usersService = {
         const passwordHash = await this._generateHash(password, user.passwordSalt)
         const result = user.passwordHash === passwordHash
         if (result) {
-            const token = jwt.sign({userId: user._id}, 'topSecretKey', {expiresIn: '1d'})
+            const token = jwt.sign({userId: user.id}, 'topSecretKey', {expiresIn: '1d'})
             return {
                 resultCode: 0,
                 data: {

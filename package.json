@@ -17,7 +17,7 @@
     "mongodb": "^4.5.0"
   },
   "scripts": {
-    "dev": "npx nodemon --inspect src/index.ts",
+    "dev": "npx nodemon --inspect dist/index.js",
     "watch": "tsc -w",
     "build": "tsc",
     "start": "node dist/index.js"
