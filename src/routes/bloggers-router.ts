@@ -19,10 +19,7 @@ bloggersRouter
         paginationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const queryString = req.query
-            const page = typeof queryString.page === 'string' ? +queryString.page : 1
-            const pageSize = typeof queryString.pageSize === 'string' ? +queryString.pageSize : 5
-            const searchNameTerm = queryString.SearchNameTerm === 'string' ? queryString.SearchNameTerm : ""
+            const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
             res.status(200).send(
                 await bloggersService.getBloggers(page, pageSize, searchNameTerm)
             )
