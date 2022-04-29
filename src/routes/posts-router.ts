@@ -9,6 +9,7 @@ import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData, PostWithPaginationType} from "../repositories/db";
+import {baseAuthMiddleware} from "../middlewares/base-auth-middleware";
 
 export const postsRouter = Router()
 
@@ -28,6 +29,7 @@ postsRouter
         postValidationRules,
         inputValidatorMiddleware,
         authMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId: number = parseInt(req.body.bloggerId)
             const blogger = await bloggersService.getBloggerById(bloggerId)
@@ -78,6 +80,7 @@ postsRouter
         check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         authMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
             const updatePost = {
@@ -115,6 +118,7 @@ postsRouter
         })
     //Delete post specified by id
     .delete('/:postId',
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
             const isDeleted = await postsService.deletePostById(id)

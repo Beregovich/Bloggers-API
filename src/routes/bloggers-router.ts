@@ -10,6 +10,7 @@ import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {baseAuthMiddleware} from "../middlewares/base-auth-middleware";
 
 export const bloggersRouter = Router()
 
@@ -28,6 +29,7 @@ bloggersRouter
     .post('/',
         bloggerValidationRules,
         inputValidatorMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             res.status(201).send(
                 await bloggersService.createBlogger(
@@ -41,6 +43,7 @@ bloggersRouter
         postValidationRules,
         inputValidatorMiddleware,
         authMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             res.status(201).send(
@@ -101,6 +104,7 @@ bloggersRouter
         check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         bloggerValidationRules,
         inputValidatorMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             const blogger = await bloggersService.updateBloggerById(
@@ -125,6 +129,7 @@ bloggersRouter
     .delete('/:bloggerId',
         check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             const isDeleted = await bloggersService.deleteBloggerById(bloggerId)
