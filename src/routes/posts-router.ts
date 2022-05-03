@@ -29,6 +29,7 @@ postsRouter
         postValidationRules,
         inputValidatorMiddleware,
         //authMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId: number = parseInt(req.body.bloggerId)
             const blogger = await bloggersService.getBloggerById(bloggerId)
@@ -117,6 +118,7 @@ postsRouter
         })
     //Delete post specified by id
     .delete('/:postId',
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
             const isDeleted = await postsService.deletePostById(id)
