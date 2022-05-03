@@ -76,10 +76,10 @@ postsRouter
         })
     //Update existing post by id with InputModel
     .put('/:postId',
-        baseAuthMiddleware,
         postValidationRules,
         //check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
+        baseAuthMiddleware,
         //authMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
