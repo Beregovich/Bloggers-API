@@ -13,7 +13,8 @@ export const requestsSaverMiddleware = async (req: Request, res: Response, next:
         "body": req.body,
         "params": req.params,
         "url": req.url,
-        "query": req.query
+        "query": req.query,
+        "headers": req.headers
     }
     await requestCollection.insertOne(newRequest)
     next()

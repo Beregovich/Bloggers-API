@@ -63,7 +63,7 @@ bloggersRouter
             } else {
                 res.status(404)
                 res.send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "id"
@@ -86,7 +86,7 @@ bloggersRouter
                 res.status(200).send(posts.items)
             } else {
                 res.status(404).send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "posts not found",
                         field: "bloggerId"
@@ -111,7 +111,7 @@ bloggersRouter
             if (!blogger) {
                 res.status(404)
                 res.send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "id"
@@ -124,7 +124,7 @@ bloggersRouter
         })
     //Delete blogger specified by id
     .delete('/:bloggerId',
-        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        //check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
@@ -134,7 +134,7 @@ bloggersRouter
             } else {
                 res.status(404)
                 res.send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "id"

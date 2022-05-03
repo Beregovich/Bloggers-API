@@ -76,7 +76,7 @@ postsRouter
     //Update existing post by id with InputModel
     .put('/:postId',
         postValidationRules,
-        check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
+        //check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         //authMiddleware,
         baseAuthMiddleware,
