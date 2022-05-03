@@ -35,7 +35,7 @@ postsRouter
             const blogger = await bloggersService.getBloggerById(bloggerId)
             if (!blogger) {
                 res.status(400).send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [
                         {
                             message: "blogger not found",
@@ -65,7 +65,7 @@ postsRouter
                 res.send(returnedPost)
             } else {
                 res.status(404).send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "post not found",
                         field: "id"
@@ -76,11 +76,11 @@ postsRouter
         })
     //Update existing post by id with InputModel
     .put('/:postId',
+        baseAuthMiddleware,
         postValidationRules,
         //check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         //authMiddleware,
-        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
             const updatePost = {
@@ -92,7 +92,7 @@ postsRouter
             const bloggerToUpdate = await bloggersService.getBloggerById(updatePost.bloggerId)
             if (!bloggerToUpdate) {
                 res.status(400).send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "bloggerId"
@@ -105,7 +105,7 @@ postsRouter
             if (!updatedPost) {
                 res.status(404)
                 res.send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "post not found",
                         field: "id"
@@ -126,7 +126,7 @@ postsRouter
                 res.sendStatus(204)
             } else {
                 res.status(404).send({
-                    "data": {},
+                    //"data": {},
                     "errorsMessages": [{
                         message: "post not found",
                         field: "id"

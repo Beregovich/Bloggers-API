@@ -99,11 +99,11 @@ bloggersRouter
         })
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
+        baseAuthMiddleware,
         requestsSaverMiddleware,
         //check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         bloggerValidationRules,
         inputValidatorMiddleware,
-        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             const blogger = await bloggersService.updateBloggerById(
