@@ -21,9 +21,8 @@ bloggersRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
-            res.status(200).send(
-                await bloggersService.getBloggers(page, pageSize, searchNameTerm)
-            )
+            let bloggers = await bloggersService.getBloggers(page, pageSize, searchNameTerm)
+            res.status(200).send(bloggers.items)
         })
     //Create new blogger
     .post('/',
@@ -31,12 +30,11 @@ bloggersRouter
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            res.status(201).send(
-                await bloggersService.createBlogger(
-                    req.body.name,
-                    req.body.youtubeUrl
-                )
+            let newBlogger = await bloggersService.createBlogger(
+                req.body.name,
+                req.body.youtubeUrl
             )
+            res.status(201).send(newBlogger)
         })
     //Create new post by blogger ID from uri
     .post('/:bloggerId/posts',
@@ -46,14 +44,13 @@ bloggersRouter
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
-            res.status(201).send(
-                await postsService.createPost({
-                    title: req.body.title,
-                    shortDescription: req.body.shortDescription,
-                    content: req.body.content,
-                    bloggerId,
-                })
-            )
+            let newPost = await postsService.createPost({
+                title: req.body.title,
+                shortDescription: req.body.shortDescription,
+                content: req.body.content,
+                bloggerId,
+            })
+            res.status(201).send(newPost)
         })
     //Returns blogger by id
     .get('/:bloggerId',
@@ -87,7 +84,7 @@ bloggersRouter
             const blogger = await bloggersService.getBloggerById(bloggerId)
             if (blogger) {
                 const posts = await postsService.getPosts(page, pageSize, searchNameTerm, bloggerId)
-                res.status(200).send(posts)
+                res.status(200).send(posts.items)
             } else {
                 res.status(404).send({
                     "data": {},
