@@ -8,7 +8,8 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
 
     const result = await usersService.checkCredentials(login, password)
     if(result.resultCode === 1){
-        res.sendStatus(401)
+        next()
+        //res.sendStatus(401)
     }else{
         next()
     }
