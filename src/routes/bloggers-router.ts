@@ -11,6 +11,7 @@ import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {baseAuthMiddleware} from "../middlewares/base-auth-middleware";
+import {requestsSaverMiddleware} from "../middlewares/request-saver-midleware";
 
 export const bloggersRouter = Router()
 
@@ -26,6 +27,7 @@ bloggersRouter
         })
     //Create new blogger
     .post('/',
+        requestsSaverMiddleware,
         bloggerValidationRules,
         inputValidatorMiddleware,
         baseAuthMiddleware,
