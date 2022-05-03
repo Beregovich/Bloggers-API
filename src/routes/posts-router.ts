@@ -97,7 +97,7 @@ postsRouter
                         message: "blogger not found",
                         field: "bloggerId"
                     }],
-                    "resultCode": 0
+                    "resultCode": 1
                 })
                 return
             }
