@@ -5,6 +5,9 @@ import {usersService} from "../domain/users-service";
 export const baseAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
    // const password = typeof req.query.password === 'string' ? req.query.password : ""
    // const login = typeof req.query.login === 'string' ? req.query.login : ""
+    if(!req.headers){
+        res.sendStatus(401)
+    }
     try{
         let authorizationHeader = req.headers.authorization
         let authorizationData = ""
