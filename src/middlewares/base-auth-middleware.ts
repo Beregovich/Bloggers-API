@@ -3,8 +3,9 @@ import {usersService} from "../domain/users-service";
 
 
 export const baseAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const password = req.body.password
-    const login = req.body.login
+    const password = typeof req.query.password === 'string' ? req.query.password : ""
+    const login = typeof req.query.login === 'string' ? req.query.login : ""
+
     const result = await usersService.checkCredentials(login, password)
     if(result.resultCode === 1){
         res.sendStatus(401)

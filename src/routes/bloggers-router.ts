@@ -42,7 +42,7 @@ bloggersRouter
     .post('/:bloggerId/posts',
         postValidationRules,
         inputValidatorMiddleware,
-        authMiddleware,
+        //authMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId

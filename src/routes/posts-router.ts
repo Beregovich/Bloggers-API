@@ -28,7 +28,7 @@ postsRouter
     .post('/',
         postValidationRules,
         inputValidatorMiddleware,
-        authMiddleware,
+        //authMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId: number = parseInt(req.body.bloggerId)
@@ -79,7 +79,7 @@ postsRouter
         postValidationRules,
         check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
-        authMiddleware,
+        //authMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
