@@ -12,6 +12,7 @@ export const postsRepository = {
         const pagesCount = Math.ceil(totalCount / pageSize)
         allPosts = await postsCollection
             .find(filter)
+            .project({_id: 0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()

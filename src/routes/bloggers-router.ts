@@ -27,10 +27,8 @@ bloggersRouter
         })
     //Create new blogger
     .post('/',
-        requestsSaverMiddleware,
         bloggerValidationRules,
         inputValidatorMiddleware,
-        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             let newBlogger = await bloggersService.createBlogger(
                 req.body.name,
@@ -43,7 +41,6 @@ bloggersRouter
         postValidationRules,
         inputValidatorMiddleware,
         //authMiddleware,
-        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             let newPost = await postsService.createPost({
@@ -100,6 +97,7 @@ bloggersRouter
         })
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
+        requestsSaverMiddleware,
         check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         bloggerValidationRules,
         inputValidatorMiddleware,
@@ -128,7 +126,6 @@ bloggersRouter
     .delete('/:bloggerId',
         check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
-        baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             const isDeleted = await bloggersService.deleteBloggerById(bloggerId)

@@ -48,7 +48,7 @@ export const inputValidatorMiddleware = (req: Request, res: Response, next: Next
 
         res.status(400).json(//Возвращаем объект в формате который требует swagger
             {
-                "data": {},
+                //"data": {},
                 "errorsMessages": errorsOccurred,//Сюда записываем наш собственный массив в который мы заполнили выше
                 "resultCode": 1
             }

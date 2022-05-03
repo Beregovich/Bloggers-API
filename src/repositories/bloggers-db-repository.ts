@@ -5,6 +5,7 @@ export const bloggersRepository = {
         const filter = {name : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const bloggers = await bloggersCollection
             .find(filter)
+            .project({_id: 0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
