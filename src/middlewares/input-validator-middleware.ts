@@ -39,12 +39,14 @@ export const inputValidatorMiddleware = (req: Request, res: Response, next: Next
     if (errors.isEmpty()) {//если ошибок нет то
         next() //двигаемся дальше
     } else {
-        const errorsOccurred: ErrorMessageType[] = errors.array().map(e => {
+        const errorsOccurred: ErrorMessageType[] = errors.array({ onlyFirstError: true }).map(e => {
             return {
+
                 message: e.msg,
                 field: e.param
             }
         })
+        let errorsTemplate
 
         res.status(400).json(
             {

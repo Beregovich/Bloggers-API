@@ -104,7 +104,6 @@ bloggersRouter
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
         checkHeaders,
-        requestsSaverMiddleware,
         //check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         bloggerValidationRules,
         inputValidatorMiddleware,
