@@ -2,7 +2,11 @@ import {NextFunction, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 
 export const checkHeaders = async (req: Request, res: Response, next: NextFunction) => {
-    if(!req.headers.authorization || typeof req.headers.authorization != 'string'
+    if(!req.headers){
+        res.sendStatus(401)
+        return
+    }
+    else if(!req.headers.authorization || typeof req.headers.authorization != 'string'
          ){
         res.sendStatus(401)
         return
