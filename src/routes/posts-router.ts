@@ -120,6 +120,7 @@ postsRouter
         })
     //Delete post specified by id
     .delete('/:postId',
+        checkHeaders,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
