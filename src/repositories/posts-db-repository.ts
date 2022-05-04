@@ -40,8 +40,9 @@ export const postsRepository = {
             bloggerName
         })
     },
-    async createPost(newPost: PostType): Promise<PostType> {
+    async createPost(newPost: PostType): Promise<PostType | boolean> {
         const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
+        if(!blogger) return false
         await postsCollection.insertOne({
             ...newPost,
             bloggerName: blogger.name

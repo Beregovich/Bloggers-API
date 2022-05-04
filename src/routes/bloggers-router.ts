@@ -53,6 +53,10 @@ bloggersRouter
                 content: req.body.content,
                 bloggerId,
             })
+            if(!newPost) {
+                res.sendStatus(404)
+                return
+            }
             res.status(201).send(newPost)
         })
     //Returns blogger by id
