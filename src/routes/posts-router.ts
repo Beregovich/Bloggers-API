@@ -26,6 +26,7 @@ postsRouter
         })
     //Create new post
     .post('/',
+        checkHeaders,
         postValidationRules,
         inputValidatorMiddleware,
         //authMiddleware,

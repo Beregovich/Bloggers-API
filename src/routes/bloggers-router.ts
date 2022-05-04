@@ -27,6 +27,7 @@ bloggersRouter
         })
     //Create new blogger
     .post('/',
+        checkHeaders,
         bloggerValidationRules,
         inputValidatorMiddleware,
         baseAuthMiddleware,
@@ -39,6 +40,7 @@ bloggersRouter
         })
     //Create new post by blogger ID from uri
     .post('/:bloggerId/posts',
+        checkHeaders,
         postValidationRules,
         inputValidatorMiddleware,
         //authMiddleware,
