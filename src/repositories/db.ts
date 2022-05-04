@@ -4,8 +4,8 @@ import {ObjectId} from "mongodb";
 const {MongoClient} = require('mongodb');
 
 export const getPaginationData = (query: any) => {
-    const page = typeof query.page === 'string' ? +query.page : 1
-    const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
+    const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
+    const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10
     const searchNameTerm = typeof query.searchNameTerm === 'string' ? query.searchNameTerm : ""
     return {page, pageSize, searchNameTerm}
 }
