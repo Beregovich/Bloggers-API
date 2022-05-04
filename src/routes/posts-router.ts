@@ -39,7 +39,7 @@ postsRouter
                     "errorsMessages": [
                         {
                             message: "blogger not found",
-                            field: "blogger"
+                            field: "bloggerId"
                         }
                     ],
                     "resultCode": 1

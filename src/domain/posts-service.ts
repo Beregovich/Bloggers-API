@@ -26,7 +26,7 @@ export const postsService = {
             ...newPost
         })
     },
-    async deletePostById(id: number) {
+    async deletePostById(id: number): Promise<boolean> {
         return await postsRepository.deletePostById(id)
     }
 }

@@ -7,6 +7,7 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
    // const login = typeof req.query.login === 'string' ? req.query.login : ""
     if(!req.headers){
         res.sendStatus(401)
+        return
     }
     try{
         let authorizationHeader = req.headers.authorization
@@ -16,7 +17,7 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
             authorizationData = authorizationHeader.split(" ")[1]
             authorizationDecoded =  Buffer.from(authorizationData, 'base64').toString()
         }else {
-            res.sendStatus(401)
+            res.sendStatus(400)
         }
         const login = authorizationDecoded.split(":")[0]
         const password = authorizationDecoded.split(":")[1]
