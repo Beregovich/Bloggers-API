@@ -10,7 +10,7 @@ import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {baseAuthMiddleware} from "../middlewares/base-auth-middleware";
+import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 import {requestsSaverMiddleware} from "../middlewares/request-saver-midleware";
 
 export const bloggersRouter = Router()
@@ -99,6 +99,7 @@ bloggersRouter
         })
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
+        checkHeaders,
         requestsSaverMiddleware,
         //check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         bloggerValidationRules,

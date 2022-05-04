@@ -9,7 +9,7 @@ import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData, PostWithPaginationType} from "../repositories/db";
-import {baseAuthMiddleware} from "../middlewares/base-auth-middleware";
+import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 
 export const postsRouter = Router()
 
@@ -77,6 +77,7 @@ postsRouter
     //Update existing post by id with InputModel
     .put('/:postId',
         postValidationRules,
+        checkHeaders,
         //check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         baseAuthMiddleware,
