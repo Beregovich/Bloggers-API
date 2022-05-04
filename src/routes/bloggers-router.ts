@@ -67,7 +67,6 @@ bloggersRouter
             } else {
                 res.status(404)
                 res.send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "id"
@@ -90,7 +89,6 @@ bloggersRouter
                 res.status(200).send(posts.items)
             } else {
                 res.status(404).send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "posts not found",
                         field: "bloggerId"
@@ -141,7 +139,6 @@ bloggersRouter
             } else {
                 res.status(404)
                 res.send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "id"

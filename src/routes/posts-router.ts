@@ -36,7 +36,6 @@ postsRouter
             const blogger = await bloggersService.getBloggerById(bloggerId)
             if (!blogger) {
                 res.status(400).send({
-                    //"data": {},
                     "errorsMessages": [
                         {
                             message: "blogger not found",
@@ -66,7 +65,6 @@ postsRouter
                 res.send(returnedPost)
             } else {
                 res.status(404).send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "post not found",
                         field: "id"
@@ -94,7 +92,6 @@ postsRouter
             const bloggerToUpdate = await bloggersService.getBloggerById(updatePost.bloggerId)
             if (!bloggerToUpdate) {
                 res.status(400).send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "bloggerId"
@@ -107,7 +104,6 @@ postsRouter
             if (!updatedPost) {
                 res.status(404)
                 res.send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "post not found",
                         field: "id"
@@ -129,7 +125,6 @@ postsRouter
                 res.sendStatus(204)
             } else {
                 res.status(404).send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "post not found",
                         field: "id"
