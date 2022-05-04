@@ -5,7 +5,7 @@ const {MongoClient} = require('mongodb');
 
 export const getPaginationData = (query: any) => {
     const page = typeof query.page === 'string' ? +query.page : 1
-    const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 50
+    const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
     const searchNameTerm = typeof query.searchNameTerm === 'string' ? query.searchNameTerm : ""
     return {page, pageSize, searchNameTerm}
 }
