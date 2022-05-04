@@ -7,7 +7,8 @@ export const checkHeaders = async (req: Request, res: Response, next: NextFuncti
         res.sendStatus(401)
         return
     }else if(!req.headers.authorization.split(" ")[1]
-        || req.headers.authorization.split(" ")[1]=="admin:qwerty"){
+        || req.headers.authorization.split(" ")[1]=="admin:qwerty"
+        || req.headers.authorization.split(" ")[0]!="Basic"){
         res.sendStatus(401)
         return
     }
