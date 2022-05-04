@@ -40,16 +40,15 @@ export const inputValidatorMiddleware = (req: Request, res: Response, next: Next
         next() //двигаемся дальше
     } else {
         const errorsOccurred: ErrorMessageType[] = errors.array().map(e => {
-            return {//Перебираем через map  и Пушим ошибки в масиив с типом который описали
-                message: e.msg, //из errors достаем message, msg это обозначение поля от создателей библиотеки
-                field: e.param //из errors достаем param, param это обозначение поля от создателей библиотеки
+            return {
+                message: e.msg,
+                field: e.param
             }
         })
 
-        res.status(400).json(//Возвращаем объект в формате который требует swagger
+        res.status(400).json(
             {
-                //"data": {},
-                "errorsMessages": errorsOccurred,//Сюда записываем наш собственный массив в который мы заполнили выше
+                "errorsMessages": errorsOccurred,
                 "resultCode": 1
             }
         )

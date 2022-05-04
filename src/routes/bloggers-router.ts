@@ -23,7 +23,7 @@ bloggersRouter
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
             let bloggers = await bloggersService.getBloggers(page, pageSize, searchNameTerm)
-            res.status(200).send(bloggers.items)
+            res.status(200).send(bloggers)
         })
     //Create new blogger
     .post('/',
@@ -86,7 +86,7 @@ bloggersRouter
             const blogger = await bloggersService.getBloggerById(bloggerId)
             if (blogger) {
                 const posts = await postsService.getPosts(page, pageSize, searchNameTerm, bloggerId)
-                res.status(200).send(posts.items)
+                res.status(200).send(posts)
             } else {
                 res.status(404).send({
                     "errorsMessages": [{
@@ -114,7 +114,6 @@ bloggersRouter
             if (!blogger) {
                 res.status(404)
                 res.send({
-                    //"data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
                         field: "id"

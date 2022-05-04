@@ -22,7 +22,7 @@ postsRouter
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
             const posts: PostWithPaginationType = await postsService
                 .getPosts(page, pageSize, searchNameTerm, null)
-            res.status(200).send(posts.items)
+            res.status(200).send(posts)
         })
     //Create new post
     .post('/',
