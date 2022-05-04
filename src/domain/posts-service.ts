@@ -12,7 +12,7 @@ export const postsService = {
             return post
         }else return false
     },
-    async createPost(newPostData: PostType): Promise<PostType> {
+    async createPost(newPostData: PostType): Promise<PostType | boolean> {
         const postToCreate = {
             ...newPostData,
             id: +(new Date()),
