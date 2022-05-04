@@ -4,19 +4,19 @@ import {body, check, validationResult} from "express-validator";
 //Rules
 const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 export const postValidationRules = [
-    body('title').isString().isLength({max: 30}).withMessage('Name should be a string less 30ch')
-        .trim().not().isEmpty().withMessage('Name should be not empty'),
+    body('title').isString().isLength({max: 30}).trim().not().isEmpty().withMessage('Name should be a string less 30ch'),
+        //.trim().not().isEmpty().withMessage('Name should be not empty'),
     body('shortDescription').isString()
-        .isLength({max: 100}).withMessage('shortDescription should be a string less 100ch')
-        .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        .isLength({max: 100}).trim().not().isEmpty().withMessage('shortDescription should be a string less 100ch'),
+        //.trim().not().isEmpty().withMessage('shortDescription should be not empty'),
     body('content').isString()
-        .isLength({max: 1000}).withMessage('shortDescription should be a string less 1000ch')
-        .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        .isLength({max: 1000}).trim().not().isEmpty().withMessage('shortDescription should be a string less 1000ch')
+        //.trim().not().isEmpty().withMessage('shortDescription should be not empty'),
 ]
 
 export const bloggerValidationRules = [
-    body('name').isString().isLength({max: 15}).withMessage('Name should be a string')
-        .trim().not().isEmpty().withMessage('Name should be not empty'),
+    body('name').isString().isLength({max: 15}).trim().not().isEmpty().withMessage('Name should be a string'),
+        //.trim().not().isEmpty().withMessage('Name should be not empty'),
     body('youtubeUrl').matches(urlValidator).isLength({max: 100}).withMessage('URL invalid'),
 ]
 
