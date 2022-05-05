@@ -21,7 +21,7 @@ export const bloggerValidationRules = [
 ]
 
 export const paginationRules = [
-    check('page').optional({checkFalsy: true})
+    check('page').optional({checkFalsy: true,  }, )
         .isInt({min: 1}).withMessage('page should be numeric value'),
     check('pageSize').optional({checkFalsy: true})
         .isInt({min: 1}).withMessage('pageSize should be numeric value'),
@@ -41,7 +41,6 @@ export const inputValidatorMiddleware = (req: Request, res: Response, next: Next
     } else {
         const errorsOccurred: ErrorMessageType[] = errors.array({ onlyFirstError: true }).map(e => {
             return {
-
                 message: e.msg,
                 field: e.param
             }
