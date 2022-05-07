@@ -5,6 +5,7 @@ import {ObjectId} from "mongodb";
 import jwt from 'jsonwebtoken'
 
 export const usersService = {
+
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
         const users = await usersRepository.getUsers(page, pageSize, searchNameTerm)
         return users

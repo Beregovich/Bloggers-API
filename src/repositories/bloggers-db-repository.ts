@@ -9,7 +9,7 @@ export const bloggersRepository = {
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        const totalCount = (await bloggersCollection.find(filter).toArray()).length //Плохо, 2й вызов БД
+        const totalCount = await bloggersCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         return ({
             pagesCount,

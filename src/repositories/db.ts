@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import {ObjectId} from "mongodb";
-
 const {MongoClient} = require('mongodb');
 
 export const getPaginationData = (query: any) => {
@@ -39,9 +38,7 @@ export type UserType = {
     passwordHash?: string;
     passwordSalt?: string;
 }
-
-const mongoUri =
-    process.env.mongoURI
+const mongoUri = process.env.mongoURI
 
 export const client = new MongoClient(mongoUri)
 export const bloggersCollection = client.db("bloggersDB").collection("bloggers")

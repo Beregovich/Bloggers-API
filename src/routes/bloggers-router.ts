@@ -9,9 +9,7 @@ import {check} from "express-validator";
 import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
-import {authMiddleware} from "../middlewares/auth-middleware";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
-import {requestsSaverMiddleware} from "../middlewares/request-saver-midleware";
 
 export const bloggersRouter = Router()
 
@@ -43,7 +41,6 @@ bloggersRouter
         checkHeaders,
         postValidationRules,
         inputValidatorMiddleware,
-        //authMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
@@ -104,7 +101,7 @@ bloggersRouter
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
         checkHeaders,
-        //check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         bloggerValidationRules,
         inputValidatorMiddleware,
         baseAuthMiddleware,
@@ -130,7 +127,7 @@ bloggersRouter
     //Delete blogger specified by id
     .delete('/:bloggerId',
         checkHeaders,
-        //check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {

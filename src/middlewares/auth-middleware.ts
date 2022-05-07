@@ -5,17 +5,16 @@ import {ObjectId} from "mongodb";
 import {UserType} from "../repositories/db";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.headers.authorization){
+    if (!req.headers.authorization) {
         res.send(401)
         return
     }
     const token = req.headers.authorization.split(" ")[1]
-
-    try{
-        const decoded: any = jwt.verify(token, "topSecretKey")
+    try {
+        const decoded: any = jwt.verify(token, process.env.SECRET_KEY || "NoAnySecretsAtAll")
         const user: UserType = await usersRepository.findUserById(new ObjectId(decoded.userId))
         req.user = user
-    }catch (e) {
+    } catch (e) {
         console.log(e)
         res.send(401)
         return

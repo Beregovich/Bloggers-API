@@ -1,11 +1,10 @@
 import {NextFunction, Request, Response} from "express";
-import {client, requestCollection} from "../repositories/db";
+import {requestCollection} from "../repositories/db";
+import {format} from 'date-fns'
 
 export const requestsSaverMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const date = new Date()
-    const dateNow = `${date.getFullYear()}.${date.getMonth()},${date.getDate()} - ${date.getHours()}:${date.getMinutes()}`
     const newRequest = {
-        "date": dateNow,
+        "date": format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
         "method": req.method,
         "baseUrl": req.baseUrl,
         "body": req.body,

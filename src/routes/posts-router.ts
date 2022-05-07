@@ -5,7 +5,6 @@ import {
     postValidationRules
 } from "../middlewares/input-validator-middleware";
 import {check} from "express-validator";
-import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData, PostWithPaginationType} from "../repositories/db";
@@ -29,7 +28,6 @@ postsRouter
         checkHeaders,
         postValidationRules,
         inputValidatorMiddleware,
-        //authMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId: number = parseInt(req.body.bloggerId)
@@ -77,10 +75,9 @@ postsRouter
     .put('/:postId',
         postValidationRules,
         checkHeaders,
-        //check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
+        check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         baseAuthMiddleware,
-        //authMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
             const updatePost = {

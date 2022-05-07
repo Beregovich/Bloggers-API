@@ -8,7 +8,7 @@ export const postsRepository = {
         let filter = bloggerId
             ?{title : {$regex : searchNameTerm ? searchNameTerm : ""}, bloggerId }
             :{title : {$regex : searchNameTerm ? searchNameTerm : ""}}
-        const totalCount = (await postsCollection.find(filter).toArray()).length
+        const totalCount = await postsCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         allPosts = await postsCollection
             .find(filter)
@@ -66,9 +66,5 @@ export const postsRepository = {
     async deletePostById(id: number) {
         const result = await postsCollection.deleteOne({id})
         return result.deletedCount === 1
-    },
-    async updatePostsByBloggerId(bloggerId: number, newName: string) {
-
-        return await postsCollection.find({bloggerId}).toArray()
     }
 }
