@@ -1,38 +1,43 @@
 import {UserType} from "../repositories/db";
-import {usersRepository} from "../repositories/users-db-repository";
+import {commentsRepository} from "../repositories/users-db-repository";
 import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
 import jwt from 'jsonwebtoken'
-import {authService} from "./auth-service";
 
-export const usersService = {
 
-    async getUsers(page: number, pageSize: number, searchNameTerm: string) {
-        const users = await usersRepository.getUsers(page, pageSize, searchNameTerm)
+export const commentsService = {
+    async getComments(page: number, pageSize: number, searchNameTerm: string) {
+        const users = await commentsRepository.getUsers(page, pageSize, searchNameTerm)
         return users
     },
-    async createUser(login: string, password: string): Promise<UserType> {
-        const passwordHash = await authService._generateHash(password)
+    async createComments(login: string, password: string): Promise<UserType> {
+        const passwordSalt = await bcrypt.genSalt(10)
+        const passwordHash = await this._generateHash(password, passwordSalt)
         const newUser = {
             id: new ObjectId(),
             login,
             passwordHash,
+            passwordSalt
         }
-        const result = await usersRepository.createUser(newUser)
+        const result = await commentsRepository.createUser(newUser)
         return result
     },
-    async deleteUserById(id: string): Promise<boolean> {
-        return await usersRepository.deleteUser(id)
+    async deleteComments(id: string): Promise<boolean> {
+        return await commentsRepository.deleteUser(id)
+    },
+    async _generateHash(password: string, salt: string) {
+        const hash = await bcrypt.hash(password, salt)
+        return hash
     },
     async checkCredentials(login: string, password: string) {
-        const user = await usersRepository.findUserByLogin(login)
+        const user = await commentsRepository.findUserByLogin(login)
         if (!user) return {
             resultCode: 1,
             data: {
                 token: null
             }
         }
-        const passwordHash = await authService._generateHash(password)
+        const passwordHash = await this._generateHash(password, user.passwordSalt)
         const result = user.passwordHash === passwordHash
         if (result) {
             const token = jwt.sign({userId: user.id}, 'topSecretKey', {expiresIn: '1d'})

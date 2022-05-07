@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
+import {authService} from "../domain/auth-service";
 
 export const checkHeaders = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers) {
@@ -35,7 +36,7 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
         }
         const login = authorizationDecoded.split(":")[0]
         const password = authorizationDecoded.split(":")[1]
-        const result = await usersService.checkCredentials(login, password)
+        const result = await authService.checkCredentials(login, password)
         if (result.resultCode === 1) {
             res.sendStatus(401)
         } else {

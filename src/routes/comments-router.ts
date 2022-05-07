@@ -6,36 +6,32 @@ import {
     postValidationRules
 } from "../middlewares/input-validator-middleware";
 import {check} from "express-validator";
-import {bloggersService} from "../domain/bloggers-service";
-import {getPaginationData} from "../repositories/db";
-import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {commentsService} from "../domain/comments-service";
 
-export const bloggersRouter = Router()
+export const commentsRouter = Router()
 
-bloggersRouter
+commentsRouter
     //Returns all comments
     .get('/',
         paginationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-
+            const comments = await commentsService.getComments(1,10,"")
+            res.send(comments)
         })
     //Create new comment
     .post('/',
+        authMiddleware,
         bloggerValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            res.status(201).send(
-                await bloggersService.createBlogger(
-                    req.body.name,
-                    req.body.youtubeUrl
-                )
-            )
+
         })
 
     //Update comment
     .put('/:commentId',
+        authMiddleware,
         check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
@@ -43,6 +39,7 @@ bloggersRouter
         })
     //Delete comment specified by id
     .delete('/:commentId',
+        authMiddleware,
         check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {

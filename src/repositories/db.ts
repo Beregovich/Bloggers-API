@@ -38,6 +38,14 @@ export type UserType = {
     passwordHash?: string;
     passwordSalt?: string;
 }
+export type CommentType = {
+    id: number;
+    content: string; //20<len<300
+    userId: string;
+    userLogin: string;
+    addedAt: string;
+}
+
 const mongoUri = process.env.mongoURI
 
 export const client = new MongoClient(mongoUri)
@@ -45,6 +53,7 @@ export const bloggersCollection = client.db("bloggersDB").collection("bloggers")
 export const postsCollection = client.db("bloggersDB").collection("posts")
 export const requestCollection = client.db("bloggersDB").collection("requests")
 export const usersCollection = client.db("bloggersDB").collection("users")
+export const commentsCollection = client.db("bloggersDB").collection("comments")
 
 export async function runDb() {
     try {

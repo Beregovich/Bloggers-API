@@ -5,13 +5,14 @@ export const usersRepository = {
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
         const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const users = await usersCollection
-            .find(filter).project({_id:0, passwordHash: 0,passwordSalt: 0 })
+            .find(filter)
+            .project({_id:0, passwordHash: 0,passwordSalt: 0 })
             .limit(pageSize)
             .toArray()
         delete users.passwordHash
         delete users.passwordSalt
         delete users._id
-        const totalCount = await usersCollection.countDocuments(filter) //Плохо, 2й вызов БД
+        const totalCount = await usersCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         return ({
             pagesCount,

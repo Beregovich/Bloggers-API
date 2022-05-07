@@ -6,6 +6,7 @@ import {postsRouter} from "./routes/posts-router";
 import {runDb} from "./repositories/db";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
+import {commentsRouter} from "./routes/comments-router";
 
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
@@ -17,7 +18,9 @@ app.use(cors())
 app.use('/api/bloggers', bloggersRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/comments', commentsRouter)
 app.use('/api/auth', authRouter)
+
 
 
 //Home
