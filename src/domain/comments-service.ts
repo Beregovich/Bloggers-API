@@ -1,5 +1,5 @@
 import {UserType} from "../repositories/db";
-import {commentsRepository} from "../repositories/users-db-repository";
+import {commentsRepository} from "../repositories/comments-db-repository";
 import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
 import jwt from 'jsonwebtoken'
@@ -7,23 +7,20 @@ import jwt from 'jsonwebtoken'
 
 export const commentsService = {
     async getComments(page: number, pageSize: number, searchNameTerm: string) {
-        const users = await commentsRepository.getUsers(page, pageSize, searchNameTerm)
-        return users
+        const comments = await commentsRepository.getComments(page, pageSize, searchNameTerm)
+        return comments
     },
-    async createComments(login: string, password: string): Promise<UserType> {
+    async createComment(login: string, password: string): Promise<UserType> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
         const newUser = {
             id: new ObjectId(),
-            login,
-            passwordHash,
-            passwordSalt
         }
-        const result = await commentsRepository.createUser(newUser)
+        const result = await commentsRepository.createComment(newUser)
         return result
     },
     async deleteComments(id: string): Promise<boolean> {
-        return await commentsRepository.deleteUser(id)
+        return await commentsRepository.deleteComment(id)
     },
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
