@@ -33,7 +33,7 @@ postsRouter
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            const bloggerId: number = parseInt(req.body.bloggerId)
+            const bloggerId: string = req.body.bloggerId
             const blogger = await bloggersService.getBloggerById(bloggerId)
             if (!blogger) {
                 res.status(400).send({
@@ -60,7 +60,7 @@ postsRouter
         check('postId').isInt({min: 1}).withMessage('id should be numeric value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const postId = +req.params.postId
+            const postId = req.params.postId
             const returnedPost = await postsService.getPostById(postId)
             if (returnedPost) {
                 res.send(returnedPost)
@@ -82,7 +82,7 @@ postsRouter
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.postId
+            const id = req.params.postId
             const updatePost = {
                 title: req.body.title,
                 shortDescription: req.body.shortDescription,
@@ -119,7 +119,7 @@ postsRouter
         checkHeaders,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.postId
+            const id = req.params.postId
             const isDeleted = await postsService.deletePostById(id)
             if (isDeleted) {
                 res.sendStatus(204)

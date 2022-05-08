@@ -25,7 +25,7 @@ export const usersRepository = {
     },
     async createUser(newUser: UserType) {
         await usersCollection.insertOne(newUser)
-        const createdUser = await usersCollection.findOne({id: newUser.id})
+        const createdUser = await usersCollection.findOne({id: new ObjectId(newUser.id)})
         return {
             id: createdUser.id,
             login: createdUser.login,

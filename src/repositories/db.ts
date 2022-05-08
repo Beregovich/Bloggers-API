@@ -11,26 +11,26 @@ export const getPaginationData = (query: any) => {
 }
 
 export type PostType = {
-    id?: ObjectId;
+    id?: string | ObjectId;
     title: string | null;
     shortDescription: string | null;
     content: string | null;
-    bloggerId: number;
+    bloggerId: string;
     bloggerName?: string | null;
 }
 export type BloggerType = {
-    id: ObjectId;
+    id: string | ObjectId;
     name: string | null;
     youtubeUrl: string | null;
 }
 export type UserType = {
-    id?: ObjectId;
+    id?: string | ObjectId;
     login: string;
     passwordHash?: string;
     passwordSalt?: string;
 }
 export type CommentType = {
-    id: ObjectId;
+    id: string | ObjectId;
     content: string; //20<len<300
     postId: string;
     userLogin: string;
