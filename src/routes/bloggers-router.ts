@@ -127,7 +127,7 @@ bloggersRouter
     //Delete blogger specified by id
     .delete('/:bloggerId',
         checkHeaders,
-        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        check('bloggerId').not().isEmpty().withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
