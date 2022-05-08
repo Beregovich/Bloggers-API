@@ -38,7 +38,7 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
         const password = authorizationDecoded.split(":")[1]
         const hash = await authService._generateHash( "qwerty")
         const result = await authService._isPasswordCorrect(password, hash)
-        if (result && login==="admin") {
+        if (!result || login!="admin") {
             res.sendStatus(401)
             return
         } else {
