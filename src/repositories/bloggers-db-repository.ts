@@ -1,4 +1,5 @@
 import {bloggersCollection, BloggerType, postsCollection} from "./db";
+import {ObjectId} from "mongodb";
 
 export const bloggersRepository = {
     async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
@@ -19,8 +20,8 @@ export const bloggersRepository = {
             items: bloggers
         })
     },
-    async getBloggerById(bloggerId: number): Promise<BloggerType | false> {
-        const blogger = await bloggersCollection.findOne({id: bloggerId})
+    async getBloggerById(bloggerId: string): Promise<BloggerType | false> {
+        const blogger = await bloggersCollection.findOne({id: new ObjectId(bloggerId)})
         if (blogger) {
             delete blogger._id
             return blogger
@@ -34,23 +35,23 @@ export const bloggersRepository = {
             youtubeUrl: newBlogger.youtubeUrl
         }
     },
-    async updateBloggerById(id: number, name: string, youtubeUrl: string) {
-        const result = await bloggersCollection.updateOne({id},
+    async updateBloggerById(id: string, name: string, youtubeUrl: string) {
+        const result = await bloggersCollection.updateOne({id: new ObjectId(id)},
             {
                 $set: {
                     "name": name,
                     "youtubeUrl": youtubeUrl
                 }
             })
-         await postsCollection.updateMany( {bloggerId: id},
+         await postsCollection.updateMany( {bloggerId: new ObjectId(id)},
             {$set: {
                     "bloggerName": name
                 }}
         )
         return result.modifiedCount === 1
     },
-    async deleteBloggerById(id: number): Promise<boolean> {
-        const result = await bloggersCollection.deleteOne({id})
+    async deleteBloggerById(id: string): Promise<boolean> {
+        const result = await bloggersCollection.deleteOne({id: new ObjectId(id)})
             return result.deletedCount === 1
         }
 }

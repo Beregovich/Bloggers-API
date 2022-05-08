@@ -1,13 +1,14 @@
 import {postsRepository} from "../repositories/posts-db-repository";
 import {PostType} from "../repositories/db";
+import {ObjectId} from "mongodb";
 
 export const postsService = {
 
-    async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: number | null) {
+    async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
         const postsToSend = await postsRepository.getPosts(page, pageSize, searchNameTerm, bloggerId)
         return postsToSend
     },
-    async getPostById(id: number): Promise<PostType | false> {
+    async getPostById(id: string): Promise<PostType | false> {
         const post = await postsRepository.getPostById(id)
         if (post) {
             return post
@@ -16,18 +17,18 @@ export const postsService = {
     async createPost(newPostData: PostType): Promise<PostType | boolean> {
         const postToCreate = {
             ...newPostData,
-            id: +(new Date()),
+            id: new ObjectId(),
         }
         return await postsRepository.createPost(postToCreate)
 
     },
-    async updatePostById(id: number, newPost: PostType) {
+    async updatePostById(id: string, newPost: PostType) {
         return await postsRepository.updatePostById({
-            id,
+            id: new ObjectId(id),
             ...newPost
         })
     },
-    async deletePostById(id: number): Promise<boolean> {
+    async deletePostById(id: string): Promise<boolean> {
         return await postsRepository.deletePostById(id)
     }
 }

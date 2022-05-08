@@ -11,7 +11,7 @@ export const getPaginationData = (query: any) => {
 }
 
 export type PostType = {
-    id?: number;
+    id?: ObjectId;
     title: string | null;
     shortDescription: string | null;
     content: string | null;
@@ -19,7 +19,7 @@ export type PostType = {
     bloggerName?: string | null;
 }
 export type BloggerType = {
-    id: number;
+    id: ObjectId;
     name: string | null;
     youtubeUrl: string | null;
 }

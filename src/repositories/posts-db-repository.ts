@@ -1,12 +1,13 @@
 import {bloggersCollection, BloggerType, postsCollection, PostType} from "./db";
 import {bloggersRepository} from "./bloggers-db-repository";
+import {ObjectId} from "mongodb";
 
 export const postsRepository = {
 
-    async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: number | null) {
+    async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
         let allPosts: PostType[] = []
         let filter = bloggerId
-            ?{title : {$regex : searchNameTerm ? searchNameTerm : ""}, bloggerId }
+            ?{title : {$regex : searchNameTerm ? searchNameTerm : ""}, bloggerId: new ObjectId(bloggerId) }
             :{title : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const totalCount = await postsCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
@@ -24,8 +25,8 @@ export const postsRepository = {
             items: allPosts
         })
     },
-    async getPostById(id: number) {
-        const post = await postsCollection.findOne({id: id})
+    async getPostById(id: string) {
+        const post = await postsCollection.findOne({id: new ObjectId(id)})
         if (!post) return false
         const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
         if (!blogger) return false
@@ -63,8 +64,8 @@ export const postsRepository = {
         })
         return result.modifiedCount === 1
     },
-    async deletePostById(id: number) {
-        const result = await postsCollection.deleteOne({id})
+    async deletePostById(id: string) {
+        const result = await postsCollection.deleteOne({id: new ObjectId(id)})
         return result.deletedCount === 1
     }
 }

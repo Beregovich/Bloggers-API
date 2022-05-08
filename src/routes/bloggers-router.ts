@@ -50,7 +50,7 @@ bloggersRouter
                 content: req.body.content,
                 bloggerId,
             })
-            if(!newPost) {
+            if (!newPost) {
                 res.sendStatus(404)
                 return
             }
@@ -61,7 +61,7 @@ bloggersRouter
         check('bloggerId').isInt({min: 1}).withMessage('id should be integer positive value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const bloggerId = +req.params.bloggerId
+            const bloggerId = req.params.bloggerId
             const blogger = await bloggersService.getBloggerById(bloggerId)
             if (blogger) {
                 res.status(200).send(blogger)
@@ -83,7 +83,7 @@ bloggersRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
-            const bloggerId = +req.params.bloggerId
+            const bloggerId = req.params.bloggerId
             const blogger = await bloggersService.getBloggerById(bloggerId)
             if (blogger) {
                 const posts = await postsService.getPosts(page, pageSize, searchNameTerm, bloggerId)
@@ -106,7 +106,7 @@ bloggersRouter
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            const bloggerId = +req.params.bloggerId
+            const bloggerId = req.params.bloggerId
             const blogger = await bloggersService.updateBloggerById(
                 bloggerId,
                 req.body.name,
@@ -131,7 +131,7 @@ bloggersRouter
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            const bloggerId = +req.params.bloggerId
+            const bloggerId = req.params.bloggerId
             const isDeleted = await bloggersService.deleteBloggerById(bloggerId)
             if (isDeleted) {
                 res.send(204)
