@@ -40,8 +40,9 @@ bloggersRouter
     .post('/:bloggerId/posts',
         checkHeaders,
         postValidationRules,
-        inputValidatorMiddleware,
         baseAuthMiddleware,
+        check('bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
+        inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = req.params.bloggerId
             let newPost = await postsService.createPost({
@@ -58,7 +59,7 @@ bloggersRouter
         })
     //Returns blogger by id
     .get('/:bloggerId',
-        check('bloggerId').isInt({min: 1}).withMessage('id should be integer positive value'),
+        check('bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = req.params.bloggerId
@@ -78,7 +79,7 @@ bloggersRouter
         })
     //return exact blogger's all posts
     .get('/:bloggerId/posts',
-        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        check('bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         paginationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
@@ -101,12 +102,12 @@ bloggersRouter
     //Update existing Blogger by id with InputModel
     .put('/:bloggerId',
         checkHeaders,
-        check('bloggerId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        baseAuthMiddleware,
+        check('bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         bloggerValidationRules,
         inputValidatorMiddleware,
-        baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            const bloggerId = req.params.bloggerId
+            const bloggerId: string = ""+req.params.bloggerId
             const blogger = await bloggersService.updateBloggerById(
                 bloggerId,
                 req.body.name,
@@ -127,9 +128,9 @@ bloggersRouter
     //Delete blogger specified by id
     .delete('/:bloggerId',
         checkHeaders,
-        check('bloggerId').not().isEmpty().withMessage('id should be positive integer value'),
-        inputValidatorMiddleware,
         baseAuthMiddleware,
+        check('bloggerId').trim().not().isEmpty().withMessage('id should be not empty'),
+        inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = req.params.bloggerId
             const isDeleted = await bloggersService.deleteBloggerById(bloggerId)
