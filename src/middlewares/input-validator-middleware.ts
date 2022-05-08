@@ -18,6 +18,16 @@ export const bloggerValidationRules = [
     body('name').isString().isLength({max: 15}).trim().not().isEmpty().withMessage('Name should be a string'),
     body('youtubeUrl').matches(urlValidator).isLength({max: 100}).withMessage('URL invalid'),
 ]
+export const userValidationRules = [
+    body("login").isString().isLength({min: 3, max: 10})
+        .withMessage('Login length should be:  3<len<10'),
+    body("password").isString().isLength({min: 6, max: 20})
+        .withMessage('Password length should be:  6<len<20')
+]
+export const commentValidationRules = [
+    body("content").isString().isLength({min: 20, max: 300})
+        .withMessage('Password length should be:  20<len<300')
+]
 export const paginationRules = [
     check('page').optional({checkFalsy: true,  }, )
         .isInt({min: 1}).withMessage('page should be numeric value'),

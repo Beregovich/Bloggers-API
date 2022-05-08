@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {commentsRepository} from "../repositories/users-db-repository";
 import {ObjectId} from "mongodb";
 import {UserType} from "../repositories/db";
+import {commentsRepository} from "../repositories/comments-db-repository";
+import {usersRepository} from "../repositories/users-db-repository";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
@@ -18,8 +19,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
     try {
         const decoded: any = jwt.verify(token, process.env.SECRET_KEY || "NoAnySecretsAtAll")
-        const user: UserType = await commentsRepository.findUserById(new ObjectId(decoded.userId))
+        const user: UserType = await usersRepository.findUserById(new ObjectId(decoded.userId))
         req.user = user
+        res.locals.userData = user
     } catch (e) {
         console.log(e)
         res.send(401)

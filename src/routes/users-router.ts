@@ -3,7 +3,7 @@ import {
     bloggerValidationRules,
     inputValidatorMiddleware,
     paginationRules,
-    postValidationRules
+    postValidationRules, userValidationRules
 } from "../middlewares/input-validator-middleware";
 import {check} from "express-validator";
 import {bloggersService} from "../domain/bloggers-service";
@@ -12,6 +12,7 @@ import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersService} from "../domain/users-service";
 import {ObjectId} from "mongodb";
+import {baseAuthMiddleware} from "../middlewares/base-auth-middleware";
 
 export const usersRouter = Router()
 
@@ -22,26 +23,26 @@ usersRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
-            const users =  await usersService.getUsers(page, pageSize, searchNameTerm)
+            const users = await usersService.getUsers(page, pageSize, searchNameTerm)
             res.status(200).send(users)
         })
     //Create new user
     .post('/',
+        baseAuthMiddleware,
+        userValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            res.status(201).send(
-                await usersService.createUser(
-                    req.body.login,
-                    req.body.password
-                )
+            const createdUser = await usersService.createUser(
+                req.body.login,
+                req.body.password
             )
+            res.status(201).send(createdUser)
         })
     //Delete user
     .delete('/:userId',
-        //check('userId').isInt({min: 1}).withMessage('id should be positive integer value'),
-        inputValidatorMiddleware,
+        baseAuthMiddleware,
         async (req: Request, res: Response) => {
-            const userId  = ""+req.params.userId
+            const userId = req.params.userId
             const isDeleted = await usersService.deleteUserById(userId)
             if (isDeleted) {
                 res.send(204)

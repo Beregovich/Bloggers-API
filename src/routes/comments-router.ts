@@ -8,24 +8,31 @@ import {
 import {check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {commentsService} from "../domain/comments-service";
+import {getPaginationData, QueryDataType} from "../repositories/db";
+import {checkOwnership} from "../middlewares/check-ownership-middleware";
 
 export const commentsRouter = Router()
 
 commentsRouter
     //Returns all comments
-    .get('/',
+    /*.get('/',
         paginationRules,
-        inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const comments = await commentsService.getComments(1,10,"")
+            const paginationData: QueryDataType = getPaginationData(req.query)
+            const comments = await commentsService.getComments(paginationData, null)
             res.send(comments)
-        })
-    //Create new comment
-    .post('/',
-        authMiddleware,
-        bloggerValidationRules,
-        inputValidatorMiddleware,
+        })*/
+
+    .get('/:commentId',
+        paginationRules,
         async (req: Request, res: Response) => {
+            const commentId = req.params.commentId
+            const comment = await commentsService.getCommentById(commentId)
+            if(comment){
+                res.send(comment)
+            }else{
+                res.sendStatus(404)
+            }
 
         })
 
@@ -35,13 +42,20 @@ commentsRouter
         check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-
         })
     //Delete comment specified by id
     .delete('/:commentId',
         authMiddleware,
-        check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        checkOwnership,
+        //check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-
+            const commentId = req.params.commentId
+            //403 error
+            const result = await commentsService.deleteComment(commentId)
+            if(result){
+                res.sendStatus(204)
+            }else{
+                res.sendStatus(404)
+            }
         })

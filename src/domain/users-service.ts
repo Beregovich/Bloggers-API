@@ -18,13 +18,13 @@ export const usersService = {
             login,
             passwordHash,
         }
-        const result = await usersRepository.createUser(newUser)
-        return result
+        const createdUser = await usersRepository.createUser(newUser)
+        return createdUser
     },
     async deleteUserById(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
-    async checkCredentials(login: string, password: string) {
+    /*async checkCredentials(login: string, password: string) {
         const user = await usersRepository.findUserByLogin(login)
         if (!user) return {
             resultCode: 1,
@@ -50,7 +50,7 @@ export const usersService = {
                 }
             }
         }
-    }
+    }*/
 }
 
 

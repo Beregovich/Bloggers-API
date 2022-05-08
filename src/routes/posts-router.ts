@@ -1,5 +1,6 @@
 import {Request, Response, Router} from 'express'
 import {
+    commentValidationRules,
     inputValidatorMiddleware,
     paginationRules,
     postValidationRules
@@ -9,6 +10,8 @@ import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData, PostWithPaginationType} from "../repositories/db";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
+import {commentsService} from "../domain/comments-service";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const postsRouter = Router()
 
@@ -129,4 +132,28 @@ postsRouter
                     "resultCode": 1
                 })
             }
+        })
+    .get('/:postId/comments',
+        paginationRules,
+        inputValidatorMiddleware,
+        async (req: Request, res: Response) => {
+            const id = req.params.postId
+            const paginationData = getPaginationData(req.query)
+            const comments: PostWithPaginationType = await commentsService
+                .getComments(paginationData, id)
+            res.status(200).send(comments)
+        })
+    .post('/:postId/comments',
+        authMiddleware,
+       commentValidationRules,
+        inputValidatorMiddleware,
+        async (req: Request, res: Response) => {
+            const postId = req.params.postId
+            const paginationData = getPaginationData(req.query)
+            //const userLogin = res.locals.userData.login
+            const userLogin = req.user!.login
+            const content = req.body.content
+            const comments: PostWithPaginationType = await commentsService
+                .createComment(paginationData, content, postId, userLogin)
+            res.status(200).send(comments)
         })

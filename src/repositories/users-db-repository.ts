@@ -6,12 +6,13 @@ export const usersRepository = {
         const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const users = await usersCollection
             .find(filter)
-            .project({_id:0, passwordHash: 0,passwordSalt: 0 })
+            .project({_id:0, passwordHash: 0})
+            .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        delete users.passwordHash
+  /*      delete users.passwordHash
         delete users.passwordSalt
-        delete users._id
+        delete users._id*/
         const totalCount = await usersCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         return ({

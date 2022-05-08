@@ -1,34 +1,33 @@
-import {commentsCollection, UserType} from "./db";
+import {commentsCollection, CommentType, QueryDataType, UserType} from "./db";
 import {ObjectId} from "mongodb";
 
 export const commentsRepository = {
-    async getComments(page: number, pageSize: number, searchNameTerm: string) {
-        const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
+    async getComments(paginationData: QueryDataType, postId: string | null) {
+        //const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
+        let filter = postId
+            ?{title : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}, postId }
+            :{title : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}}
         const comments = await commentsCollection
             .find(filter)
-            .project({_id:0, passwordHash: 0,passwordSalt: 0 })
-            .limit(pageSize)
+            .project({_id:0, passwordHash: 0})
+            .skip((paginationData.page - 1) * paginationData.pageSize)
+            .limit(paginationData.pageSize)
             .toArray()
-        delete comments.passwordHash
-        delete comments.passwordSalt
-        delete comments._id
         const totalCount = await commentsCollection.countDocuments(filter)
-        const pagesCount = Math.ceil(totalCount / pageSize)
+        const pagesCount = Math.ceil(totalCount / paginationData.pageSize)
         return ({
             pagesCount,
-            page,
-            pageSize,
+            page: paginationData.page,
+            pageSize: paginationData.pageSize,
             totalCount,
             items: comments
         })
     },
-    async createComment(newUser: UserType) {
-        await commentsCollection.insertOne(newUser)
-        const createdUser = await commentsCollection.findOne({id: newUser.id})
-        return {
-            id: createdUser.id,
-            login: createdUser.login,
-        }
+    async createComment(newComment: CommentType) {
+        await commentsCollection.insertOne(newComment)
+        const createdComment = await commentsCollection.findOne({id: newComment.id})
+
+        return createdComment
     },
     async deleteComment(id: string): Promise<boolean> {
         const result = await commentsCollection.deleteOne({id: new ObjectId(id)})
@@ -38,5 +37,10 @@ export const commentsRepository = {
         const result = await commentsCollection.deleteOne({id: new ObjectId(id)})
             return result.deletedCount === 1
         },
+    async getCommentById(commentId: string) {
+        const id = new ObjectId(commentId)
+        const comment = await commentsCollection.findOne({id}, {_id:false})
+        return comment?comment:null
+    }
 }
 

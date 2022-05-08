@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import {ObjectId} from "mongodb";
+
 const {MongoClient} = require('mongodb');
 
 export const getPaginationData = (query: any) => {
@@ -17,6 +18,24 @@ export type PostType = {
     bloggerId: number;
     bloggerName?: string | null;
 }
+export type BloggerType = {
+    id: number;
+    name: string | null;
+    youtubeUrl: string | null;
+}
+export type UserType = {
+    id?: ObjectId;
+    login: string;
+    passwordHash?: string;
+    passwordSalt?: string;
+}
+export type CommentType = {
+    id: ObjectId;
+    content: string; //20<len<300
+    postId: string;
+    userLogin: string;
+    addedAt: Date;
+}
 
 export type PostWithPaginationType = {
     pagesCount: number;
@@ -25,26 +44,23 @@ export type PostWithPaginationType = {
     totalCount: number;
     items: PostType[];
 }
-
-export type BloggerType = {
-    id: number;
-    name: string | null;
-    youtubeUrl: string | null;
+export type EntityWithPaginationType<T> = {
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: T[];
 }
 
-export type UserType = {
-    id?: ObjectId;
-    login: string;
-    passwordHash?: string;
-    passwordSalt?: string;
+export type QueryDataType = {
+    page: number;
+    pageSize: number;
+    searchNameTerm: string;
 }
-export type CommentType = {
-    id: number;
-    content: string; //20<len<300
-    userId: string;
-    userLogin: string;
-    addedAt: string;
-}
+
+
+
+
 
 const mongoUri = process.env.mongoURI
 

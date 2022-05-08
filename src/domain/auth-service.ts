@@ -20,7 +20,7 @@ export const authService = {
                 token: null
             }
         }
-        const isHashesEquals = await this._isPasswordCorrect(password, user.accountData.passwordHash)
+        const isHashesEquals = await this._isPasswordCorrect(password, user.passwordHash)
         if (isHashesEquals) {
             const token = jwt.sign({userId: user.id}, 'topSecretKey', {expiresIn: '1d'})
             return {
