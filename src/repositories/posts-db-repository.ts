@@ -7,7 +7,7 @@ export const postsRepository = {
     async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
         let allPosts: PostType[] = []
         let filter = bloggerId
-            ?{title : {$regex : searchNameTerm ? searchNameTerm : ""}, bloggerId: new ObjectId(bloggerId) }
+            ?{title : {$regex : searchNameTerm ? searchNameTerm : ""}, bloggerId}
             :{title : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const totalCount = await postsCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
@@ -26,7 +26,7 @@ export const postsRepository = {
         })
     },
     async getPostById(id: string) {
-        const post = await postsCollection.findOne({id: new ObjectId(id)})
+        const post = await postsCollection.findOne({id})
         if (!post) return false
         const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
         if (!blogger) return false
@@ -42,7 +42,7 @@ export const postsRepository = {
         })
     },
     async createPost(newPost: PostType): Promise<PostType | boolean> {
-        const blogger = await bloggersCollection.findOne({id: new ObjectId(newPost.bloggerId)})
+        const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
         if(!blogger) return false
         await postsCollection.insertOne({
             ...newPost,
@@ -65,7 +65,7 @@ export const postsRepository = {
         return result.modifiedCount === 1
     },
     async deletePostById(id: string) {
-        const result = await postsCollection.deleteOne({id: new ObjectId(id)})
+        const result = await postsCollection.deleteOne({id})
         return result.deletedCount === 1
     }
 }

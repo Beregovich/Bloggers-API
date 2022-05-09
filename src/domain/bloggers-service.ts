@@ -1,6 +1,6 @@
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {BloggerType} from "../repositories/db";
-import {ObjectId} from "mongodb";
+import { v4 as uuidv4 } from 'uuid'
 
 export const bloggersService = {
 
@@ -12,7 +12,7 @@ export const bloggersService = {
     },
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType> {
         const bloggerToPush = {
-            id: new ObjectId(),
+            id: uuidv4(),
             name,
             youtubeUrl
         }

@@ -1,6 +1,7 @@
 import {postsRepository} from "../repositories/posts-db-repository";
 import {PostType} from "../repositories/db";
 import {ObjectId} from "mongodb";
+import {v4 as uuidv4} from "uuid";
 
 export const postsService = {
 
@@ -17,14 +18,14 @@ export const postsService = {
     async createPost(newPostData: PostType): Promise<PostType | boolean> {
         const postToCreate = {
             ...newPostData,
-            id: new ObjectId(),
+            id: uuidv4(),
         }
         return await postsRepository.createPost(postToCreate)
 
     },
     async updatePostById(id: string, newPost: PostType) {
         return await postsRepository.updatePostById({
-            id: new ObjectId(id),
+            id: uuidv4(),//WTF?
             ...newPost
         })
     },

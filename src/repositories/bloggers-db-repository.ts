@@ -21,7 +21,7 @@ export const bloggersRepository = {
         })
     },
     async getBloggerById(bloggerId: string): Promise<BloggerType | false> {
-        const blogger = await bloggersCollection.findOne({id: new ObjectId(bloggerId)})
+        const blogger = await bloggersCollection.findOne({id: bloggerId})
         if (blogger) {
             delete blogger._id
             return blogger
@@ -36,14 +36,14 @@ export const bloggersRepository = {
         }
     },
     async updateBloggerById(id: string, name: string, youtubeUrl: string) {
-        const result = await bloggersCollection.updateOne({id: new ObjectId(id)},
+        const result = await bloggersCollection.updateOne({id},
             {
                 $set: {
                     "name": name,
                     "youtubeUrl": youtubeUrl
                 }
             })
-         await postsCollection.updateMany( {bloggerId: new ObjectId(id)},
+         await postsCollection.updateMany( {bloggerId: id},
             {$set: {
                     "bloggerName": name
                 }}
@@ -51,7 +51,7 @@ export const bloggersRepository = {
         return result.modifiedCount === 1
     },
     async deleteBloggerById(id: string): Promise<boolean> {
-        const result = await bloggersCollection.deleteOne({id: new ObjectId(id)})
+        const result = await bloggersCollection.deleteOne({id})
             return result.deletedCount === 1
         }
 }

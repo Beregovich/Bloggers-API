@@ -1,6 +1,4 @@
 import 'dotenv/config'
-import {ObjectId} from "mongodb";
-
 const {MongoClient} = require('mongodb');
 
 export const getPaginationData = (query: any) => {
@@ -11,7 +9,7 @@ export const getPaginationData = (query: any) => {
 }
 
 export type PostType = {
-    id?: string | ObjectId;
+    id?: string;
     title: string | null;
     shortDescription: string | null;
     content: string | null;
@@ -19,18 +17,18 @@ export type PostType = {
     bloggerName?: string | null;
 }
 export type BloggerType = {
-    id: string | ObjectId;
+    id: string;
     name: string | null;
     youtubeUrl: string | null;
 }
 export type UserType = {
-    id?: string | ObjectId;
+    id?: string;
     login: string;
     passwordHash?: string;
     passwordSalt?: string;
 }
 export type CommentType = {
-    id: string | ObjectId;
+    id: string;
     content: string; //20<len<300
     postId: string;
     userLogin: string;
