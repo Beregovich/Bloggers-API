@@ -31,6 +31,7 @@ export type CommentType = {
     id: string;
     content: string; //20<len<300
     postId: string;
+    userId: string;
     userLogin: string;
     addedAt: Date;
 }

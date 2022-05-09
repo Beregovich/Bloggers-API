@@ -21,10 +21,11 @@ export const commentsService = {
         const comment = await commentsRepository.updateComment(commentId, content)
         return comment
     },
-    async createComment(paginationData: QueryDataType, content: string, postId: string, userLogin: string) {
+    async createComment(paginationData: QueryDataType, content: string, postId: string, userLogin: string, userId:string) {
         const newComment = {
             id: uuidv4(),
             content,
+            userId,
             postId,
             userLogin,
             addedAt: new Date()

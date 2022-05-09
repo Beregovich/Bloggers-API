@@ -19,6 +19,10 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     try {
         const decoded: any = jwt.verify(token, "topSecretKey")
         const user: UserType = await usersRepository.findUserById(decoded.userId)
+        if(!user){
+            res.sendStatus(404)
+            return
+        }
         req.user = user
         res.locals.userData = user
     } catch (e) {

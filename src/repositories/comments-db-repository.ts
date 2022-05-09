@@ -5,11 +5,11 @@ export const commentsRepository = {
     async getComments(paginationData: QueryDataType, postId: string | null) {
         //const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         let filter = postId
-            ?{title : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}, postId }
-            :{title : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}}
+            ?{content : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}, postId }
+            :{content : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}}
         const comments = await commentsCollection
             .find(filter)
-            .project({_id:0, passwordHash: 0})
+            .project({_id:0, userId: 0})
             .skip((paginationData.page - 1) * paginationData.pageSize)
             .limit(paginationData.pageSize)
             .toArray()
