@@ -42,6 +42,13 @@ commentsRouter
         check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
+            const commentId = req.params.commentId
+            const updated = await commentsService.updateCommentById(commentId)
+            if(updated){
+                res.sendStatus(204)
+            }else{
+                res.sendStatus(404)
+            }
         })
     //Delete comment specified by id
     .delete('/:commentId',
