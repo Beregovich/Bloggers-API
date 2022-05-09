@@ -56,7 +56,6 @@ postsRouter
         })
     //Return post by id
     .get('/:postId',
-        check(':postId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const postId = req.params.postId
@@ -77,7 +76,6 @@ postsRouter
     .put('/:postId',
         postValidationRules,
         checkHeaders,
-        check(':postId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         inputValidatorMiddleware,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
@@ -116,7 +114,6 @@ postsRouter
     //Delete post specified by id
     .delete('/:postId',
         checkHeaders,
-        check(':postId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const id = req.params.postId
@@ -135,7 +132,6 @@ postsRouter
         })
     .get('/:postId/comments',
         paginationRules,
-        check(':postId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const id = req.params.postId
@@ -146,7 +142,6 @@ postsRouter
         })
     .post('/:postId/comments',
         authMiddleware,
-        check(':postId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
        commentValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {

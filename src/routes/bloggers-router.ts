@@ -41,7 +41,6 @@ bloggersRouter
         checkHeaders,
         postValidationRules,
         baseAuthMiddleware,
-        check(':bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = req.params.bloggerId
@@ -59,7 +58,6 @@ bloggersRouter
         })
     //Returns blogger by id
     .get('/:bloggerId',
-        check(':bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = req.params.bloggerId
@@ -79,7 +77,6 @@ bloggersRouter
         })
     //return exact blogger's all posts
     .get('/:bloggerId/posts',
-        check(':bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         paginationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
@@ -103,7 +100,6 @@ bloggersRouter
     .put('/:bloggerId',
         checkHeaders,
         baseAuthMiddleware,
-        check(':bloggerId').isLength({min: 24, max:24}).withMessage('id should 24ch length'),
         bloggerValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
@@ -129,7 +125,6 @@ bloggersRouter
     .delete('/:bloggerId',
         checkHeaders,
         baseAuthMiddleware,
-        check(':bloggerId').trim().not().isEmpty().withMessage('id should be not empty'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const bloggerId = req.params.bloggerId

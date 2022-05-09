@@ -25,7 +25,7 @@ export const postsService = {
     },
     async updatePostById(id: string, newPost: PostType) {
         return await postsRepository.updatePostById({
-            id: uuidv4(),//WTF?
+            id,//WTF?
             ...newPost
         })
     },

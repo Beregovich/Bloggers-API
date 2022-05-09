@@ -7,6 +7,7 @@ import {runDb} from "./repositories/db";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
+import {requestsSaverMiddleware} from "./middlewares/request-saver-midleware";
 
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
@@ -15,6 +16,7 @@ const port = process.env.PORT || 5000
 
 app.use(jsonBodyMiddleware)
 app.use(cors())
+app.use(requestsSaverMiddleware)
 app.use('/api/bloggers', bloggersRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/users', usersRouter)
