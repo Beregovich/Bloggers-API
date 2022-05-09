@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express'
 import {
-    bloggerValidationRules,
+    bloggerValidationRules, commentValidationRules,
     inputValidatorMiddleware,
     paginationRules,
     postValidationRules
@@ -37,6 +37,8 @@ commentsRouter
 
     //Update comment
     .put('/:commentId',
+        commentValidationRules,
+        inputValidatorMiddleware,
         authMiddleware,
         check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
         inputValidatorMiddleware,

@@ -45,7 +45,7 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
             next()
         }
     } catch (e) {
-        console.log(e)
+        console.log("Base auth middleware error:"+e)
         res.sendStatus(401)
     }
 }
