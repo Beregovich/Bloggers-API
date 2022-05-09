@@ -17,8 +17,8 @@ export const commentsService = {
         const comment = await commentsRepository.getCommentById(commentId)
         return comment
     },
-    async updateCommentById(commentId: string) {
-        const comment = await commentsRepository.updateComment(commentId)
+    async updateCommentById(commentId: string, content: string) {
+        const comment = await commentsRepository.updateComment(commentId, content)
         return comment
     },
     async createComment(paginationData: QueryDataType, content: string, postId: string, userLogin: string) {

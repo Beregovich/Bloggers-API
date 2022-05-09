@@ -43,7 +43,8 @@ commentsRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const commentId = req.params.commentId
-            const updated = await commentsService.updateCommentById(commentId)
+            const content = req.body.content
+            const updated = await commentsService.updateCommentById(commentId, content)
             if(updated){
                 res.sendStatus(204)
             }else{
