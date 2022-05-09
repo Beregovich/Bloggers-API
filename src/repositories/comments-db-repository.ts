@@ -9,7 +9,7 @@ export const commentsRepository = {
             :{content : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}}
         const comments = await commentsCollection
             .find(filter)
-            .project({_id:0, userId: 0})
+            .project({_id:0, postId: 0})
             .skip((paginationData.page - 1) * paginationData.pageSize)
             .limit(paginationData.pageSize)
             .toArray()
@@ -42,6 +42,7 @@ export const commentsRepository = {
         const comment = await commentsCollection.findOne({id: commentId}, {_id:false})
         if (!comment) return null
         delete comment._id
+        delete comment.postId
         return comment
     }
 }
