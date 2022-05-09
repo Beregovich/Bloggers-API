@@ -39,7 +39,8 @@ export const commentsRepository = {
         },
     async getCommentById(commentId: string) {
         const comment = await commentsCollection.findOne({id: commentId}, {_id:false})
-        return comment?comment:null
+        delete comment._id
+        return comment
     }
 }
 
