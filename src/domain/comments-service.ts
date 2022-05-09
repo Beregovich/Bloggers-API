@@ -14,8 +14,8 @@ export const commentsService = {
         return comments
     },
     async getCommentById(commentId: string) {
-        const comment = await commentsRepository.getCommentById(commentId)
-        return comment
+        const result = await commentsRepository.getCommentById(commentId)
+        return result
     },
     async updateCommentById(commentId: string, content: string) {
         const comment = await commentsRepository.updateComment(commentId, content)

@@ -24,7 +24,6 @@ commentsRouter
         })*/
 
     .get('/:commentId',
-        paginationRules,
         async (req: Request, res: Response) => {
             const commentId = req.params.commentId
             const comment = await commentsService.getCommentById(commentId)

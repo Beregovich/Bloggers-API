@@ -26,7 +26,8 @@ export const commentsRepository = {
     async createComment(newComment: CommentType) {
         await commentsCollection.insertOne(newComment)
         const createdComment = await commentsCollection.findOne({id: newComment.id})
-
+        delete createdComment._id
+        delete createdComment.postId
         return createdComment
     },
     async deleteComment(id: string): Promise<boolean> {
@@ -39,6 +40,7 @@ export const commentsRepository = {
         },
     async getCommentById(commentId: string) {
         const comment = await commentsCollection.findOne({id: commentId}, {_id:false})
+        if (!comment) return null
         delete comment._id
         return comment
     }
