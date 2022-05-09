@@ -16,7 +16,6 @@ const port = process.env.PORT || 5000
 
 app.use(jsonBodyMiddleware)
 app.use(cors())
-app.use(requestsSaverMiddleware)
 app.use('/api/bloggers', bloggersRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/users', usersRouter)

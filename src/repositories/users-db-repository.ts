@@ -25,14 +25,14 @@ export const usersRepository = {
     },
     async createUser(newUser: UserType) {
         await usersCollection.insertOne(newUser)
-        const createdUser = await usersCollection.findOne({id: new ObjectId(newUser.id)})
+        const createdUser = await usersCollection.findOne({id: newUser.id})
         return {
             id: createdUser.id,
             login: createdUser.login,
         }
     },
     async deleteUser(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne({id: new ObjectId(id)})
+        const result = await usersCollection.deleteOne({id})
             return result.deletedCount === 1
         },
     findUserById(id: ObjectId) {

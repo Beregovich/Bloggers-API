@@ -30,11 +30,11 @@ export const commentsRepository = {
         return createdComment
     },
     async deleteComment(id: string): Promise<boolean> {
-        const result = await commentsCollection.deleteOne({id: new ObjectId(id)})
+        const result = await commentsCollection.deleteOne({id})
             return result.deletedCount === 1
         },
     async updateComment(id: string): Promise<boolean> {
-        const result = await commentsCollection.deleteOne({id: new ObjectId(id)})
+        const result = await commentsCollection.deleteOne({id})
             return result.deletedCount === 1
         },
     async getCommentById(commentId: string) {
