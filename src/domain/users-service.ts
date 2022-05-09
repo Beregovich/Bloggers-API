@@ -1,9 +1,9 @@
 import {UserType} from "../repositories/db";
 import {usersRepository} from "../repositories/users-db-repository";
 import bcrypt from 'bcrypt'
-import {ObjectId} from "mongodb";
 import jwt from 'jsonwebtoken'
 import {authService} from "./auth-service";
+import {v4 as uuidv4} from "uuid";
 
 export const usersService = {
 
@@ -14,7 +14,7 @@ export const usersService = {
     async createUser(login: string, password: string): Promise<UserType> {
         const passwordHash = await authService._generateHash(password)
         const newUser = {
-            id: new ObjectId(),
+            id: uuidv4(),
             login,
             passwordHash,
         }

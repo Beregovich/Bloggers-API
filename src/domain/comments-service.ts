@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
 import jwt from 'jsonwebtoken'
 import {authService} from "./auth-service";
+import {v4 as uuidv4} from "uuid";
 
 
 export const commentsService = {
@@ -18,7 +19,7 @@ export const commentsService = {
     },
     async createComment(paginationData: QueryDataType, content: string, postId: string, userLogin: string) {
         const newComment = {
-            id: new ObjectId(),
+            id: uuidv4(),
             content,
             postId,
             userLogin,
