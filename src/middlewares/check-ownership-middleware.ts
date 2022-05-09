@@ -6,7 +6,7 @@ export const checkOwnership = async (req: Request, res: Response, next: NextFunc
     const commentId = req.params.commentId
     const commentToChangeOrRemove = await commentsService.getCommentById(commentId)
     if(!commentToChangeOrRemove || commentToChangeOrRemove.userLogin != req.user!.login ){
-        res.send(403)
+        res.send(404)
     }else{
         next()
     }
