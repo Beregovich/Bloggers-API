@@ -38,8 +38,7 @@ export const commentsRepository = {
             return result.deletedCount === 1
         },
     async getCommentById(commentId: string) {
-        const id = new ObjectId(commentId)
-        const comment = await commentsCollection.findOne({id}, {_id:false})
+        const comment = await commentsCollection.findOne({id: commentId}, {_id:false})
         return comment?comment:null
     }
 }

@@ -40,7 +40,6 @@ export const authService = {
     },
     async _generateHash(password: string) {
         const hash = await bcrypt.hash(password, 10)
-        console.log('hash: ' + hash)
         return hash
     },
     async _isPasswordCorrect(password: string, hash: string) {

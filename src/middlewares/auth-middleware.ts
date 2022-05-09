@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {ObjectId} from "mongodb";
 import {UserType} from "../repositories/db";
 import {commentsRepository} from "../repositories/comments-db-repository";
 import {usersRepository} from "../repositories/users-db-repository";
@@ -29,4 +28,3 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
     next()
 }
-console.log()
