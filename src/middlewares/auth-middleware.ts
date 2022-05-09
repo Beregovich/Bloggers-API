@@ -18,8 +18,8 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         return
     }
     try {
-        const decoded: any = jwt.verify(token, process.env.SECRET_KEY || "NoAnySecretsAtAll")
-        const user: UserType = await usersRepository.findUserById(new ObjectId(decoded.userId))
+        const decoded: any = jwt.verify(token, "topSecretKey")
+        const user: UserType = await usersRepository.findUserById(decoded.userId)
         req.user = user
         res.locals.userData = user
     } catch (e) {

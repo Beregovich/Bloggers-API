@@ -22,7 +22,7 @@ export const authService = {
         }
         const isHashesEquals = await this._isPasswordCorrect(password, user.passwordHash)
         if (isHashesEquals) {
-            const token = jwt.sign({userId: user.id}, 'topSecretKey', {expiresIn: '1d'})
+            const token = jwt.sign({userId: user.id}, 'topSecretKey', {expiresIn: '30d'})
             return {
                 resultCode: 0,
                 data: {
