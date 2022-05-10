@@ -3,8 +3,15 @@ import {usersService} from "../domain/users-service";
 import {authService} from "../domain/auth-service";
 
 export const checkHeaders = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.headers) {
+    const exceptedAuthInput = "Basic "+Buffer.from("admin:qwerty", 'base64').toString()
+    if(!req.headers || !req.headers.authorization){
         res.sendStatus(401)
+    }else{
+        if(req.headers.authorization != exceptedAuthInput) return res.sendStatus(401)
+        next()
+    }
+    /*if (!req.headers) {
+
         return
     } else if (!req.headers.authorization || typeof req.headers.authorization != 'string'
     ) {
@@ -26,7 +33,7 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
         let authorizationDecoded = ""
         if (authorizationHeader) {
             authorizationData = authorizationHeader.split(" ")[1]
-            if (!authorizationData) {
+            if (!authorizationData || authorizationData.length!=2) {
                 res.sendStatus(401)
                 return
             }
@@ -47,5 +54,5 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
     } catch (e) {
         console.log("Base auth middleware error:"+e)
         res.sendStatus(401)
-    }
+    }*/
 }
