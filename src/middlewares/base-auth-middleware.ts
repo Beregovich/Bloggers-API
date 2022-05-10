@@ -9,7 +9,7 @@ export const checkHeaders = async (req: Request, res: Response, next: NextFuncti
     }else{
         if(req.headers.authorization != exceptedAuthInput) return res.sendStatus(401)
         next()
-    }
+    }}
     /*if (!req.headers) {
 
         return
@@ -24,7 +24,7 @@ export const checkHeaders = async (req: Request, res: Response, next: NextFuncti
         return
     }
     next()
-}
+}*/
 
 export const baseAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -54,5 +54,5 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
     } catch (e) {
         console.log("Base auth middleware error:"+e)
         res.sendStatus(401)
-    }*/
+    }
 }
