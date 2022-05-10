@@ -3,7 +3,7 @@ import {usersService} from "../domain/users-service";
 import {authService} from "../domain/auth-service";
 
 export const checkHeaders = async (req: Request, res: Response, next: NextFunction) => {
-    const exceptedAuthInput = "Basic "+Buffer.from("admin:qwerty", 'base64').toString()
+    const exceptedAuthInput = "Basic YWRtaW46cXdlcnR5"
     if(!req.headers || !req.headers.authorization){
         res.sendStatus(401)
     }else{
