@@ -29,7 +29,7 @@ export const checkHeaders = async (req: Request, res: Response, next: NextFuncti
 export const baseAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     next()
     return
-    try {
+   /* try {
         let authorizationHeader = req.headers.authorization
         let authorizationData = ""
         let authorizationDecoded = ""
@@ -56,5 +56,5 @@ export const baseAuthMiddleware = async (req: Request, res: Response, next: Next
     } catch (e) {
         console.log("Base auth middleware error:"+e)
         res.sendStatus(401)
-    }
+    }*/
 }
