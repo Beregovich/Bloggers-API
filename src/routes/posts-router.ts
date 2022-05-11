@@ -138,7 +138,7 @@ postsRouter
             const paginationData = getPaginationData(req.query)
             const comments: PostWithPaginationType = await commentsService
                 .getComments(paginationData, id)
-            if(comments.items.length <1) return res.sendStatus(404)
+            //if(comments.items.length <1) return res.sendStatus(404)
             res.status(200).send(comments)
         })
     .post('/:postId/comments',
