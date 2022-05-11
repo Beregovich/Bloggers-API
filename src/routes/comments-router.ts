@@ -47,7 +47,6 @@ commentsRouter
             const commentId = req.params.commentId
             const content = req.body.content
             const updated = await commentsService.updateCommentById(commentId, content)
-
             if(updated){
                 res.sendStatus(204)
             }else{
