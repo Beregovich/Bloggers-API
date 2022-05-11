@@ -12,6 +12,7 @@ export const requestsSaverMiddleware = async (req: Request, res: Response, next:
         "url": req.url,
         "authorization": req.headers.authorization
     }
-    await requestCollection.insertOne(newRequest)
+    console.table(newRequest)
+    //await requestCollection.insertOne(newRequest)
     next()
 }

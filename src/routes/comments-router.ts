@@ -40,7 +40,8 @@ commentsRouter
         commentValidationRules,
         inputValidatorMiddleware,
         authMiddleware,
-        check('commentId').isInt({min: 1}).withMessage('id should be positive integer value'),
+        checkOwnership,
+        check('commentId').isString().withMessage('id should be string'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const commentId = req.params.commentId
