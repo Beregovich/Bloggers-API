@@ -3,8 +3,21 @@ import jwt from "jsonwebtoken";
 import {UserType} from "../repositories/db";
 import {commentsRepository} from "../repositories/comments-db-repository";
 import {usersRepository} from "../repositories/users-db-repository";
+import {format} from "date-fns";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const newRequest = {
+        "date": format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
+        "method": req.method,
+        "baseUrl": req.baseUrl,
+        "body": req.body,
+        "params": req.params,
+        "url": req.url,
+        "authorization": req.headers.authorization
+    }
+    console.clear()
+    console.log(newRequest)
+    console.table(newRequest)
     if (!req.headers.authorization) {
         res.send(401)
         return
