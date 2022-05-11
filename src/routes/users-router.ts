@@ -12,7 +12,7 @@ import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersService} from "../domain/users-service";
 import {ObjectId} from "mongodb";
-import {baseAuthMiddleware} from "../middlewares/base-auth-middleware";
+import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 
 export const usersRouter = Router()
 
@@ -28,6 +28,7 @@ usersRouter
         })
     //Create new user
     .post('/',
+        checkHeaders,
         baseAuthMiddleware,
         userValidationRules,
         inputValidatorMiddleware,
@@ -40,6 +41,7 @@ usersRouter
         })
     //Delete user
     .delete('/:userId',
+        checkHeaders,
         baseAuthMiddleware,
         async (req: Request, res: Response) => {
             const userId = req.params.userId
