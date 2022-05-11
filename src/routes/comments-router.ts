@@ -37,16 +37,17 @@ commentsRouter
 
     //Update comment
     .put('/:commentId',
-        commentValidationRules,
-        inputValidatorMiddleware,
         authMiddleware,
         checkOwnership,
+        commentValidationRules,
+        inputValidatorMiddleware,
         check('commentId').isString().withMessage('id should be string'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const commentId = req.params.commentId
             const content = req.body.content
             const updated = await commentsService.updateCommentById(commentId, content)
+
             if(updated){
                 res.sendStatus(204)
             }else{
