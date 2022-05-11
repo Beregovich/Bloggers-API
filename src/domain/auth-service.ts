@@ -13,6 +13,9 @@ import {usersRepository} from "../repositories/users-db-repository";
 
 export const authService = {
     async checkCredentials(login: string, password: string) {
+        console.log("\n=======\n======\n=====\n====\n===\n====\n=====\n======\n=======")
+        console.log("Checking credentials: "+login+":"+password)
+        console.log("\n=======\n======\n=====\n====\n===\n====\n=====\n======\n=======")
         const user = await usersRepository.findUserByLogin(login)
         if (!user /*|| !user.emailConfirmation.isConfirmed*/) return {
             resultCode: 1,
