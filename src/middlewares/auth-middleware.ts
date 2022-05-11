@@ -18,7 +18,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     console.log("\n=======\n======\n=====\n====\n===\n====\n=====\n======\n=======")
     console.log(newRequest)
     console.log("\n=======\n======\n=====\n====\n===\n====\n=====\n======\n=======")
-    if (!req.headers.authorization) {
+    if (!req.headers || !req.headers.authorization) {
         res.send(401)
         return
     }

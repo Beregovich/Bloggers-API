@@ -152,6 +152,8 @@ postsRouter
             const userLogin = req.user!.login
             const userId = req.user!.id
             const content = req.body.content
+            const post  = await postsService.getPostById(postId)
+            if(!post) return res.sendStatus(404)
             const comments: PostWithPaginationType = await commentsService
                 .createComment(paginationData, content, postId, userLogin, userId!)
             res.status(201).send(comments)
