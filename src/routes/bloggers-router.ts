@@ -10,8 +10,8 @@ import {bloggersService} from "../domain/bloggers-service";
 import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
-
 export const bloggersRouter = Router()
+
 
 bloggersRouter
     //Returns all bloggers

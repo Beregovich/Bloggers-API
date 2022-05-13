@@ -57,12 +57,7 @@ export type QueryDataType = {
     searchNameTerm: string;
 }
 
-
-
-
-
 const mongoUri = process.env.mongoURI
-
 export const client = new MongoClient(mongoUri)
 export const bloggersCollection = client.db("bloggersDB").collection("bloggers")
 export const postsCollection = client.db("bloggersDB").collection("posts")

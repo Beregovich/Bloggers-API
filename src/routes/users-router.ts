@@ -6,7 +6,7 @@ import {
     postValidationRules, userValidationRules
 } from "../middlewares/input-validator-middleware";
 import {check} from "express-validator";
-import {bloggersService} from "../domain/bloggers-service";
+
 import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
