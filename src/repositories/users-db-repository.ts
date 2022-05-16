@@ -1,5 +1,5 @@
 import {usersCollection, UserType} from "./db";
-import {ObjectId} from "mongodb";
+import { v4 as uuidv4 } from 'uuid'
 
 export const usersRepository = {
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
@@ -10,9 +10,6 @@ export const usersRepository = {
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-  /*      delete users.passwordHash
-        delete users.passwordSalt
-        delete users._id*/
         const totalCount = await usersCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         return ({
@@ -35,13 +32,23 @@ export const usersRepository = {
         const result = await usersCollection.deleteOne({id})
             return result.deletedCount === 1
         },
-    findUserById(id: ObjectId) {
+    findUserById(id: string) {
         const user = usersCollection.findOne({id})
         return user
     },
     findUserByLogin(login: string) {
         const user = usersCollection.findOne({login})
         return user
+    },
+    async updateConfirmation(id: string){
+        let result = await usersCollection
+            .updateOne({id}, {$set: {"emailConfirmation.isConfirmed": true}} )
+        return result.modifiedCount === 1
+    },
+    async updateConfirmationCode(id: string){
+        let result = await usersCollection
+            .updateOne({id}, {$set: {"emailConfirmation.confirmationCode": uuidv4()}} )
+        return result.modifiedCount === 1
     }
 }
 
