@@ -48,7 +48,7 @@ export type EntityWithPaginationType<T> = {
     page: number;
     pageSize: number;
     totalCount: number;
-    items: T[];
+    items: T;
 }
 
 export type QueryDataType = {

@@ -1,5 +1,5 @@
 import {BloggersRepository, bloggersRepository} from "../repositories/bloggers-db-repository";
-import {BloggerType} from "../repositories/db";
+import {BloggerType, EntityWithPaginationType} from "../repositories/db";
 import { v4 as uuidv4 } from 'uuid'
 
 export class BloggersService {
@@ -8,7 +8,7 @@ export class BloggersService {
     async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
         return await this.bloggersRepository.getBloggers(page, pageSize, searchNameTerm)
     }
-    async getBloggerById(id: string): Promise<BloggerType | boolean> {
+    async getBloggerById(id: string): Promise<BloggerType | null> {
         return await this.bloggersRepository.getBloggerById(id)
     }
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType> {
@@ -26,6 +26,15 @@ export class BloggersService {
     async deleteBloggerById(id: string): Promise<boolean> {
         return await this.bloggersRepository.deleteBloggerById(id)
     }
+}
+export interface IBloggersRepository{
+    getBloggers(page: number,
+                pageSize: number,
+                searchNameTerm: string): Promise<EntityWithPaginationType<BloggerType[]>>
+    getBloggerById(id: string): Promise<BloggerType | null>
+    createBlogger(newBlogger: BloggerType): Promise<BloggerType>
+    updateBloggerById(id: string, name: string, youtubeUrl: string): Promise<BloggerType | boolean>
+    deleteBloggerById(id: string): Promise<boolean>
 }
 export const bloggersService = new BloggersService(bloggersRepository)
 
