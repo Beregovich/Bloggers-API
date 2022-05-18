@@ -1,6 +1,4 @@
 import {NextFunction, Request, Response} from "express";
-import {usersService} from "../domain/users-service";
-import {authService} from "../domain/auth-service";
 
 export const checkHeaders = async (req: Request, res: Response, next: NextFunction) => {
     const exceptedAuthInput = "Basic YWRtaW46cXdlcnR5"
@@ -10,21 +8,6 @@ export const checkHeaders = async (req: Request, res: Response, next: NextFuncti
         if(req.headers.authorization != exceptedAuthInput) return res.sendStatus(401)
         next()
     }}
-    /*if (!req.headers) {
-
-        return
-    } else if (!req.headers.authorization || typeof req.headers.authorization != 'string'
-    ) {
-        res.sendStatus(401)
-        return
-    } else if (!req.headers.authorization.split(" ")[1]
-        || req.headers.authorization.split(" ")[1] == "admin:qwerty"
-        || req.headers.authorization.split(" ")[0] != "Basic") {
-        res.sendStatus(401)
-        return
-    }
-    next()
-}*/
 
 export const baseAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     next()

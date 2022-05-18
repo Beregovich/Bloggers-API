@@ -1,23 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {UserType} from "../repositories/db";
-import {commentsRepository} from "../repositories/comments-db-repository";
 import {usersRepository} from "../repositories/users-db-repository";
-import {format} from "date-fns";
+import {UserType} from "../types/types";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const newRequest = {
-        "date": format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
-        "method": req.method,
-        "baseUrl": req.baseUrl,
-        "body": req.body,
-        "params": req.params,
-        "url": req.url,
-        "authorization": req.headers.authorization
-    }
-    console.log("\n=======\n======\n=====\n====\n===\n====\n=====\n======\n=======")
-    console.log(newRequest)
-    console.log("\n=======\n======\n=====\n====\n===\n====\n=====\n======\n=======")
     if (!req.headers || !req.headers.authorization) {
         res.send(401)
         return

@@ -1,10 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import {body, check, validationResult} from "express-validator";
+import {ErrorMessageType} from "../types/types";
 
-type ErrorMessageType = {
-    message: string;
-    field: string;
-}
 //Rules
 const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 export const postValidationRules = [

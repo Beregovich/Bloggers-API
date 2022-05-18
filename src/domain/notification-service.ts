@@ -6,8 +6,7 @@ export const emailTemplateService = {
 \n<h3>Your confirmation code:${user.emailConfirmation.confirmationCode}<h3>`
     }
 }
-
-export const emailService = {
+export class EmailService  {
     async sendEmail(email: string, subject: string, message: string) {
         let transporter = nodemailer.createTransport({
             service: 'gmail',                              // the service used
@@ -28,3 +27,4 @@ export const emailService = {
         }
     }
 }
+export const emailService = new EmailService()

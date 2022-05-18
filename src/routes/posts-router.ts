@@ -8,10 +8,11 @@ import {
 import {check} from "express-validator";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
-import {getPaginationData, PostWithPaginationType} from "../repositories/db";
+import {getPaginationData} from "../repositories/db";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 import {commentsService} from "../domain/comments-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {CommentType, EntityWithPaginationType, PostType} from "../types/types";
 export const postsRouter = Router()
 
 postsRouter
@@ -21,7 +22,7 @@ postsRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const {page, pageSize, searchNameTerm} = getPaginationData(req.query)
-            const posts: PostWithPaginationType = await postsService
+            const posts: EntityWithPaginationType<PostType[]> = await postsService
                 .getPosts(page, pageSize, searchNameTerm, null)
             res.status(200).send(posts)
         })
@@ -136,7 +137,7 @@ postsRouter
         async (req: Request, res: Response) => {
             const id = req.params.postId
             const paginationData = getPaginationData(req.query)
-            const comments: PostWithPaginationType = await commentsService
+            const comments: EntityWithPaginationType<CommentType[]> = await commentsService
                 .getComments(paginationData, id)
             const post = await postsService.getPostById(id)
             if(!post) return res.sendStatus(404)
@@ -149,13 +150,13 @@ postsRouter
         async (req: Request, res: Response) => {
             const postId = req.params.postId
             const paginationData = getPaginationData(req.query)
-            //const userLogin = res.locals.userData.login
+            //const userLogin = res.locals.userData.login ==============check this case in future==================
             const userLogin = req.user!.login
             const userId = req.user!.id
             const content = req.body.content
             const post  = await postsService.getPostById(postId)
             if(!post) return res.sendStatus(404)
-            const comments: PostWithPaginationType = await commentsService
+            const comments: EntityWithPaginationType<CommentType> = await commentsService
                 .createComment(paginationData, content, postId, userLogin, userId!)
             res.status(201).send(comments)
         })

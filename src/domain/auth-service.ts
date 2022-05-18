@@ -4,7 +4,7 @@ import { isAfter} from 'date-fns'
 import {usersRepository} from "../repositories/users-db-repository";
 import {emailService, emailTemplateService} from "./notification-service";
 
-export const authService = {
+class AuthService  {
     async checkCredentials(login: string, password: string) {
         const user = await usersRepository.findUserByLogin(login)
         if (!user || !user.emailConfirmation.isConfirmed) return {
@@ -30,15 +30,15 @@ export const authService = {
                 }
             }
         }
-    },
+    }
     async _generateHash(password: string) {
         const hash = await bcrypt.hash(password, 10)
         return hash
-    },
+    }
     async _isPasswordCorrect(password: string, hash: string) {
         const isEqual = await bcrypt.compare(password, hash)
         return isEqual
-    },
+    }
     async confirmEmail(code: string, login: string): Promise<boolean> {
         let user = await usersRepository.findUserByLogin(login)
         if(!user)return false
@@ -49,7 +49,7 @@ export const authService = {
             return result
         }
         return false
-    },
+    }
     async resendCode(login: string) {
         let user = await usersRepository.findUserByLogin(login)
         if(user){
@@ -62,3 +62,4 @@ export const authService = {
         }else return null
     }
 }
+export const authService = new AuthService()

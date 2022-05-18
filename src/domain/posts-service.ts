@@ -1,6 +1,6 @@
 import {PostsRepository, postsRepository} from "../repositories/posts-db-repository";
-import {PostType} from "../repositories/db";
 import {v4 as uuidv4} from "uuid";
+import {EntityWithPaginationType, PostType} from "../types/types";
 
 export class PostsService {
     constructor(private postsRepository: PostsRepository) {
@@ -15,7 +15,7 @@ export class PostsService {
             return post
         } else return false
     }
-    async createPost(newPostData: PostType): Promise<PostType | boolean> {
+    async createPost(newPostData: PostType): Promise<PostType | null> {
         const postToCreate = {
             ...newPostData,
             id: uuidv4(),
@@ -24,44 +24,20 @@ export class PostsService {
 
     }
     async updatePostById(id: string, newPost: PostType) {
-        return await this.postsRepository.updatePostById({
-            id,//WTF?
-            ...newPost
-        })
+        return await this.postsRepository.updatePostById(id, newPost)
     }
     async deletePostById(id: string): Promise<boolean> {
         return await this.postsRepository.deletePostById(id)
     }
 }
+export interface IPostsRepository {
+    getPosts(page: number,
+             pageSize: number,
+             searchNameTerm: string,
+             bloggerId: string | null): Promise<EntityWithPaginationType<PostType[]>>,
+    getPostById(id: string): Promise<PostType | false>,
+    createPost(newPostData: PostType): Promise<PostType | null>,
+    updatePostById(id: string, newPost: PostType): any,
+    deletePostById(id: string): Promise<boolean>
+}
 export const postsService = new PostsService(postsRepository)
-
-/*export const postsService = {
-
-    async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
-        const postsToSend = await postsRepository.getPosts(page, pageSize, searchNameTerm, bloggerId)
-        return postsToSend
-    },
-    async getPostById(id: string): Promise<PostType | false> {
-        const post = await postsRepository.getPostById(id)
-        if (post) {
-            return post
-        } else return false
-    },
-    async createPost(newPostData: PostType): Promise<PostType | boolean> {
-        const postToCreate = {
-            ...newPostData,
-            id: uuidv4(),
-        }
-        return await postsRepository.createPost(postToCreate)
-
-    },
-    async updatePostById(id: string, newPost: PostType) {
-        return await postsRepository.updatePostById({
-            id,//WTF?
-            ...newPost
-        })
-    },
-    async deletePostById(id: string): Promise<boolean> {
-        return await postsRepository.deletePostById(id)
-    }
-}*/

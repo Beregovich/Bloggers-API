@@ -1,6 +1,7 @@
-import {bloggersCollection, BloggerType, EntityWithPaginationType, postsCollection} from "./db";
+import {bloggersCollection, postsCollection} from "./db";
 import * as MongoClient from 'mongodb';
 import {IBloggersRepository} from "../domain/bloggers-service";
+import {BloggerType, EntityWithPaginationType} from "../types/types";
 
 export class BloggersRepository implements IBloggersRepository {
     constructor(private bloggersCollection: MongoClient.Collection<BloggerType>,

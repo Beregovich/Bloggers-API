@@ -1,5 +1,6 @@
-import {usersCollection, UserType} from "./db";
+import {usersCollection} from "./db";
 import { v4 as uuidv4 } from 'uuid'
+import {UserType} from "../types/types";
 
 export const usersRepository = {
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {

@@ -1,8 +1,10 @@
-import {bloggersCollection, postsCollection, PostType} from "./db";
+import {bloggersCollection, postsCollection} from "./db";
 import {BloggersRepository, bloggersRepository} from "./bloggers-db-repository";
+import {IPostsRepository} from "../domain/posts-service";
+import {PostType} from "../types/types";
 
-export class PostsRepository  {
-    constructor(private postsCollection: any,//те же вопросы что для блогеров
+export class PostsRepository implements IPostsRepository{
+    constructor(private postsCollection: any,
                 private bloggersCollection: any,
                 private bloggersRepository: BloggersRepository) {}
     async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
@@ -42,9 +44,9 @@ export class PostsRepository  {
             bloggerName
         })
     }
-    async createPost(newPost: PostType): Promise<PostType | boolean> {
+    async createPost(newPost: PostType): Promise<PostType | null> {
         const blogger = await this.bloggersCollection.findOne({id: newPost.bloggerId})
-        if(!blogger) return false
+        if(!blogger) return null
         await postsCollection.insertOne({
             ...newPost,
             bloggerName: blogger.name
@@ -53,8 +55,7 @@ export class PostsRepository  {
         delete postToReturn._id
         return (postToReturn)
     }
-    async updatePostById(newPost: PostType) {
-        const id = newPost.id
+    async updatePostById(id: string,newPost: PostType) {
         const result = await this.postsCollection.updateOne({id}, {
             $set: {
                 title: newPost.title,
@@ -71,70 +72,3 @@ export class PostsRepository  {
     }
 }
 export const postsRepository = new PostsRepository(postsCollection, bloggersCollection, bloggersRepository)
-
-/*export const postsRepository = {
-    async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
-        let allPosts: PostType[] = []
-        let filter = bloggerId
-            ?{title : {$regex : searchNameTerm ? searchNameTerm : ""}, bloggerId}
-            :{title : {$regex : searchNameTerm ? searchNameTerm : ""}}
-        const totalCount = await postsCollection.countDocuments(filter)
-        const pagesCount = Math.ceil(totalCount / pageSize)
-        allPosts = await postsCollection
-            .find(filter)
-            .project({_id: 0})
-            .skip((page - 1) * pageSize)
-            .limit(pageSize)
-            .toArray()
-        return ({
-            pagesCount,
-            page,
-            pageSize,
-            totalCount,
-            items: allPosts
-        })
-    },
-    async getPostById(id: string) {
-        const post = await postsCollection.findOne({id})
-        if (!post) return false
-        const blogger = await bloggersRepository.getBloggerById(post.bloggerId)
-        if (!blogger) return false
-        const bloggerName = blogger.name
-        delete post._id
-        return ({
-            id: post.id,
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            bloggerId: post.bloggerId,
-            bloggerName
-        })
-    },
-    async createPost(newPost: PostType): Promise<PostType | boolean> {
-        const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
-        if(!blogger) return false
-        await postsCollection.insertOne({
-            ...newPost,
-            bloggerName: blogger.name
-        })
-        const postToReturn = await postsCollection.findOne({id: newPost.id})
-        delete postToReturn._id
-        return (postToReturn)
-    },
-    async updatePostById(newPost: PostType) {
-        const id = newPost.id
-        const result = await postsCollection.updateOne({id}, {
-            $set: {
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                content: newPost.content,
-                bloggerId: newPost.bloggerId
-            }
-        })
-        return result.modifiedCount === 1
-    },
-    async deletePostById(id: string) {
-        const result = await postsCollection.deleteOne({id})
-        return result.deletedCount === 1
-    }
-}*/

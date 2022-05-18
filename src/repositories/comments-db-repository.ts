@@ -1,5 +1,5 @@
-import {commentsCollection, CommentType, QueryDataType, UserType} from "./db";
-import {ObjectId} from "mongodb";
+import {commentsCollection} from "./db";
+import {CommentType, QueryDataType} from "../types/types";
 
 export const commentsRepository = {
     async getComments(paginationData: QueryDataType, postId: string | null) {

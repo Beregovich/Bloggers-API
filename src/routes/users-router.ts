@@ -1,21 +1,14 @@
 import {Request, Response, Router} from 'express'
 import {
-    bloggerValidationRules,
     inputValidatorMiddleware,
     paginationRules,
-    postValidationRules, userValidationRules
+    userValidationRules
 } from "../middlewares/input-validator-middleware";
-import {check} from "express-validator";
-
 import {getPaginationData} from "../repositories/db";
-import {postsService} from "../domain/posts-service";
-import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersService} from "../domain/users-service";
-import {ObjectId} from "mongodb";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 
 export const usersRouter = Router()
-
 usersRouter
     //Returns all users
     .get('/',

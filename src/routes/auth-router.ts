@@ -1,11 +1,8 @@
 import {Request, Response, Router} from 'express'
-
 import {usersService} from "../domain/users-service";
 import {authService} from "../domain/auth-service";
 
-
 export const authRouter = Router({})
-
 authRouter
     .post('/registration',
         async (req: Request, res: Response) => {

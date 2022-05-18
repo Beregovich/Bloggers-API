@@ -1,5 +1,4 @@
 import {NextFunction, Request, Response} from "express";
-import {usersService} from "../domain/users-service";
 import {commentsService} from "../domain/comments-service";
 
 export const checkOwnership = async (req: Request, res: Response, next: NextFunction) => {

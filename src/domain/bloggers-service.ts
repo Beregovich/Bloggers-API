@@ -1,6 +1,6 @@
 import {BloggersRepository, bloggersRepository} from "../repositories/bloggers-db-repository";
-import {BloggerType, EntityWithPaginationType} from "../repositories/db";
 import { v4 as uuidv4 } from 'uuid'
+import {BloggerType, EntityWithPaginationType} from "../types/types";
 
 export class BloggersService {
     constructor(private bloggersRepository: BloggersRepository) {
