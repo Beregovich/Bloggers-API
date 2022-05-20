@@ -1,27 +1,46 @@
-import {usersRepository} from "../repositories/users-db-repository";
+import {UsersRepository, usersRepository} from "../repositories/users-db-repository";
 import {authService} from "./auth-service";
 import {v4 as uuidv4} from "uuid";
-import {UserType} from "../types/types";
+import {EntityWithPaginationType, UserType} from "../types/types";
+import {addHours} from "date-fns";
 
-export const usersService = {
-
+class UsersService  {
+    constructor(private usersRepository: UsersRepository, ) {
+    }
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
-        const users = await usersRepository.getUsers(page, pageSize, searchNameTerm)
+        const users = await this.usersRepository.getUsers(page, pageSize, searchNameTerm)
         return users
-    },
-    async createUser(login: string, password: string): Promise<UserType> {
+    }
+    async createUser(login: string, password: string): Promise<UserType | null> {
         const passwordHash = await authService._generateHash(password)
-        const newUser = {
-            id: uuidv4(),
-            login,
-            passwordHash,
+        const newUser: UserType = {
+            accountData: {
+                id: uuidv4(),
+                login: login,
+                email: login,
+                passwordHash,
+                createdAt: new Date()
+            },
+            loginAttempts: [],
+            emailConfirmation: {
+                sentEmails: [],
+                confirmationCode: uuidv4(),
+                expirationDate: addHours(new Date(), 24),
+                isConfirmed: false
+            }
         }
-        const createdUser = await usersRepository.createUser(newUser)
+        const createdUser = await this.usersRepository.createUser(newUser)
         return createdUser
-    },
+    }
     async deleteUserById(id: string): Promise<boolean> {
-        return await usersRepository.deleteUser(id)
-    },
+        return await this.usersRepository.deleteUserById(id)
+    }
 }
+export interface IUsersRepository {
+    getUsers(page: number, pageSize: number, searchNameTerm: string): Promise<EntityWithPaginationType<UserType[]>>,
+    createUser(newUser: UserType): Promise<UserType | null>,
+    deleteUserById(id: string): Promise<boolean>
+}
+export const usersService = new UsersService(usersRepository)
 
 

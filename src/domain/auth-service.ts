@@ -13,9 +13,9 @@ class AuthService  {
                 token: null
             }
         }
-        const isHashesEquals = await this._isPasswordCorrect(password, user.passwordHash)
+        const isHashesEquals = await this._isPasswordCorrect(password, user.accountData.passwordHash)
         if (isHashesEquals) {
-            const token = jwt.sign({userId: user.id}, 'topSecretKey', {expiresIn: '30d'})
+            const token = jwt.sign({userId: user.accountData.id}, 'topSecretKey', {expiresIn: '30d'})
             return {
                 resultCode: 0,
                 data: {
@@ -41,11 +41,11 @@ class AuthService  {
     }
     async confirmEmail(code: string, login: string): Promise<boolean> {
         let user = await usersRepository.findUserByLogin(login)
-        if(!user)return false
+        if(!user) return false
         let dbCode =  user.emailConfirmation.confirmationCode
         let dateIsExpired = isAfter(user.emailConfirmation.expirationDate, new Date())
         if(dbCode === code && dateIsExpired ){
-            let result = await usersRepository.updateConfirmation(user._id)
+            let result = await usersRepository.updateConfirmation(user.accountData.id)
             return result
         }
         return false
@@ -53,7 +53,7 @@ class AuthService  {
     async resendCode(login: string) {
         let user = await usersRepository.findUserByLogin(login)
         if(user){
-            let isCodeUpdated = await usersRepository.updateConfirmationCode(user._id)
+            let isCodeUpdated = await usersRepository.updateConfirmationCode(user.accountData.id)
             if(isCodeUpdated){
                 let messageBody = emailTemplateService.getEmailConfirmationMessage(user)
                 await emailService.sendEmail(user.accountData.email, "E-mail confirmation ", messageBody)
