@@ -1,21 +1,24 @@
-import {commentsRepository} from "../repositories/comments-db-repository";
+import {CommentsRepository, commentsRepository} from "../repositories/comments-db-repository";
 import {v4 as uuidv4} from "uuid";
-import {QueryDataType} from "../types/types";
+import { CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
 
- class CommentsService  {
+
+ export class CommentsService  {
+     constructor(private commentsRepository: CommentsRepository) {
+     }
     async getComments(paginationData: QueryDataType, PostId: string | null) {
-        const comments = await commentsRepository.getComments(paginationData, PostId)
+        const comments = await this.commentsRepository.getComments(paginationData, PostId)
         return comments
     }
     async getCommentById(commentId: string) {
-        const result = await commentsRepository.getCommentById(commentId)
+        const result = await this.commentsRepository.getCommentById(commentId)
         return result
     }
     async updateCommentById(commentId: string, content: string) {
-        const comment = await commentsRepository.updateComment(commentId, content)
+        const comment = await this.commentsRepository.updateCommentById(commentId, content)
         return comment
     }
-    async createComment(paginationData: QueryDataType, content: string, postId: string, userLogin: string, userId:string) {
+    async createComment(content: string, postId: string, userLogin: string, userId:string) {
         const newComment = {
             id: uuidv4(),
             content,
@@ -24,13 +27,20 @@ import {QueryDataType} from "../types/types";
             userLogin,
             addedAt: new Date()
         }
-        const result = await commentsRepository.createComment(newComment)
+        const result = await this.commentsRepository.createComment(newComment)
         return result
     }
      async deleteComment(id: string): Promise<boolean> {
-         return await commentsRepository.deleteComment(id)
+         return await this.commentsRepository.deleteComment(id)
      }
 }
-export const commentsService = new CommentsService()
+export interface ICommentRepository{
+    getComments(paginationData: QueryDataType, PostId: string | null): Promise<EntityWithPaginationType<CommentType[]>>,
+    getCommentById(commentId: string): Promise<CommentType | null>,
+    updateCommentById(commentId: string, content: string): any,
+    createComment(newComment: CommentType ): Promise<CommentType | null>,
+    deleteComment(id: string): Promise<boolean>,
+}
+export const commentsService = new CommentsService(commentsRepository)
 
 

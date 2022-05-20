@@ -7,22 +7,16 @@ export class BloggersRepository implements IBloggersRepository {
     constructor(private bloggersCollection: MongoClient.Collection<BloggerType>,
                 private postsCollection: MongoClient.Collection<PostType>) {
     }
-
     async getBloggers(page: number,
                       pageSize: number,
                       searchNameTerm: string): Promise<EntityWithPaginationType<BloggerType[]>> {
         const filter = {name: {$regex: searchNameTerm ? searchNameTerm : ""}}
-        const bloggersDocuments = await this.bloggersCollection
+        const bloggers = await this.bloggersCollection
             .find(filter)
-            .project({_id: 0})
+            .project<BloggerType>({_id: 0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        const bloggers: BloggerType[] = bloggersDocuments.map(b => ({
-            id: b.id,
-            name: b.name,
-            youtubeUrl: b.youtubeUrl
-        }))
         const totalCount = await this.bloggersCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         return ({
@@ -33,14 +27,12 @@ export class BloggersRepository implements IBloggersRepository {
             items: bloggers
         })
     }
-
     async getBloggerById(bloggerId: string): Promise<BloggerType | null> {
         const blogger = await this.bloggersCollection.findOne({id: bloggerId}, {projection: {_id: 0}})
         if (blogger) {
             return blogger
         } else return null
     }
-
     async createBlogger(newBlogger: BloggerType) {
         await this.bloggersCollection.insertOne(newBlogger)
         return {
@@ -49,7 +41,6 @@ export class BloggersRepository implements IBloggersRepository {
             youtubeUrl: newBlogger.youtubeUrl
         }
     }
-
     async updateBloggerById(id: string, name: string, youtubeUrl: string) {
         const result = await this.bloggersCollection.updateOne({id},
             {

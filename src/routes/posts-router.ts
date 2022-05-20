@@ -149,14 +149,13 @@ postsRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const postId = req.params.postId
-            const paginationData = getPaginationData(req.query)
             //const userLogin = res.locals.userData.login ==============check this case in future==================
             const userLogin = req.user!.login
             const userId = req.user!.id
             const content = req.body.content
             const post  = await postsService.getPostById(postId)
             if(!post) return res.sendStatus(404)
-            const comments: EntityWithPaginationType<CommentType> = await commentsService
-                .createComment(paginationData, content, postId, userLogin, userId!)
+            const comments: CommentType | null = await commentsService
+                .createComment(content, postId, userLogin, userId!)
             res.status(201).send(comments)
         })

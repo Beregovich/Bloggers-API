@@ -20,14 +20,6 @@ export class PostsRepository implements IPostsRepository{
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        const Posts = allPosts.map(p=>({
-            id: p.id,
-            title: p.title,
-            shortDescription: p.shortDescription,
-            content: p.content,
-            bloggerId: p.bloggerId,
-            bloggerName: p.bloggerName
-        }))
         return ({
             pagesCount,
             page,
