@@ -7,7 +7,6 @@ import {IUsersRepository} from "../domain/users-service";
 export class UsersRepository implements IUsersRepository {
     constructor(private usersCollection: MongoClient.Collection<UserType>) {
     }
-
     async getUsers(page: number,
                    pageSize: number,
                    searchNameTerm: string): Promise<EntityWithPaginationType<UserType[]>> {
