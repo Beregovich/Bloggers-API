@@ -1,8 +1,9 @@
 import {bloggersCollection, postsCollection} from "./db";
-import {BloggersRepository, bloggersRepository} from "./bloggers-db-repository";
+import {BloggersRepository} from "./bloggers-db-repository";
 import {IPostsRepository} from "../domain/posts-service";
 import {BloggerType, PostType} from "../types/types";
 import * as MongoClient from 'mongodb';
+import {bloggersRepository} from "../IoCContainer";
 
 export class PostsRepository implements IPostsRepository{
     constructor(private postsCollection: MongoClient.Collection<PostType>,

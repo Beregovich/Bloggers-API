@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import {injectable} from "inversify";
 const {MongoClient} = require('mongodb');
 
 export const getPaginationData = (query: any) => {

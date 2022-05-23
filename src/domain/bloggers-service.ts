@@ -1,9 +1,12 @@
-import {BloggersRepository, bloggersRepository} from "../repositories/bloggers-db-repository";
+import {BloggersRepository} from "../repositories/bloggers-db-repository";
 import { v4 as uuidv4 } from 'uuid'
 import {BloggerType, EntityWithPaginationType} from "../types/types";
+import {TYPES} from "../IoCContainer";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BloggersService {
-    constructor(private bloggersRepository: BloggersRepository) {
+    constructor(@inject<IBloggersRepository>(TYPES.IBloggersRepository) private bloggersRepository: BloggersRepository) {
     }
     async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
         return await this.bloggersRepository.getBloggers(page, pageSize, searchNameTerm)
@@ -36,7 +39,7 @@ export interface IBloggersRepository{
     updateBloggerById(id: string, name: string, youtubeUrl: string): Promise<BloggerType | boolean>
     deleteBloggerById(id: string): Promise<boolean>
 }
-export const bloggersService = new BloggersService(bloggersRepository)
+
 
 
 

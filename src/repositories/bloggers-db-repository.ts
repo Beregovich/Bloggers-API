@@ -2,7 +2,9 @@ import {bloggersCollection, postsCollection} from "./db";
 import * as MongoClient from 'mongodb';
 import {IBloggersRepository} from "../domain/bloggers-service";
 import {BloggerType, EntityWithPaginationType, PostType} from "../types/types";
+import {injectable} from "inversify";
 
+@injectable()
 export class BloggersRepository implements IBloggersRepository {
     constructor(private bloggersCollection: MongoClient.Collection<BloggerType>,
                 private postsCollection: MongoClient.Collection<PostType>) {
@@ -65,5 +67,5 @@ export class BloggersRepository implements IBloggersRepository {
     }
 
 }
-export const bloggersRepository = new BloggersRepository(bloggersCollection, postsCollection)
+
 
