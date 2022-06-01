@@ -13,12 +13,10 @@ export const TYPES = {
     IBloggersRepository: Symbol.for("IBloggersRepository"),
     BloggersService: Symbol.for("BloggersService"),
     bloggersCollection: Symbol.for("bloggersCollection"),
-    ICommentRepository: Symbol.for("ICommentRepository"),
-    IPostsRepository: Symbol.for("IPostsRepository"),
-    IUsersRepository: Symbol.for("IUsersRepository"),
-
+    BloggersRepository: Symbol.for("BloggersRepository"),
 }
 export const myContainer = new Container();
 myContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository);
 myContainer.bind<BloggersService>(TYPES.BloggersService).to(BloggersService);
+myContainer.bind<BloggersRepository>(TYPES.BloggersRepository).to(BloggersRepository);
 myContainer.get<BloggersService>(TYPES.BloggersService)
