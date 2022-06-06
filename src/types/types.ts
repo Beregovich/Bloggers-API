@@ -12,11 +12,7 @@ export type BloggerType = {
     name: string | null;
     youtubeUrl: string | null;
 }
-/*export type UserType = {
-    id: string;
-    login: string;
-    passwordHash?: string;
-}*/
+
 export type CommentType = {
     id: string;
     content: string; //20<len<300
@@ -43,12 +39,11 @@ export type ErrorMessageType = {
     message: string;
     field: string;
 }
-
-/*export type UserAccountDBType = WithId<{
-    accountData: UserAccountType,
-    loginAttempts: LoginAttemptType[],
-    emailConfirmation: EmailConfirmationType
-}>*/
+export type LimitsControlType = {
+    userId: string;
+    authAttemptsAt: Date[];
+    sentEmailsAt: Date[];
+}
 
 export type UserType = {
     accountData: UserAccountType,
