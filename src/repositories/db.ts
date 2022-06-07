@@ -16,7 +16,7 @@ export const postsCollection = client.db("bloggersDB").collection("posts")
 export const requestCollection = client.db("bloggersDB").collection("requests")
 export const usersCollection = client.db("bloggersDB").collection("users")
 export const commentsCollection = client.db("bloggersDB").collection("comments")
-
+export const limitsCollection = client.db("bloggersDB").collection("limits")
 export async function runDb() {
     try {
         await client.connect()

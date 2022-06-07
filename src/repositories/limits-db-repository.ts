@@ -1,10 +1,12 @@
-import {bloggersCollection, postsCollection} from "./db";
+import {limitsCollection} from "./db";
 import * as MongoClient from 'mongodb';
-import {IBloggersRepository} from "../domain/bloggers-service";
-import {BloggerType, EntityWithPaginationType, LimitsControlType, PostType} from "../types/types";
-import {injectable} from "inversify";
 
-export class LimitsRepository  {
+import { LimitsControlType} from "../types/types";
+import {injectable} from "inversify";
+import {ILimitsRepository} from "../application/limit-control-service";
+
+@injectable()
+export class LimitsRepository  implements ILimitsRepository{
     constructor(private limitsCollection: MongoClient.Collection<LimitsControlType>) {
     }
     async getLimitsById(id: string): Promise<any> {
@@ -14,7 +16,6 @@ export class LimitsRepository  {
             .toArray()
         return limits
     }
-
     async createLimits(id: string) {
         let result = await this.limitsCollection.insertOne({
             userId: id,
@@ -23,20 +24,20 @@ export class LimitsRepository  {
 
         })
     }
-    async updateSentEmailsById(id: string) {
+    async updateSentEmailsById(id: string, date: Date) {
         const result = await this.limitsCollection.updateOne({id},
             {
                 $push: {
-                    "sentEmailsAt": new Date(),
+                    "sentEmailsAt": date,
                 }
             })
         return result.modifiedCount === 1
     }
-    async updateAuthAttempts(id: string) {
+    async updateAuthAttempts(id: string, date: Date) {
         const result = await this.limitsCollection.updateOne({id},
             {
                 $push: {
-                    "authAttemptsAt": new Date(),
+                    "authAttemptsAt": date,
                 }
             })
         return result.modifiedCount === 1
@@ -44,4 +45,4 @@ export class LimitsRepository  {
 
 }
 
-
+export const limitsRepository = new LimitsRepository(limitsCollection)
