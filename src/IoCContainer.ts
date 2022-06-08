@@ -1,22 +1,21 @@
-import { Container } from "inversify";
+import {Container} from "inversify";
 import {BloggersService, IBloggersRepository} from "./domain/bloggers-service";
-import {ICommentRepository} from "./domain/comments-service";
-import {IPostsRepository} from "./domain/posts-service";
-import {IUsersRepository} from "./domain/users-service";
 import {BloggersRepository} from "./repositories/bloggers-db-repository";
-import {bloggersCollection, postsCollection} from "./repositories/db";
+import {bloggersCollection, limitsCollection, postsCollection} from "./repositories/db";
+import "reflect-metadata";
+import {TYPES} from "./iocTYPES";
+import {LimitsRepository} from "./repositories/limits-db-repository";
+import {ILimitsRepository, LimitsControlService} from "./application/limit-control-service";
+
 
 export const bloggersRepository = new BloggersRepository(bloggersCollection, postsCollection)
 export const bloggersService = new BloggersService(bloggersRepository)
-
-export const TYPES = {
-    IBloggersRepository: Symbol.for("IBloggersRepository"),
-    BloggersService: Symbol.for("BloggersService"),
-    bloggersCollection: Symbol.for("bloggersCollection"),
-    BloggersRepository: Symbol.for("BloggersRepository"),
-}
+export const limitsRepository = new LimitsRepository(limitsCollection)
 export const myContainer = new Container();
 myContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository);
 myContainer.bind<BloggersService>(TYPES.BloggersService).to(BloggersService);
-myContainer.bind<BloggersRepository>(TYPES.BloggersRepository).to(BloggersRepository);
-myContainer.get<BloggersService>(TYPES.BloggersService)
+myContainer.bind<BloggersRepository>(TYPES.BloggersRepository).toConstantValue(bloggersRepository)
+myContainer.bind<LimitsRepository>(TYPES.LimitsRepository).toConstantValue(limitsRepository)
+//myContainer.bind<ILimitsRepository>(TYPES.ILimitsRepository).to(LimitsRepository);
+//myContainer.bind<LimitsControlService>(TYPES.LimitsControlService).to(LimitsControlService);
+//myContainer.get<BloggersService>(TYPES.BloggersService)

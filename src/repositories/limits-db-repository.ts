@@ -1,6 +1,6 @@
 import {limitsCollection} from "./db";
 import * as MongoClient from 'mongodb';
-
+import "reflect-metadata";
 import { LimitsControlType} from "../types/types";
 import {injectable} from "inversify";
 import {ILimitsRepository} from "../application/limit-control-service";
@@ -16,12 +16,11 @@ export class LimitsRepository  implements ILimitsRepository{
             .toArray()
         return limits
     }
-    async createLimits(id: string) {
+    async createLimits(ip: string) {
         let result = await this.limitsCollection.insertOne({
-            userId: id,
+            userIp: ip,
             authAttemptsAt: [],
             sentEmailsAt: [],
-
         })
     }
     async updateSentEmailsById(id: string, date: Date) {
@@ -45,4 +44,4 @@ export class LimitsRepository  implements ILimitsRepository{
 
 }
 
-export const limitsRepository = new LimitsRepository(limitsCollection)
+

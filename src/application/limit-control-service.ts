@@ -1,19 +1,19 @@
 import {injectable} from "inversify";
 import {LimitsControlType} from "../types/types";
 import {LimitsRepository} from "../repositories/limits-db-repository";
-
+import "reflect-metadata";
 @injectable()
-export class LimitsControl {
+export class LimitsControlService {
     constructor(private limitsRepository: LimitsRepository) {
     }
 
-    private limitInterval = 5 * 60 * 1000 //5min  60sec 1000ms
+    private limitInterval = 10 * 1000 //10sec 1000ms
     async checkAuthLimits(id: string) {
         const dateInLimit: Date = new Date()
         dateInLimit.setDate(dateInLimit.getTime() - this.limitInterval)
         let limits: LimitsControlType = await this.limitsRepository.getLimitsById(id)
         const attempts = limits.authAttemptsAt.filter(date => date > dateInLimit)
-        return attempts.length < 50
+        return attempts.length <= 5
     }
 
     async checkSentEmailsLimits(id: string) {

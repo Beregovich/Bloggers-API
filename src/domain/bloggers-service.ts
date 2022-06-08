@@ -1,8 +1,9 @@
 import {BloggersRepository} from "../repositories/bloggers-db-repository";
 import { v4 as uuidv4 } from 'uuid'
 import {BloggerType, EntityWithPaginationType} from "../types/types";
-import {TYPES} from "../IoCContainer";
 import {inject, injectable} from "inversify";
+import "reflect-metadata";
+import {TYPES} from "../iocTYPES";
 
 @injectable()
 export class BloggersService {

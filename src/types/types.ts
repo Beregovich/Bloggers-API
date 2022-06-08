@@ -39,11 +39,6 @@ export type ErrorMessageType = {
     message: string;
     field: string;
 }
-export type LimitsControlType = {
-    userId: string;
-    authAttemptsAt: Date[];
-    sentEmailsAt: Date[];
-}
 
 export type UserType = {
     accountData: UserAccountType,
@@ -72,5 +67,11 @@ export type EmailConfirmationType = {
     confirmationCode: string
     expirationDate: Date
     sentEmails: SentConfirmationEmailType[]
+}
+export type LimitsControlType = {
+    userIp: string;
+    authAttemptsAt: Date[];
+    sentEmailsAt: Date[];
+    lastChangingAt: Date;
 }
 
