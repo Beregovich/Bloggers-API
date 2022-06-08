@@ -5,13 +5,14 @@ import {bloggersCollection, limitsCollection, postsCollection} from "./repositor
 import "reflect-metadata";
 import {TYPES} from "./iocTYPES";
 import {LimitsRepository} from "./repositories/limits-db-repository";
-import {ILimitsRepository, LimitsControlService} from "./application/limit-control-service";
+import {ILimitsRepository, LimitsControlService} from "./middlewares/limit-control-middleware";
 
 
 export const bloggersRepository = new BloggersRepository(bloggersCollection, postsCollection)
 export const bloggersService = new BloggersService(bloggersRepository)
 export const limitsRepository = new LimitsRepository(limitsCollection)
 export const myContainer = new Container();
+
 myContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository);
 myContainer.bind<BloggersService>(TYPES.BloggersService).to(BloggersService);
 myContainer.bind<BloggersRepository>(TYPES.BloggersRepository).toConstantValue(bloggersRepository)

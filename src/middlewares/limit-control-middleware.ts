@@ -2,45 +2,45 @@ import {injectable} from "inversify";
 import {LimitsControlType} from "../types/types";
 import {LimitsRepository} from "../repositories/limits-db-repository";
 import "reflect-metadata";
+
 @injectable()
 export class LimitsControlService {
     constructor(private limitsRepository: LimitsRepository) {
     }
-
     private limitInterval = 10 * 1000 //10sec 1000ms
-    async checkAuthLimits(id: string) {
+    async checkAuthLimits(ip: string) {
         const dateInLimit: Date = new Date()
         dateInLimit.setDate(dateInLimit.getTime() - this.limitInterval)
-        let limits: LimitsControlType = await this.limitsRepository.getLimitsById(id)
+        let limits: LimitsControlType = await this.limitsRepository.getLimitsByIp(ip)
         const attempts = limits.authAttemptsAt.filter(date => date > dateInLimit)
         return attempts.length <= 5
     }
 
-    async checkSentEmailsLimits(id: string) {
+    async checkSentEmailsLimits(ip: string) {
         const dateInLimit: Date = new Date()
-        dateInLimit.setDate(dateInLimit.getTime() - this.limitInterval)
-        let limits: LimitsControlType = await this.limitsRepository.getLimitsById(id)
+        dateInLimit.setTime(dateInLimit.getTime() - this.limitInterval)
+        let limits: LimitsControlType = await this.limitsRepository.getLimitsByIp(ip)
         const attempts = limits.sentEmailsAt.filter(date => date > dateInLimit)
         return attempts.length < 5
     }
 
-    async addAuthAttemptDate(id: string) {
+    async addAuthAttemptDate(ip: string) {
         const date = new Date()
-        await this.limitsRepository.updateSentEmailsById(id, date)
+        await this.limitsRepository.updateSentEmailsById(ip, date)
     }
 
-    async addSentEmailDate(id: string) {
+    async addSentEmailDate(ip: string) {
         const date = new Date()
-        await this.limitsRepository.updateSentEmailsById(id, date)
+        await this.limitsRepository.updateSentEmailsById(ip, date)
     }
 }
 
 export interface ILimitsRepository {
-    getLimitsById(id: string): Promise<LimitsControlType>
+    getLimitsByIp(ip: string): Promise<LimitsControlType>
 
-    createLimits(id: string): void
+    createLimits(ip: string): void
 
-    updateSentEmailsById(id: string, date: Date): Promise<boolean>
+    updateSentEmailsById(ip: string, date: Date): Promise<boolean>
 
-    updateAuthAttempts(id: string, date: Date): Promise<boolean>
+    updateAuthAttempts(ip: string, date: Date): Promise<boolean>
 }
