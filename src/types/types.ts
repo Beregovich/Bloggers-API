@@ -68,10 +68,16 @@ export type EmailConfirmationType = {
     expirationDate: Date
     sentEmails: SentConfirmationEmailType[]
 }
+
 export type LimitsControlType = {
+    userIp: string;
+    url: string;
+    time: Date;
+}
+/*export type LimitsControlType = {
     userIp: string;
     authAttemptsAt: Date[];
     sentEmailsAt: Date[];
     lastChangingAt: Date;
-}
+}*/
 

@@ -10,7 +10,28 @@ export class LimitsRepository implements ILimitsRepository {
     constructor(private limitsCollection: MongoClient.Collection<LimitsControlType>) {
     }
 
-    async getLimitsByIp(id: string): Promise<any> {
+    async addAttempt(ip: string, url: string, time: Date ) {
+        let result = await this.limitsCollection.insertOne({
+            userIp: ip,
+            url,
+            time
+        })
+        return result.insertedId
+    }
+    async removeOldAttempts() {
+        let result = await this.limitsCollection.deleteMany({})
+        return result.deletedCount
+    }
+    async getLastAttempts(ip: string, url: string, limitTime: Date){
+        const countAttempts = await this.limitsCollection.countDocuments({
+            userIp: ip,
+            url,
+            time: {$gt: limitTime}
+        })
+        return countAttempts
+    }
+    /*
+    async getLimitsByIp(ip: string): Promise<any> {
         const limits = await this.limitsCollection
             .find()
             .project<LimitsControlType>({_id: 0})
@@ -18,25 +39,17 @@ export class LimitsRepository implements ILimitsRepository {
         return limits
     }
 
-    async createLimits(ip: string) {
-        let result = await this.limitsCollection.insertOne({
-            userIp: ip,
-            authAttemptsAt: [],
-            sentEmailsAt: [],
-            lastChangingAt: new Date()
-        })
-    }
-
-    async updateSentEmailsById(ip: string, date: Date) {
+    async updateSentEmailsByIp(ip: string, date: Date) {
         const result = await this.limitsCollection.updateOne({ip},
             {
                 $push: {"sentEmailsAt": date},
                 $set: {lastChangingAt: date}
-            })
+            },
+            {upsert: true})
         return result.modifiedCount === 1
     }
 
-    async updateAuthAttempts(ip: string, date: Date) {
+    async updateAuthAttemptsByIp(ip: string, date: Date) {
         const result = await this.limitsCollection.updateOne({ip},
             {
                 $push: {"authAttemptsAt": date},
@@ -44,8 +57,9 @@ export class LimitsRepository implements ILimitsRepository {
             },
             {upsert: true})
         return result.modifiedCount === 1
-    }
+    }*/
 
 }
+
 
 

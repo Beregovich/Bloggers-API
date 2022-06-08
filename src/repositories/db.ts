@@ -17,6 +17,16 @@ export const requestCollection = client.db("bloggersDB").collection("requests")
 export const usersCollection = client.db("bloggersDB").collection("users")
 export const commentsCollection = client.db("bloggersDB").collection("comments")
 export const limitsCollection = client.db("bloggersDB").collection("limits")
+
+export async function removeAll(){
+    await bloggersCollection.deleteMany({})
+    await postsCollection.deleteMany({})
+    await requestCollection.deleteMany({})
+    await usersCollection.deleteMany({})
+    await commentsCollection.deleteMany({})
+    await limitsCollection.deleteMany({})
+}
+
 export async function runDb() {
     try {
         await client.connect()

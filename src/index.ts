@@ -3,7 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import {bloggersRouter} from "./routes/bloggers-router";
 import {postsRouter} from "./routes/posts-router";
-import {runDb} from "./repositories/db";
+import {removeAll, runDb} from "./repositories/db";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
@@ -20,6 +20,10 @@ app.use('/api/users', usersRouter)
 app.use('/api/comments', commentsRouter)
 app.use('/api/auth', authRouter)
 
+app.delete('/testing/all-data', (req: Request, res: Response) => {
+    removeAll()
+    res.sendStatus(204)
+})
 //Home
 app.get('/*', (req: Request, res: Response) => {
     res.send({
@@ -29,6 +33,7 @@ app.get('/*', (req: Request, res: Response) => {
         "/api/posts/:postId": "GET, PUT, DELETE"
     })
 })
+
 
 async function startServer() {
     await runDb()
