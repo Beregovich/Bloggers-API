@@ -28,7 +28,8 @@ usersRouter
         async (req: Request, res: Response) => {
             const createdUser = await usersService.createUser(
                 req.body.login,
-                req.body.password
+                req.body.password,
+                req.body.email
             )
             res.status(201).send(createdUser)
         })
