@@ -50,6 +50,10 @@ export class UsersRepository implements IUsersRepository {
         const user = this.usersCollection.findOne({login})
         return user
     }
+    findUserByConfirmationCode(code: string): Promise<UserType | null> {
+        const user = this.usersCollection.findOne({"emailConfirmation.confirmationCode": code})
+        return user
+    }
 
     async updateConfirmation(id: string) {
         let result = await this.usersCollection

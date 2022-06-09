@@ -20,9 +20,8 @@ app.use('/api/users', usersRouter)
 app.use('/api/comments', commentsRouter)
 app.use('/api/auth', authRouter)
 
-app.delete('/testing/all-data', (req: Request, res: Response) => {
-    removeAll()
-    res.sendStatus(204)
+app.delete('/api/testing/all-data', (req: Request, res: Response) => {
+    removeAll().then(()=>res.sendStatus(204))
 })
 //Home
 app.get('/*', (req: Request, res: Response) => {

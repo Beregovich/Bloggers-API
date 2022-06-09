@@ -1,9 +1,8 @@
 import nodemailer from "nodemailer";
 
 export const emailTemplateService = {
-    getEmailConfirmationMessage(user: any){ //any!
-        return `<H1>Hello</H1>
-\n<h3>Your confirmation code:${user.emailConfirmation.confirmationCode}<h3>`
+    getEmailConfirmationMessage(confirmationCode: string){
+        return `<a href="https://bloggers-api-beregovich.herokuapp.com/api/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`
     }
 }
 export class EmailService  {

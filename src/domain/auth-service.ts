@@ -39,8 +39,8 @@ class AuthService  {
         const isEqual = await bcrypt.compare(password, hash)
         return isEqual
     }
-    async confirmEmail(code: string, login: string): Promise<boolean> {
-        let user = await usersRepository.findUserByLogin(login)
+    async confirmEmail(code: string): Promise<boolean> {
+        let user = await usersRepository.findUserByConfirmationCode(code)
         if(!user) return false
         let dbCode =  user.emailConfirmation.confirmationCode
         let dateIsExpired = isAfter(user.emailConfirmation.expirationDate, new Date())
@@ -55,7 +55,7 @@ class AuthService  {
         if(user){
             let isCodeUpdated = await usersRepository.updateConfirmationCode(user.accountData.id)
             if(isCodeUpdated){
-                let messageBody = emailTemplateService.getEmailConfirmationMessage(user)
+                let messageBody = emailTemplateService.getEmailConfirmationMessage(user.emailConfirmation.confirmationCode)
                 await emailService.sendEmail(user.accountData.email, "E-mail confirmation ", messageBody)
                 return true
             }
