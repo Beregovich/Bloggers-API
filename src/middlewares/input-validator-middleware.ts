@@ -5,13 +5,15 @@ import {ErrorMessageType} from "../types/types";
 //Rules
 const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 const emailValidator = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-const emailValidationRule = check('email').matches(emailValidator).withMessage("wrong email")
+export const emailValidationRule = check('email').matches(emailValidator).withMessage("wrong email")
 const loginValidationRule = check('login').isString()
     .isLength({min: 3, max:10})
     .withMessage("login should be 3<len<10 string")
 const passwordValidationRule = check('password').isString()
     .isLength({min: 6, max:20})
     .withMessage("password should be 6<len<20 string")
+
+
 
 export const postValidationRules = [
     body('title').isString().isLength({max: 30}).trim().not().isEmpty().withMessage('Name should be a string less 30ch'),
@@ -58,6 +60,6 @@ export const inputValidatorMiddleware = (req: Request, res: Response, next: Next
                 field: e.param
             }
         })
-        res.status(400).json(errorsOccurred)
+        res.status(400).json({"errorsMessages": errorsOccurred})
     }
 }

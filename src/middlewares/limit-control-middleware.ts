@@ -1,10 +1,11 @@
 import {injectable} from "inversify";
-import {LimitsControlType} from "../types/types";
+import {ErrorMessageType, LimitsControlType} from "../types/types";
 import {LimitsRepository} from "../repositories/limits-db-repository";
 import "reflect-metadata";
 import {limitsRepository} from "../IoCContainer";
 import {Request, Response, NextFunction} from "express";
 import {ObjectId} from "mongodb";
+import {usersRepository} from "../repositories/users-db-repository";
 
 @injectable()
 export class LimitsControlMiddleware {
@@ -26,6 +27,18 @@ export class LimitsControlMiddleware {
         }else{
             res.sendStatus(429)
         }
+    }
+
+    async checkUserExisting(req: Request, res: Response, next: NextFunction){
+        const login = req.body.login
+        const email = req.body.email
+        let errors: ErrorMessageType[] = [];
+        const userWithExistingEmail = await usersRepository.findUserByEmail(email)
+        const userWithExistingLogin = await usersRepository.findUserByEmail(login)
+        if(userWithExistingEmail) errors.push({message: "email already exist",field: "email"})
+        if(userWithExistingLogin) errors.push({message: "login already exist",field: "login"})
+        if(errors.length === 0) return next()
+        res.status(400).send({"errorsMessages": errors})
     }
     /*async checkAuthLimits(req: Request, res: Response, next: NextFunction) {
         const ip = req.ip

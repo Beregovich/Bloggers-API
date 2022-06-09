@@ -2,11 +2,19 @@ import {Request, Response, Router} from 'express'
 import {usersService} from "../domain/users-service";
 import {authService} from "../domain/auth-service";
 import {limitsControl} from "../middlewares/limit-control-middleware";
-import {inputValidatorMiddleware, registrationValidationRules} from "../middlewares/input-validator-middleware";
+import {
+    emailValidationRule,
+    inputValidatorMiddleware,
+    registrationValidationRules,
+    userValidationRules
+} from "../middlewares/input-validator-middleware";
+import {body} from "express-validator";
 
 export const authRouter = Router({})
 authRouter
     .post('/login',
+        userValidationRules,
+        inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
             const checkResult = await authService.checkCredentials(req.body.login, req.body.password)
@@ -17,15 +25,18 @@ authRouter
             }
         })
     .post('/registration',
-        //registrationValidationRules,
+        registrationValidationRules,
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
+        limitsControl.checkUserExisting.bind(limitsControl),
         async (req: Request, res: Response) => {
             const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
-            res.sendStatus(204)
+            user
+                ?res.sendStatus(204)
+                :res.sendStatus(400)
         })
     .post('/registration-confirmation',
-        //registrationValidationRules,
+        body('code').isString().withMessage('Name should be a string less 30ch'),
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
@@ -38,7 +49,7 @@ authRouter
             }
         })
     .post('/registration-email-resending',
-        //registrationValidationRules,
+        emailValidationRule,
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
