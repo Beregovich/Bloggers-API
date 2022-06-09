@@ -36,7 +36,7 @@ authRouter
                 :res.sendStatus(400)
         })
     .post('/registration-confirmation',
-        body('code').isString().withMessage('Name should be a string less 30ch'),
+        body('code').isString().withMessage('Name should be a string '),
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {

@@ -61,13 +61,13 @@ export class UsersRepository implements IUsersRepository {
 
     async updateConfirmation(id: string) {
         let result = await this.usersCollection
-            .updateOne({id}, {$set: {"emailConfirmation.isConfirmed": true}})
+            .updateOne({"accountData.id":id}, {$set: {"emailConfirmation.isConfirmed": true}})
         return result.modifiedCount === 1
     }
 
     async updateConfirmationCode(id: string) {
         let result = await this.usersCollection
-            .updateOne({id}, {$set: {"emailConfirmation.confirmationCode": uuidv4()}})
+            .updateOne({"accountData.id": id}, {$set: {"emailConfirmation.confirmationCode": uuidv4()}})
         return result.modifiedCount === 1
     }
     async findExistingUser(login: string, email: string){
