@@ -17,6 +17,7 @@ export const requestCollection = client.db("bloggersDB").collection("requests")
 export const usersCollection = client.db("bloggersDB").collection("users")
 export const commentsCollection = client.db("bloggersDB").collection("comments")
 export const limitsCollection = client.db("bloggersDB").collection("limits")
+export const emailToSendQueueCollection = client.db("bloggersDB").collection("emailsToSend")
 
 export async function removeAll(){
     await bloggersCollection.deleteMany({})

@@ -12,6 +12,7 @@ const app = express()
 const port = process.env.PORT || 5000
 //const urlValidator = /^(http(s)?:\/\/)?([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+\/[/a-zA-Z0-9_-]+$/
 
+app.set('trust proxy', true);
 app.use(jsonBodyMiddleware)
 app.use(cors())
 app.use('/api/bloggers', bloggersRouter)

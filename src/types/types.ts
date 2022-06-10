@@ -74,6 +74,14 @@ export type LimitsControlType = {
     url: string;
     time: Date;
 }
+
+export type emailConfirmationType = {
+    email: string;
+    message: string;
+    subject: string;
+    isSent: boolean;
+    createdAt: Date;
+}
 /*export type LimitsControlType = {
     userIp: string;
     authAttemptsAt: Date[];

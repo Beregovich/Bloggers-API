@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer";
+import {emailConfirmationType} from "../types/types";
+import {notificationRepository} from "../repositories/notification-db-repository";
+import {scheduler} from "../application/email-sending-scheduler";
 
 export const emailTemplateService = {
     getEmailConfirmationMessage(confirmationCode: string){
@@ -22,10 +25,15 @@ export class EmailService  {
                 to: email,
                 subject: subject,
                 html: message
-            })
+            },(err)=>err)
         }catch(e){
             console.log("sendMail function error: "+e)
         }
+    }
+    async addMessageInQueue(message: emailConfirmationType){
+        const result = await notificationRepository.enqueueMessage(message)
+        if(result) await scheduler.emailSender()
+        return result
     }
 }
 export const emailService = new EmailService()
