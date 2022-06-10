@@ -36,16 +36,18 @@ authRouter
                 :res.sendStatus(400)
         })
     .post('/registration-confirmation',
-        body('code').isString().withMessage('Name should be a string '),
+        body('code').isString().withMessage('code should be a string'),
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
             const code = req.body.code || req.query.code
             const result = await authService.confirmEmail(code)
             if (result) {
-                res.sendStatus(201)
+                res.sendStatus(204)
             } else {
-                res.sendStatus(400)
+                res.status(400).send({
+                    errorsMessages: [{ message: "wrong code", field: "code" }]
+                })
             }
         })
     .post('/registration-email-resending',
@@ -53,7 +55,9 @@ authRouter
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
-            let isReseeded = authService.resendCode(req.body.email)
-            if(!isReseeded) return null
-            res.sendStatus(200)
+            let isReseeded = await  authService.resendCode(req.body.email)
+            if(!isReseeded) return res.status(400)
+                .send({errorsMessages: [{ message: "email already confirmed or such email not found",
+                        field: "email" }]})
+            res.sendStatus(204)
         })

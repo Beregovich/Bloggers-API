@@ -42,6 +42,7 @@ class AuthService  {
     async confirmEmail(code: string): Promise<boolean> {
         let user = await usersRepository.findUserByConfirmationCode(code)
         if(!user) return false
+        if(user.emailConfirmation.isConfirmed) return false
         let dbCode =  user.emailConfirmation.confirmationCode
         let dateIsExpired = isAfter(user.emailConfirmation.expirationDate, new Date())
         if(dbCode === code && dateIsExpired ){
@@ -50,16 +51,17 @@ class AuthService  {
         }
         return false
     }
-    async resendCode(login: string) {
-        let user = await usersRepository.findUserByLogin(login)
-        if(user){
+    async resendCode(email: string) {
+        let user = await usersRepository.findUserByEmail(email)
+        if(!user) return null
+        if(user.emailConfirmation.isConfirmed) return null
             let isCodeUpdated = await usersRepository.updateConfirmationCode(user.accountData.id)
             if(isCodeUpdated){
                 let messageBody = emailTemplateService.getEmailConfirmationMessage(user.emailConfirmation.confirmationCode)
                 await emailService.sendEmail(user.accountData.email, "E-mail confirmation ", messageBody)
                 return true
             }
-        }else return null
+            return null
     }
 }
 export const authService = new AuthService()
