@@ -6,7 +6,7 @@ export const checkOwnership = async (req: Request, res: Response, next: NextFunc
     const commentToChangeOrRemove = await commentsService.getCommentById(commentId)
     if(!commentToChangeOrRemove ){
         res.sendStatus(404)
-    }else if(commentToChangeOrRemove.userLogin != req.user!.login){
+    }else if(commentToChangeOrRemove.userLogin != req.user!.accountData.login){
         res.sendStatus(403)
         console.log(("Forbidden"))
     }else{
