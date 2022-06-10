@@ -52,12 +52,12 @@ class AuthService  {
     }
     async resendCode(email: string) {
         let user = await usersRepository.findUserByEmail(email)
-        if(!user) return null
-        if(user.emailConfirmation.isConfirmed) return null
-            let isCodeUpdated = await usersRepository.updateConfirmationCode(user.accountData.id)
-            if(isCodeUpdated){
-                let messageBody = emailTemplateService.getEmailConfirmationMessage(user.emailConfirmation.confirmationCode)
-                await emailService.sendEmail(user.accountData.email, "E-mail confirmation ", messageBody)
+        if(!user || user.emailConfirmation.isConfirmed) return null
+            let updatedUser = await usersRepository.updateConfirmationCode(user.accountData.id)
+            if(updatedUser){
+                let messageBody = emailTemplateService
+                    .getEmailConfirmationMessage(updatedUser.emailConfirmation.confirmationCode)
+                await emailService.sendEmail(updatedUser.accountData.email, "E-mail confirmation ", messageBody)
                 return true
             }
             return null

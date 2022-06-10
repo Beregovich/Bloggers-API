@@ -3,6 +3,7 @@ import {v4 as uuidv4} from 'uuid'
 import {BloggerType, EntityWithPaginationType, UserType} from "../types/types";
 import * as MongoClient from "mongodb";
 import {IUsersRepository} from "../domain/users-service";
+import {addHours} from "date-fns";
 
 export class UsersRepository implements IUsersRepository {
     constructor(private usersCollection: MongoClient.Collection<UserType>) {
@@ -66,9 +67,11 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async updateConfirmationCode(id: string) {
-        let result = await this.usersCollection
-            .updateOne({"accountData.id": id}, {$set: {"emailConfirmation.confirmationCode": uuidv4()}})
-        return result.modifiedCount === 1
+        let updatedUser = await this.usersCollection
+            .findOneAndUpdate({"accountData.id": id},
+                {$set: {"emailConfirmation.confirmationCode": uuidv4(),
+                        "emailConfirmation.expirationDate": addHours(new Date(), 24)}})
+        return updatedUser.value
     }
     async findExistingUser(login: string, email: string){
         const result = await this.usersCollection
