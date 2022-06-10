@@ -6,8 +6,7 @@ import {scheduler} from "../application/email-sending-scheduler";
 export const emailTemplateService = {
     getEmailConfirmationMessage(confirmationCode: string){
 
-        return `<a href="https://bloggers-api-beregovich.herokuapp.com/api/auth/registration-confirmation/
-                    ?code=${confirmationCode}">${confirmationCode}</a>`
+        return `<a href="https://bloggers-api-beregovich.herokuapp.com/api/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`
     }
 }
 export class EmailService  {
@@ -32,7 +31,7 @@ export class EmailService  {
     }
     async addMessageInQueue(message: emailConfirmationType){
         const result = await notificationRepository.enqueueMessage(message)
-        if(result) await scheduler.emailSender()
+        if(result) await scheduler.emailSender(this.sendEmail)
         return result
     }
 }

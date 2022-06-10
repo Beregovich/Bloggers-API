@@ -16,6 +16,7 @@ export class LimitsControlMiddleware {
 
     async checkLimits(req: Request, res: Response, next: NextFunction) {
         const ip = req.ip
+        console.log(ip)
         const url = req.url
         const currentTime: Date = new Date()
         const limitTime: Date = new Date(currentTime.getTime() - this.limitInterval)
@@ -34,10 +35,10 @@ export class LimitsControlMiddleware {
         const email = req.body.email
         let errors: ErrorMessageType[] = [];
         const userWithExistingEmail = await usersRepository.findUserByEmail(email)
-        const userWithExistingLogin = await usersRepository.findUserByEmail(login)
-        if(userWithExistingEmail) errors.push({message: "email already exist",field: "email"})
-        if(userWithExistingLogin) errors.push({message: "login already exist",field: "login"})
-        if(errors.length === 0) return next()
+        const userWithExistingLogin = await usersRepository.findUserByLogin(login)
+        if(userWithExistingEmail) errors.push({message: "email already exist",field: "email"});
+        if(userWithExistingLogin) errors.push({message: "login already exist",field: "login"});
+        if(errors.length < 1 ) return next()
         res.status(400).send({"errorsMessages": errors})
     }
     /*async checkAuthLimits(req: Request, res: Response, next: NextFunction) {

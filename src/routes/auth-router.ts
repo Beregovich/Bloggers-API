@@ -40,7 +40,7 @@ authRouter
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
-            const code = req.body.code || req.query.code
+            const code = req.body.code
             const result = await authService.confirmEmail(code)
             if (result) {
                 res.sendStatus(204)
@@ -55,8 +55,8 @@ authRouter
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
-            let isReseeded = await  authService.resendCode(req.body.email)
-            if(!isReseeded) return res.status(400)
+            let isResended = await  authService.resendCode(req.body.email)
+            if(!isResended) return res.status(400)
                 .send({errorsMessages: [{ message: "email already confirmed or such email not found",
                         field: "email" }]})
             res.sendStatus(204)

@@ -41,8 +41,7 @@ class AuthService  {
     }
     async confirmEmail(code: string): Promise<boolean> {
         let user = await usersRepository.findUserByConfirmationCode(code)
-        if(!user) return false
-        if(user.emailConfirmation.isConfirmed) return false
+        if(!user || user.emailConfirmation.isConfirmed) return false
         let dbCode =  user.emailConfirmation.confirmationCode
         let dateIsExpired = isAfter(user.emailConfirmation.expirationDate, new Date())
         if(dbCode === code && dateIsExpired ){

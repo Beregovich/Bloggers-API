@@ -33,7 +33,14 @@ class UsersService  {
         const createdUser = await this.usersRepository.createUser(newUser)
         if(createdUser){
             let messageBody = emailTemplateService.getEmailConfirmationMessage(createdUser.emailConfirmation.confirmationCode)
-            await emailService.sendEmail(createdUser.accountData.email, "E-mail confirmation ", messageBody)
+            await emailService.addMessageInQueue({
+                email: newUser.accountData.email,
+                message: messageBody,
+                subject: "E-mail confirmation ",
+                isSent: false,
+                createdAt: new Date()
+            })
+            //await emailService.sendEmail(createdUser.accountData.email, "E-mail confirmation ", messageBody)
             return createdUser
         }else {
             return null
