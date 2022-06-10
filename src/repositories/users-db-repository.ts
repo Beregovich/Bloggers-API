@@ -70,7 +70,8 @@ export class UsersRepository implements IUsersRepository {
         let updatedUser = await this.usersCollection
             .findOneAndUpdate({"accountData.id": id},
                 {$set: {"emailConfirmation.confirmationCode": uuidv4(),
-                        "emailConfirmation.expirationDate": addHours(new Date(), 24)}})
+                        "emailConfirmation.expirationDate": addHours(new Date(), 24)}},
+                {returnDocument: "after"})
         return updatedUser.value
     }
     async findExistingUser(login: string, email: string){
