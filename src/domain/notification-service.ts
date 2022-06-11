@@ -1,13 +1,15 @@
 import nodemailer from "nodemailer";
 import {emailConfirmationType} from "../types/types";
-import {notificationRepository} from "../repositories/notification-db-repository";
-import {scheduler} from "../IoCContainer";
+import {notificationRepository, scheduler} from "../IoCContainer";
+import {injectable} from "inversify";
+
 export const emailTemplateService = {
     getEmailConfirmationMessage(confirmationCode: string){
 
         return `<a href="https://bloggers-api-beregovich.herokuapp.com/api/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`
     }
 }
+@injectable()
 export class EmailService  {
     async sendEmail(email: string, subject: string, message: string) {
         let transporter = nodemailer.createTransport({
@@ -34,4 +36,3 @@ export class EmailService  {
         return result
     }
 }
-export const emailService = new EmailService()

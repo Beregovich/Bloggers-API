@@ -5,8 +5,8 @@ import {
     userValidationRules
 } from "../middlewares/input-validator-middleware";
 import {getPaginationData} from "../repositories/db";
-import {usersService} from "../domain/users-service";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
+import {usersService} from "../IoCContainer";
 
 export const usersRouter = Router()
 usersRouter

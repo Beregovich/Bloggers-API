@@ -1,9 +1,9 @@
-import {emailToSendQueueCollection} from "./db";
 import {emailConfirmationType} from "../types/types";
 import * as MongoClient from 'mongodb';
+import {ObjectId} from 'mongodb';
+import {injectable} from "inversify";
 
-import {ObjectId} from "mongodb";
-
+@injectable()
 export class NotificationRepository {
     constructor(private emailToSendQueueCollection: MongoClient.Collection<emailConfirmationType>) {
     }
@@ -24,7 +24,5 @@ export class NotificationRepository {
     }
 
 }
-
-export const notificationRepository = new NotificationRepository(emailToSendQueueCollection)
 
 

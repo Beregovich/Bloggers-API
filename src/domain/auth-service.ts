@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { isAfter} from 'date-fns'
-import {usersRepository} from "../repositories/users-db-repository";
-import {emailService, emailTemplateService} from "./notification-service";
+import {emailTemplateService} from "./notification-service";
+import {injectable} from "inversify";
+import {emailService, usersRepository} from "../IoCContainer";
 
-class AuthService  {
+@injectable()
+export class AuthService  {
     async checkCredentials(login: string, password: string) {
         const user = await usersRepository.findUserByLogin(login)
         if (!user || !user.emailConfirmation.isConfirmed) return {
@@ -63,4 +65,3 @@ class AuthService  {
             return null
     }
 }
-export const authService = new AuthService()

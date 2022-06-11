@@ -1,11 +1,10 @@
 import {injectable} from "inversify";
-import {ErrorMessageType, LimitsControlType} from "../types/types";
+import {ErrorMessageType} from "../types/types";
 import {LimitsRepository} from "../repositories/limits-db-repository";
 import "reflect-metadata";
-import {limitsRepository} from "../IoCContainer";
-import {Request, Response, NextFunction} from "express";
+import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
-import {usersRepository} from "../repositories/users-db-repository";
+import {usersRepository} from "../IoCContainer";
 
 @injectable()
 export class LimitsControlMiddleware {
@@ -16,7 +15,6 @@ export class LimitsControlMiddleware {
 
     async checkLimits(req: Request, res: Response, next: NextFunction) {
         const ip = req.ip
-        console.log(ip)
         const url = req.url
         const currentTime: Date = new Date()
         const limitTime: Date = new Date(currentTime.getTime() - this.limitInterval)
@@ -50,4 +48,3 @@ export interface ILimitsRepository {
     getLastAttempts(ip: string, hostname: string, currentTime: Date): Promise<number>
 }
 
-export const limitsControl = new LimitsControlMiddleware(limitsRepository)

@@ -1,11 +1,13 @@
-import {UsersRepository, usersRepository} from "../repositories/users-db-repository";
-import {authService} from "./auth-service";
+import {UsersRepository} from "../repositories/users-db-repository";
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, UserType} from "../types/types";
 import {addHours} from "date-fns";
-import {emailService, emailTemplateService} from "./notification-service";
+import {emailTemplateService} from "./notification-service";
+import {authService, emailService} from "../IoCContainer";
+import {injectable} from "inversify";
 
-class UsersService  {
+@injectable()
+export class UsersService  {
     constructor(private usersRepository: UsersRepository, ) {
     }
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
@@ -55,6 +57,6 @@ export interface IUsersRepository {
     createUser(newUser: UserType): Promise<UserType | null>,
     deleteUserById(id: string): Promise<boolean>
 }
-export const usersService = new UsersService(usersRepository)
+
 
 

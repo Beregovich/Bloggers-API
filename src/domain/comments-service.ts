@@ -1,8 +1,10 @@
-import {CommentsRepository, commentsRepository} from "../repositories/comments-db-repository";
+import {CommentsRepository} from "../repositories/comments-db-repository";
 import {v4 as uuidv4} from "uuid";
 import { CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
+import {commentsRepository} from "../IoCContainer";
+import {injectable} from "inversify";
 
-
+@injectable()
  export class CommentsService  {
      constructor(private commentsRepository: CommentsRepository) {
      }
@@ -41,6 +43,6 @@ export interface ICommentRepository{
     createComment(newComment: CommentType ): Promise<CommentType | null>,
     deleteComment(id: string): Promise<boolean>,
 }
-export const commentsService = new CommentsService(commentsRepository)
+
 
 

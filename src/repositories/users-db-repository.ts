@@ -1,10 +1,11 @@
-import {usersCollection} from "./db";
 import {v4 as uuidv4} from 'uuid'
 import {EntityWithPaginationType, UserType} from "../types/types";
 import * as MongoClient from "mongodb";
 import {IUsersRepository} from "../domain/users-service";
 import {addHours} from "date-fns";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersRepository implements IUsersRepository {
     constructor(private usersCollection: MongoClient.Collection<UserType>) {
     }
@@ -88,6 +89,4 @@ export class UsersRepository implements IUsersRepository {
         return result
     }
 }
-
-export const usersRepository = new UsersRepository(usersCollection)
 

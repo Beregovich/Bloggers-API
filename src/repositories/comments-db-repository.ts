@@ -1,8 +1,9 @@
-import {commentsCollection} from "./db";
 import {CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
 import * as MongoClient from 'mongodb';
 import {ICommentRepository} from "../domain/comments-service";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsRepository implements ICommentRepository{
     constructor(private commentsCollection: MongoClient.Collection<CommentType>) {
     }
@@ -48,7 +49,5 @@ export class CommentsRepository implements ICommentRepository{
         return comment
     }
 }
-
-export const commentsRepository = new CommentsRepository(commentsCollection)
 
 

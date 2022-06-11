@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {commentsService} from "../domain/comments-service";
+import {commentsService} from "../IoCContainer";
 
 export const checkOwnership = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = req.params.commentId

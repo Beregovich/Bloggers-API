@@ -2,8 +2,8 @@ import {Request, Response, Router} from 'express'
 import {commentValidationRules, inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
 import {check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {commentsService} from "../domain/comments-service";
 import {checkOwnership} from "../middlewares/check-ownership-middleware";
+import {commentsService} from "../IoCContainer";
 
 export const commentsRouter = Router()
 commentsRouter

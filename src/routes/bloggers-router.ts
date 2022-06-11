@@ -6,9 +6,8 @@ import {
     postValidationRules
 } from "../middlewares/input-validator-middleware";
 import {getPaginationData} from "../repositories/db";
-import {postsService} from "../domain/posts-service";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
-import {bloggersService} from "../IoCContainer";
+import {bloggersService, postsService} from "../IoCContainer";
 
 export const bloggersRouter = Router()
 

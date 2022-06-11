@@ -1,6 +1,8 @@
-import {notificationRepository} from "../repositories/notification-db-repository";
 import {EmailService} from "../domain/notification-service";
+import {notificationRepository} from "../IoCContainer";
+import {injectable} from "inversify";
 
+@injectable()
 export class Scheduler {
     private isWorking: boolean;
     constructor(private emailService: EmailService){

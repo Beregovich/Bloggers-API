@@ -1,7 +1,4 @@
 import {Request, Response, Router} from 'express'
-import {usersService} from "../domain/users-service";
-import {authService} from "../domain/auth-service";
-import {limitsControl} from "../middlewares/limit-control-middleware";
 import {
     emailValidationRule,
     inputValidatorMiddleware,
@@ -9,6 +6,7 @@ import {
     userValidationRules
 } from "../middlewares/input-validator-middleware";
 import {body} from "express-validator";
+import {authService, limitsControl, usersService} from "../IoCContainer";
 
 export const authRouter = Router({})
 authRouter

@@ -1,7 +1,9 @@
-import {PostsRepository, postsRepository} from "../repositories/posts-db-repository";
+import {PostsRepository} from "../repositories/posts-db-repository";
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, PostType} from "../types/types";
+import {injectable} from "inversify";
 
+@injectable()
 export class PostsService {
     constructor(private postsRepository: PostsRepository) {
     }
@@ -40,4 +42,3 @@ export interface IPostsRepository {
     updatePostById(id: string, newPost: PostType): any,
     deletePostById(id: string): Promise<boolean>
 }
-export const postsService = new PostsService(postsRepository)
