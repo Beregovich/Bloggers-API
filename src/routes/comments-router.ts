@@ -11,12 +11,11 @@ commentsRouter
         async (req: Request, res: Response) => {
             const commentId = req.params.commentId
             const comment = await commentsService.getCommentById(commentId)
-            if(comment){
+            if (comment) {
                 res.send(comment)
-            }else{
+            } else {
                 res.sendStatus(404)
             }
-
         })
     //Update comment
     .put('/:commentId',
@@ -30,9 +29,9 @@ commentsRouter
             const commentId = req.params.commentId
             const content = req.body.content
             const updated = await commentsService.updateCommentById(commentId, content)
-            if(updated){
+            if (updated) {
                 res.sendStatus(204)
-            }else{
+            } else {
                 res.sendStatus(404)
             }
         })
@@ -45,9 +44,9 @@ commentsRouter
             const commentId = req.params.commentId
             //403 error
             const result = await commentsService.deleteComment(commentId)
-            if(result){
+            if (result) {
                 res.sendStatus(204)
-            }else{
+            } else {
                 res.sendStatus(404)
             }
         })

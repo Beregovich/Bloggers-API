@@ -7,13 +7,11 @@ const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 const emailValidator = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 export const emailValidationRule = check('email').matches(emailValidator).withMessage("wrong email")
 const loginValidationRule = check('login').isString()
-    .isLength({min: 3, max:10})
+    .isLength({min: 3, max: 10})
     .withMessage("login should be 3<len<10 string")
 const passwordValidationRule = check('password').isString()
-    .isLength({min: 6, max:20})
+    .isLength({min: 6, max: 20})
     .withMessage("password should be 6<len<20 string")
-
-
 
 export const postValidationRules = [
     body('title').isString().isLength({max: 30}).trim().not().isEmpty().withMessage('Name should be a string less 30ch'),
@@ -37,7 +35,7 @@ export const commentValidationRules = [
         .withMessage('Password length should be:  20<len<300')
 ]
 export const paginationRules = [
-    check('page').optional({checkFalsy: true,  }, )
+    check('page').optional({checkFalsy: true,},)
         .isInt({min: 1}).withMessage('page should be numeric value'),
     check('pageSize').optional({checkFalsy: true})
         .isInt({min: 1}).withMessage('pageSize should be numeric value'),
@@ -54,7 +52,7 @@ export const inputValidatorMiddleware = (req: Request, res: Response, next: Next
     if (errors.isEmpty()) {
         next()
     } else {
-        const errorsOccurred: ErrorMessageType[] = errors.array({ onlyFirstError: true }).map(e => {
+        const errorsOccurred: ErrorMessageType[] = errors.array({onlyFirstError: true}).map(e => {
             return {
                 message: e.msg,
                 field: e.param

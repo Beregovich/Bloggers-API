@@ -5,7 +5,6 @@ import {bloggersCollection, limitsCollection, postsCollection} from "./repositor
 import "reflect-metadata";
 import {TYPES} from "./iocTYPES";
 import {LimitsRepository} from "./repositories/limits-db-repository";
-import {ILimitsRepository, LimitsControlMiddleware} from "./middlewares/limit-control-middleware";
 
 
 export const bloggersRepository = new BloggersRepository(bloggersCollection, postsCollection)

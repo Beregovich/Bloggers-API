@@ -1,4 +1,3 @@
-import {EmailService, emailService} from "../domain/notification-service";
 import {notificationRepository} from "../repositories/notification-db-repository";
 
 export class Scheduler {

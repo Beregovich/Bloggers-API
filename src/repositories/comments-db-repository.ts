@@ -1,5 +1,5 @@
 import {commentsCollection} from "./db";
-import {BloggerType, CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
+import {CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
 import * as MongoClient from 'mongodb';
 import {ICommentRepository} from "../domain/comments-service";
 
@@ -8,7 +8,6 @@ export class CommentsRepository implements ICommentRepository{
     }
     async getComments(paginationData: QueryDataType,
                       postId: string | null): Promise<EntityWithPaginationType<CommentType[]>> {
-        //const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         let filter = postId
             ?{content : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}, postId }
             :{content : {$regex : paginationData.searchNameTerm ? paginationData.searchNameTerm : ""}}

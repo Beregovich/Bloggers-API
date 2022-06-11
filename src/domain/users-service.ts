@@ -40,7 +40,6 @@ class UsersService  {
                 isSent: false,
                 createdAt: new Date()
             })
-            //await emailService.sendEmail(createdUser.accountData.email, "E-mail confirmation ", messageBody)
             return createdUser
         }else {
             return null

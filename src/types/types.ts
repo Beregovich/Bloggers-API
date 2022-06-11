@@ -1,4 +1,3 @@
-
 export type PostType = {
     id?: string;
     title: string | null;
@@ -82,10 +81,5 @@ export type emailConfirmationType = {
     isSent: boolean;
     createdAt: Date;
 }
-/*export type LimitsControlType = {
-    userIp: string;
-    authAttemptsAt: Date[];
-    sentEmailsAt: Date[];
-    lastChangingAt: Date;
-}*/
+
 

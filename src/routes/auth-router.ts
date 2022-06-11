@@ -32,8 +32,8 @@ authRouter
         async (req: Request, res: Response) => {
             const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
             user
-                ?res.sendStatus(204)
-                :res.sendStatus(400)
+                ? res.sendStatus(204)
+                : res.sendStatus(400)
         })
     .post('/registration-confirmation',
         body('code').isString().withMessage('code should be a string'),
@@ -46,7 +46,7 @@ authRouter
                 res.sendStatus(204)
             } else {
                 res.status(400).send({
-                    errorsMessages: [{ message: "wrong code", field: "code" }]
+                    errorsMessages: [{message: "wrong code", field: "code"}]
                 })
             }
         })
@@ -55,9 +55,13 @@ authRouter
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
-            let isResended = await  authService.resendCode(req.body.email)
-            if(!isResended) return res.status(400)
-                .send({errorsMessages: [{ message: "email already confirmed or such email not found",
-                        field: "email" }]})
+            let isResended = await authService.resendCode(req.body.email)
+            if (!isResended) return res.status(400)
+                .send({
+                    errorsMessages: [{
+                        message: "email already confirmed or such email not found",
+                        field: "email"
+                    }]
+                })
             res.sendStatus(204)
         })

@@ -1,6 +1,6 @@
 import {usersCollection} from "./db";
 import {v4 as uuidv4} from 'uuid'
-import {BloggerType, EntityWithPaginationType, UserType} from "../types/types";
+import {EntityWithPaginationType, UserType} from "../types/types";
 import * as MongoClient from "mongodb";
 import {IUsersRepository} from "../domain/users-service";
 import {addHours} from "date-fns";
@@ -8,6 +8,7 @@ import {addHours} from "date-fns";
 export class UsersRepository implements IUsersRepository {
     constructor(private usersCollection: MongoClient.Collection<UserType>) {
     }
+
     async getUsers(page: number,
                    pageSize: number,
                    searchNameTerm: string): Promise<EntityWithPaginationType<UserType[]>> {
@@ -38,12 +39,12 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async deleteUserById(id: string): Promise<boolean> {
-        const result = await this.usersCollection.deleteOne({"accountData.id":id})
+        const result = await this.usersCollection.deleteOne({"accountData.id": id})
         return result.deletedCount === 1
     }
 
     findUserById(id: string): Promise<UserType | null> {
-        const user = this.usersCollection.findOne({"accountData.id":id})
+        const user = this.usersCollection.findOne({"accountData.id": id})
         return user
     }
 
@@ -51,10 +52,12 @@ export class UsersRepository implements IUsersRepository {
         const user = this.usersCollection.findOne({"accountData.login": login})
         return user
     }
+
     findUserByEmail(email: string): Promise<UserType | null> {
-        const user = this.usersCollection.findOne({"accountData.email":email})
+        const user = this.usersCollection.findOne({"accountData.email": email})
         return user
     }
+
     findUserByConfirmationCode(code: string): Promise<UserType | null> {
         const user = this.usersCollection.findOne({"emailConfirmation.confirmationCode": code})
         return user
@@ -62,19 +65,24 @@ export class UsersRepository implements IUsersRepository {
 
     async updateConfirmation(id: string) {
         let result = await this.usersCollection
-            .updateOne({"accountData.id":id}, {$set: {"emailConfirmation.isConfirmed": true}})
+            .updateOne({"accountData.id": id}, {$set: {"emailConfirmation.isConfirmed": true}})
         return result.modifiedCount === 1
     }
 
     async updateConfirmationCode(id: string) {
         let updatedUser = await this.usersCollection
             .findOneAndUpdate({"accountData.id": id},
-                {$set: {"emailConfirmation.confirmationCode": uuidv4(),
-                        "emailConfirmation.expirationDate": addHours(new Date(), 24)}},
+                {
+                    $set: {
+                        "emailConfirmation.confirmationCode": uuidv4(),
+                        "emailConfirmation.expirationDate": addHours(new Date(), 24)
+                    }
+                },
                 {returnDocument: "after"})
         return updatedUser.value
     }
-    async findExistingUser(login: string, email: string){
+
+    async findExistingUser(login: string, email: string) {
         const result = await this.usersCollection
             .findOne({$or: [{"accountData.login": login}, {"accountData.email": email}]})
         return result

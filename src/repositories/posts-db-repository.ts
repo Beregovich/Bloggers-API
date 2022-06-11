@@ -5,14 +5,16 @@ import {BloggerType, PostType} from "../types/types";
 import * as MongoClient from 'mongodb';
 import {bloggersRepository} from "../IoCContainer";
 
-export class PostsRepository implements IPostsRepository{
+export class PostsRepository implements IPostsRepository {
     constructor(private postsCollection: MongoClient.Collection<PostType>,
                 private bloggersCollection: MongoClient.Collection<BloggerType>,
-                private bloggersRepository: BloggersRepository) {}
+                private bloggersRepository: BloggersRepository) {
+    }
+
     async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
         let filter = bloggerId
-            ?{title : {$regex : searchNameTerm ? searchNameTerm : ""}, bloggerId}
-            :{title : {$regex : searchNameTerm ? searchNameTerm : ""}}
+            ? {title: {$regex: searchNameTerm ? searchNameTerm : ""}, bloggerId}
+            : {title: {$regex: searchNameTerm ? searchNameTerm : ""}}
         const totalCount = await this.postsCollection.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         const allPosts = await this.postsCollection
@@ -29,8 +31,9 @@ export class PostsRepository implements IPostsRepository{
             items: allPosts
         })
     }
+
     async getPostById(id: string) {
-        const post = await this.postsCollection.findOne({id},{projection: {_id:0}})
+        const post = await this.postsCollection.findOne({id}, {projection: {_id: 0}})
         if (!post) return false
         const blogger = await this.bloggersRepository.getBloggerById(post.bloggerId)
         if (!blogger) return false
@@ -44,17 +47,19 @@ export class PostsRepository implements IPostsRepository{
             bloggerName
         })
     }
+
     async createPost(newPost: PostType): Promise<PostType | null> {
         const blogger = await this.bloggersCollection.findOne({id: newPost.bloggerId})
-        if(!blogger) return null
+        if (!blogger) return null
         await postsCollection.insertOne({
             ...newPost,
             bloggerName: blogger.name
         })
-        const postToReturn = await this.postsCollection.findOne({id: newPost.id}, {projection: {_id:0}})
+        const postToReturn = await this.postsCollection.findOne({id: newPost.id}, {projection: {_id: 0}})
         return (postToReturn)
     }
-    async updatePostById(id: string,newPost: PostType) {
+
+    async updatePostById(id: string, newPost: PostType) {
         const result = await this.postsCollection.updateOne({id}, {
             $set: {
                 title: newPost.title,
@@ -65,9 +70,11 @@ export class PostsRepository implements IPostsRepository{
         })
         return result.modifiedCount === 1
     }
+
     async deletePostById(id: string) {
         const result = await this.postsCollection.deleteOne({id})
         return result.deletedCount === 1
     }
 }
+
 export const postsRepository = new PostsRepository(postsCollection, bloggersCollection, bloggersRepository)

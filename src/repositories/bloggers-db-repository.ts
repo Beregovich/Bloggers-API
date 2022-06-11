@@ -1,4 +1,3 @@
-import {bloggersCollection, postsCollection} from "./db";
 import * as MongoClient from 'mongodb';
 import {IBloggersRepository} from "../domain/bloggers-service";
 import {BloggerType, EntityWithPaginationType, PostType} from "../types/types";
@@ -10,6 +9,7 @@ export class BloggersRepository implements IBloggersRepository {
     constructor(private bloggersCollection: MongoClient.Collection<BloggerType>,
                 private postsCollection: MongoClient.Collection<PostType>) {
     }
+
     async getBloggers(page: number,
                       pageSize: number,
                       searchNameTerm: string): Promise<EntityWithPaginationType<BloggerType[]>> {
@@ -30,12 +30,14 @@ export class BloggersRepository implements IBloggersRepository {
             items: bloggers
         })
     }
+
     async getBloggerById(bloggerId: string): Promise<BloggerType | null> {
         const blogger = await this.bloggersCollection.findOne({id: bloggerId}, {projection: {_id: 0}})
         if (blogger) {
             return blogger
         } else return null
     }
+
     async createBlogger(newBlogger: BloggerType) {
         await this.bloggersCollection.insertOne(newBlogger)
         return {
@@ -44,6 +46,7 @@ export class BloggersRepository implements IBloggersRepository {
             youtubeUrl: newBlogger.youtubeUrl
         }
     }
+
     async updateBloggerById(id: string, name: string, youtubeUrl: string) {
         const result = await this.bloggersCollection.updateOne({id},
             {
@@ -66,7 +69,6 @@ export class BloggersRepository implements IBloggersRepository {
         const result = await this.bloggersCollection.deleteOne({id})
         return result.deletedCount === 1
     }
-
 }
 
 

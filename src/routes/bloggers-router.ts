@@ -9,6 +9,7 @@ import {getPaginationData} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 import {bloggersService} from "../IoCContainer";
+
 export const bloggersRouter = Router()
 
 bloggersRouter
@@ -101,7 +102,7 @@ bloggersRouter
         bloggerValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const bloggerId: string = ""+req.params.bloggerId
+            const bloggerId: string = "" + req.params.bloggerId
             const blogger = await bloggersService.updateBloggerById(
                 bloggerId,
                 req.body.name,

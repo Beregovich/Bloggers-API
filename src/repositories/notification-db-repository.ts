@@ -1,23 +1,25 @@
-import {commentsCollection, emailToSendQueueCollection} from "./db";
-import {BloggerType, CommentType, emailConfirmationType, EntityWithPaginationType, QueryDataType} from "../types/types";
+import {emailToSendQueueCollection} from "./db";
+import {emailConfirmationType} from "../types/types";
 import * as MongoClient from 'mongodb';
-import {ICommentRepository} from "../domain/comments-service";
+
 import {ObjectId} from "mongodb";
 
 export class NotificationRepository {
     constructor(private emailToSendQueueCollection: MongoClient.Collection<emailConfirmationType>) {
     }
-    async enqueueMessage(message: emailConfirmationType){
+
+    async enqueueMessage(message: emailConfirmationType) {
         const result = await this.emailToSendQueueCollection.insertOne(message)
         return result.insertedId
     }
-    async dequeueMessage(){
+
+    async dequeueMessage() {
         const message = await this.emailToSendQueueCollection.findOne({isSent: false})
         return message
     }
 
-    async updateMessageStatus(id: ObjectId){
-        const result = await this.emailToSendQueueCollection.updateOne({_id:id},{$set:{isSent: true}})
+    async updateMessageStatus(id: ObjectId) {
+        const result = await this.emailToSendQueueCollection.updateOne({_id: id}, {$set: {isSent: true}})
         return result.modifiedCount === 1
     }
 

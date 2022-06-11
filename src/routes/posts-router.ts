@@ -14,6 +14,7 @@ import {commentsService} from "../domain/comments-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {CommentType, EntityWithPaginationType, PostType} from "../types/types";
 import {bloggersService} from "../IoCContainer";
+
 export const postsRouter = Router()
 
 postsRouter
@@ -86,7 +87,7 @@ postsRouter
                 title: req.body.title,
                 shortDescription: req.body.shortDescription,
                 content: req.body.content,
-                bloggerId: ""+req.body.bloggerId
+                bloggerId: "" + req.body.bloggerId
             }
             const bloggerToUpdate = await bloggersService.getBloggerById(updatePost.bloggerId)
             if (!bloggerToUpdate) {
@@ -141,12 +142,12 @@ postsRouter
             const comments: EntityWithPaginationType<CommentType[]> = await commentsService
                 .getComments(paginationData, id)
             const post = await postsService.getPostById(id)
-            if(!post) return res.sendStatus(404)
+            if (!post) return res.sendStatus(404)
             res.status(200).send(comments)
         })
     .post('/:postId/comments',
         authMiddleware,
-       commentValidationRules,
+        commentValidationRules,
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const postId = req.params.postId
@@ -154,8 +155,8 @@ postsRouter
             const userLogin = req.user!.accountData.login
             const userId = req.user!.accountData.id
             const content = req.body.content
-            const post  = await postsService.getPostById(postId)
-            if(!post) return res.sendStatus(404)
+            const post = await postsService.getPostById(postId)
+            if (!post) return res.sendStatus(404)
             const comments: CommentType | null = await commentsService
                 .createComment(content, postId, userLogin, userId!)
             res.status(201).send(comments)
