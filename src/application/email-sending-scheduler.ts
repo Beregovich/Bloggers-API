@@ -1,27 +1,24 @@
 import {notificationRepository} from "../repositories/notification-db-repository";
+import {EmailService} from "../domain/notification-service";
 
 export class Scheduler {
     private isWorking: boolean;
-    constructor(){
+    constructor(private emailService: EmailService){
         this.isWorking = false
     }
-    async emailSender(sendEmail: (...args: any) => Promise<any>) {
+    async emailSender() {
         this.isWorking = true;
         const emailToSend = await notificationRepository.dequeueMessage()
         if(emailToSend){
             setTimeout(async () => {
-                const thisIsThis = this
-                console.log(this)
-                let error = await sendEmail(emailToSend.email, emailToSend.subject, emailToSend.message)
-               // let error = await this.emailService.sendEmail(emailToSend.email, emailToSend.subject, emailToSend.message)
+                let error = await this.emailService.sendEmail(emailToSend.email, emailToSend.subject, emailToSend.message)
                 console.log("error: ",error)
                 await notificationRepository.updateMessageStatus(emailToSend._id)
-                await this.emailSender(sendEmail)
+                await this.emailSender()
             }, 1000)
         }else{
             this.isWorking = false
         }
     }
 }
-//export const scheduler = new Scheduler(emailService)
-export const scheduler = new Scheduler()
+

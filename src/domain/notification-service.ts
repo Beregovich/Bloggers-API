@@ -1,8 +1,7 @@
 import nodemailer from "nodemailer";
 import {emailConfirmationType} from "../types/types";
 import {notificationRepository} from "../repositories/notification-db-repository";
-import {scheduler} from "../application/email-sending-scheduler";
-
+import {scheduler} from "../IoCContainer";
 export const emailTemplateService = {
     getEmailConfirmationMessage(confirmationCode: string){
 
@@ -31,7 +30,7 @@ export class EmailService  {
     }
     async addMessageInQueue(message: emailConfirmationType){
         const result = await notificationRepository.enqueueMessage(message)
-        if(result) await scheduler.emailSender(this.sendEmail)
+        if(result) await scheduler.emailSender()
         return result
     }
 }
