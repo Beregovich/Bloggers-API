@@ -151,9 +151,8 @@ postsRouter
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             const postId = req.params.postId
-            //const userLogin = res.locals.userData.login ==============check this case in future==================
-            const userLogin = req.user!.accountData.login
-            const userId = req.user!.accountData.id
+            const userLogin = res.locals.userData.accountData.login
+            const userId = res.locals.userData.accountData.login
             const content = req.body.content
             const post = await postsService.getPostById(postId)
             if (!post) return res.sendStatus(404)
