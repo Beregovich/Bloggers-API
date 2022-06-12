@@ -59,7 +59,13 @@ export class AuthService  {
             if(updatedUser){
                 let messageBody = emailTemplateService
                     .getEmailConfirmationMessage(updatedUser.emailConfirmation.confirmationCode)
-                await emailService.sendEmail(updatedUser.accountData.email, "E-mail confirmation ", messageBody)
+                await emailService.addMessageInQueue({
+                    email: updatedUser.accountData.email,
+                    message: messageBody,
+                    subject: "E-mail confirmation ",
+                    isSent: false,
+                    createdAt: new Date()
+                })
                 return true
             }
             return null

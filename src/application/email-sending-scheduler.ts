@@ -4,7 +4,7 @@ import {injectable} from "inversify";
 
 @injectable()
 export class Scheduler {
-    private isWorking: boolean;
+    public isWorking: boolean;
     constructor(private emailService: EmailService){
         this.isWorking = false
     }
