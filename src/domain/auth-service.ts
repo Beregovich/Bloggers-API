@@ -1,12 +1,14 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { isAfter} from 'date-fns'
-import {emailTemplateService} from "./notification-service";
+import {EmailService, emailTemplateService} from "./notification-service";
 import {injectable} from "inversify";
-import {emailService, usersRepository} from "../IoCContainer";
+import {usersRepository} from "../IoCContainer";
 
 @injectable()
 export class AuthService  {
+    constructor(private emailService: EmailService) {
+    }
     async checkCredentials(login: string, password: string) {
         const user = await usersRepository.findUserByLogin(login)
         if (!user || !user.emailConfirmation.isConfirmed) return {
@@ -59,7 +61,7 @@ export class AuthService  {
             if(updatedUser){
                 let messageBody = emailTemplateService
                     .getEmailConfirmationMessage(updatedUser.emailConfirmation.confirmationCode)
-                await emailService.addMessageInQueue({
+                await this.emailService.addMessageInQueue({
                     email: updatedUser.accountData.email,
                     message: messageBody,
                     subject: "E-mail confirmation ",
