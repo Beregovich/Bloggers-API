@@ -3,10 +3,11 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import {bloggersRouter} from "./routes/bloggers-router";
 import {postsRouter} from "./routes/posts-router";
-import {removeAll, runDb} from "./repositories/db";
+import {runDb} from "./repositories/db";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
+import {removeAll} from "./application/autotests-require-additions";
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000

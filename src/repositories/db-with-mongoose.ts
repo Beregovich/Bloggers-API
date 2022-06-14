@@ -1,66 +1,118 @@
 import 'dotenv/config'
 import mongoose from 'mongoose'
 //const {MongoClient} = require('mongodb');
-import {MongoClient} from 'mongodb'
-import {BloggerType, EntityWithPaginationType} from "../types/types";
-
-export const getPaginationData = (query: any) => {
-    const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
-    const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10
-    const searchNameTerm = typeof query.SearchNameTerm === 'string' ? query.SearchNameTerm : ""
-    return {page, pageSize, searchNameTerm}
-}
+import {
+    BloggerType, CheckLimitsType,
+    CommentType, EmailConfirmationMessageType, EmailConfirmationType,
+    EntityWithPaginationType,
+    LimitsControlType,
+    PostType, SentConfirmationEmailType, UserAccountType,
+    UserType
+} from "../types/types";
 
 
 const mongoUri = process.env.mongoURI || ""
 
-const bloggersSchema = new mongoose.Schema<EntityWithPaginationType<BloggerType>>({
+//Schemas
+const bloggersSchema = new mongoose.Schema({
+    id: String,
+    name: String,
+    youtubeUrl: String,
+})
+const bloggersWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<BloggerType>>({
     pagesCount: Number,
     page: Number,
     pageSize: Number,
     totalCount: Number,
-    items: [{
-        id: String,
-        name: String,
-        youtubeUrl: String,
-    }]
+    items: bloggersSchema
+})
+const postsSchema = new mongoose.Schema<PostType>({
+    id: String,
+    title: [String, null],
+    shortDescription: [String, null],
+    content: [String, null],
+    bloggerId: String,
+    bloggerName: [String, null]
+})
+const postsWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<PostType>>({
+    pagesCount: Number,
+    page: Number,
+    pageSize: Number,
+    totalCount: Number,
+    items: postsSchema
+})
+const userAccountDataSchema = new mongoose.Schema<UserAccountType>({
+    id: String,
+    email: String,
+    login: String,
+    passwordHash: String,
+    createdAt: Date
+})
+const userSentConfirmationEmailSchema = new mongoose.Schema<SentConfirmationEmailType>({
+    sentDate: Date
+})
+const userEmailConfirmationSchema = new mongoose.Schema<EmailConfirmationType>({
+    isConfirmed: Boolean,
+    confirmationCode: String,
+    expirationDate: Date,
+    sentEmails: userSentConfirmationEmailSchema
+})
+const usersSchema = new mongoose.Schema<UserType>({
+    accountData: userAccountDataSchema,
+    emailConfirmation: userEmailConfirmationSchema
+})
+const usersWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<UserType>>({
+    pagesCount: Number,
+    page: Number,
+    pageSize: Number,
+    totalCount: Number,
+    items: usersSchema
 })
 
+const commentsSchema = new mongoose.Schema<CommentType>({
+    id: String,
+    content: String,
+    postId: String,
+    userId: String,
+    userLogin: String,
+    addedAt: Date,
+})
+const commentsWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<CommentType>>({
+    pagesCount: Number,
+    page: Number,
+    pageSize: Number,
+    totalCount: Number,
+    items: commentsSchema
+})
+const limitsSchema = new mongoose.Schema<CheckLimitsType>({
+    login: [String, null],
+    userIp: String,
+    url: String,
+    time: Date
+})
+const emailsQueueSchema = new mongoose.Schema<EmailConfirmationMessageType>({
+    email: String,
+    message: String,
+    subject: String,
+    isSent: Boolean,
+    createdAt: Date
+})
 
-const postsSchema = new mongoose.Schema({})
-const usersSchema = new mongoose.Schema({})
-const commentsSchema = new mongoose.Schema({})
-const limitsSchema = new mongoose.Schema({})
-const emailsQueueSchema = new mongoose.Schema({})
-
-
-export const client = new MongoClient(mongoUri)
-
-export const bloggersCollection = client.db("bloggersDB").collection("bloggers")
-export const postsCollection = client.db("bloggersDB").collection("posts")
-export const requestCollection = client.db("bloggersDB").collection("requests")
-export const usersCollection = client.db("bloggersDB").collection("users")
-export const commentsCollection = client.db("bloggersDB").collection("comments")
-export const limitsCollection = client.db("bloggersDB").collection("limits")
-export const emailToSendQueueCollection = client.db("bloggersDB").collection("emailsToSend")
-
-export async function removeAll() {
-    await bloggersCollection.deleteMany({})
-    await postsCollection.deleteMany({})
-    await requestCollection.deleteMany({})
-    await usersCollection.deleteMany({})
-    await commentsCollection.deleteMany({})
-    await limitsCollection.deleteMany({})
-}
+//Models
+export const bloggersModel = mongoose.model('Bloggers', bloggersWithPaginationSchema)
+export const postsModel = mongoose.model('Posts', postsWithPaginationSchema)
+export const usersModel = mongoose.model('Users', usersWithPaginationSchema)
+export const commentsModel = mongoose.model('Comments', commentsWithPaginationSchema)
+export const limitsModel = mongoose.model('Limits', limitsSchema)
+export const emailsQueueModel = mongoose.model('EmailsQueue', emailsQueueSchema)
 
 export async function runDb() {
     try {
-        await client.connect()
-        await client.db("bloggersDB").command({ping: 1})
-        console.log("Connection complete")
+        await mongoose.connect(mongoUri)
+        const connectionId = mongoose.connection.id
+        console.log("Mongoose connection complete with id: ", connectionId)
     } catch (e) {
-        await client.close()
-        console.log("no connection")
+        console.log("No connection, error: ", e)
     }
 }
 

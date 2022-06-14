@@ -4,22 +4,27 @@ import {injectable} from "inversify";
 
 @injectable()
 export class Scheduler {
-    public isWorking: boolean;
-    constructor(private emailService: EmailService){
-        this.isWorking = false
+    private _isWorking: boolean;
+    constructor(private emailService: EmailService) {
+        this._isWorking = false
     }
+
+    public get isWorking() {
+        return this._isWorking
+    }
+
     async emailSender() {
-        this.isWorking = true;
+        this._isWorking = true;
         const emailToSend = await notificationRepository.dequeueMessage()
-        if(emailToSend){
+        if (emailToSend) {
             setTimeout(async () => {
                 let error = await this.emailService.sendEmail(emailToSend.email, emailToSend.subject, emailToSend.message)
-                console.log("error: ",error)
+                console.log("error: ", error)
                 await notificationRepository.updateMessageStatus(emailToSend._id)
                 await this.emailSender()
             }, 1000)
-        }else{
-            this.isWorking = false
+        } else {
+            this._isWorking = false
         }
     }
 }

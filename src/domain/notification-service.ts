@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import {emailConfirmationType} from "../types/types";
+import {EmailConfirmationMessageType} from "../types/types";
 import {notificationRepository, scheduler} from "../IoCContainer";
 import {injectable} from "inversify";
 
@@ -30,7 +30,7 @@ export class EmailService  {
             console.log("sendMail function error: "+e)
         }
     }
-    async addMessageInQueue(message: emailConfirmationType){
+    async addMessageInQueue(message: EmailConfirmationMessageType){
         const result = await notificationRepository.enqueueMessage(message)
         if(result && !scheduler.isWorking) await scheduler.emailSender()
         return result

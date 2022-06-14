@@ -40,32 +40,32 @@ export type ErrorMessageType = {
 }
 
 export type UserType = {
-    accountData: UserAccountType,
-    loginAttempts: LoginAttemptType[],
-    emailConfirmation: EmailConfirmationType
+    accountData: UserAccountType;
+    //loginAttempts: LoginAttemptType[],
+    emailConfirmation: EmailConfirmationType;
 }
 
 export type UserAccountType = {
-    id: string,
-    email: string
-    login: string
-    passwordHash: string
-    createdAt: Date
+    id: string;
+    email: string;
+    login: string;
+    passwordHash: string;
+    createdAt: Date;
 }
 export type SentConfirmationEmailType = {
-    sentDate: Date
+    sentDate: Date;
 }
 
 export type LoginAttemptType = {
-    attemptDate: Date
-    ip: string
+    attemptDate: Date;
+    ip: string;
 }
 
 export type EmailConfirmationType = {
-    isConfirmed: boolean
-    confirmationCode: string
-    expirationDate: Date
-    sentEmails: SentConfirmationEmailType[]
+    isConfirmed: boolean;
+    confirmationCode: string;
+    expirationDate: Date;
+    sentEmails: SentConfirmationEmailType[];
 }
 
 export type LimitsControlType = {
@@ -74,12 +74,18 @@ export type LimitsControlType = {
     time: Date;
 }
 
-export type emailConfirmationType = {
+export type EmailConfirmationMessageType = {
     email: string;
     message: string;
     subject: string;
     isSent: boolean;
     createdAt: Date;
+}
+export type CheckLimitsType = {
+    login: string | null;
+    userIp: string;
+    url: string;
+    time: Date;
 }
 
 
