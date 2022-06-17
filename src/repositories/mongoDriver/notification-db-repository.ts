@@ -1,4 +1,4 @@
-import {EmailConfirmationMessageType} from "../types/types";
+import {EmailConfirmationMessageType} from "../../types/types";
 import * as MongoClient from 'mongodb';
 import {ObjectId} from 'mongodb';
 import {injectable} from "inversify";

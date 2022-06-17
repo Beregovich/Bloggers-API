@@ -1,14 +1,13 @@
-import {postsCollection} from "./db";
-import {BloggersRepository} from "./bloggers-db-repository";
-import {IPostsRepository} from "../domain/posts-service";
-import {BloggerType, PostType} from "../types/types";
-import * as MongoClient from 'mongodb';
+import {IPostsRepository} from "../../domain/posts-service";
+import {BloggerType, PostType} from "../../types/types";
 import {injectable} from "inversify";
+import {BloggersRepository} from "./bloggers-mongoose-repository";
+import mongoose from "mongoose";
 
 @injectable()
 export class PostsRepository implements IPostsRepository {
-    constructor(private postsCollection: MongoClient.Collection<PostType>,
-                private bloggersCollection: MongoClient.Collection<BloggerType>,
+    constructor(private postsModel: mongoose.Model<PostType>,
+                private bloggersModel: mongoose.Model<BloggerType>,
                 private bloggersRepository: BloggersRepository) {
     }
 
@@ -16,14 +15,13 @@ export class PostsRepository implements IPostsRepository {
         let filter = bloggerId
             ? {title: {$regex: searchNameTerm ? searchNameTerm : ""}, bloggerId}
             : {title: {$regex: searchNameTerm ? searchNameTerm : ""}}
-        const totalCount = await this.postsCollection.countDocuments(filter)
+        const totalCount = await this.postsModel.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
-        const allPosts = await this.postsCollection
-            .find(filter)
-            .project<PostType>({_id: 0})
+        const allPosts = await this.postsModel
+            .find(filter, {projection: {_id: 0}})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
-            .toArray()
+            .lean()
         return ({
             pagesCount,
             page,
@@ -34,7 +32,7 @@ export class PostsRepository implements IPostsRepository {
     }
 
     async getPostById(id: string) {
-        const post = await this.postsCollection.findOne({id}, {projection: {_id: 0}})
+        const post = await this.postsModel.findOne({id}, {projection: {_id: 0}})
         if (!post) return false
         const blogger = await this.bloggersRepository.getBloggerById(post.bloggerId)
         if (!blogger) return false
@@ -50,18 +48,18 @@ export class PostsRepository implements IPostsRepository {
     }
 
     async createPost(newPost: PostType): Promise<PostType | null> {
-        const blogger = await this.bloggersCollection.findOne({id: newPost.bloggerId})
+        const blogger = await this.bloggersModel.findOne({id: newPost.bloggerId})
         if (!blogger) return null
-        await postsCollection.insertOne({
+        await this.postsModel.create({
             ...newPost,
             bloggerName: blogger.name
         })
-        const postToReturn = await this.postsCollection.findOne({id: newPost.id}, {projection: {_id: 0}})
+        const postToReturn = await this.postsModel.findOne({id: newPost.id}, {projection: {_id: 0}})
         return (postToReturn)
     }
 
     async updatePostById(id: string, newPost: PostType) {
-        const result = await this.postsCollection.updateOne({id}, {
+        const result = await this.postsModel.updateOne({id}, {
             $set: {
                 title: newPost.title,
                 shortDescription: newPost.shortDescription,
@@ -73,7 +71,7 @@ export class PostsRepository implements IPostsRepository {
     }
 
     async deletePostById(id: string) {
-        const result = await this.postsCollection.deleteOne({id})
+        const result = await this.postsModel.deleteOne({id})
         return result.deletedCount === 1
     }
 }

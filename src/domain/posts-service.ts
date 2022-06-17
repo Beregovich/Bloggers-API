@@ -1,4 +1,4 @@
-import {PostsRepository} from "../repositories/posts-db-repository";
+import {PostsRepository} from "../repositories/mongoDriver/posts-db-repository";
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, PostType} from "../types/types";
 import {injectable} from "inversify";

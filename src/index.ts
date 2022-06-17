@@ -7,7 +7,7 @@ import {runDb} from "./repositories/db";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
-import {removeAll} from "./application/autotests-require-additions";
+import {removeAll} from "./application/common";
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000

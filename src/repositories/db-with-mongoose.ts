@@ -4,7 +4,6 @@ import mongoose from 'mongoose'
 import {
     BloggerType, CheckLimitsType,
     CommentType, EmailConfirmationMessageType, EmailConfirmationType,
-    EntityWithPaginationType,
     LimitsControlType,
     PostType, SentConfirmationEmailType, UserAccountType,
     UserType
@@ -14,18 +13,12 @@ import {
 const mongoUri = process.env.mongoURI || ""
 
 //Schemas
-const bloggersSchema = new mongoose.Schema({
+const bloggersSchema = new mongoose.Schema<BloggerType>({
     id: String,
     name: String,
     youtubeUrl: String,
 })
-const bloggersWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<BloggerType>>({
-    pagesCount: Number,
-    page: Number,
-    pageSize: Number,
-    totalCount: Number,
-    items: bloggersSchema
-})
+
 const postsSchema = new mongoose.Schema<PostType>({
     id: String,
     title: [String, null],
@@ -34,13 +27,7 @@ const postsSchema = new mongoose.Schema<PostType>({
     bloggerId: String,
     bloggerName: [String, null]
 })
-const postsWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<PostType>>({
-    pagesCount: Number,
-    page: Number,
-    pageSize: Number,
-    totalCount: Number,
-    items: postsSchema
-})
+
 const userAccountDataSchema = new mongoose.Schema<UserAccountType>({
     id: String,
     email: String,
@@ -61,13 +48,6 @@ const usersSchema = new mongoose.Schema<UserType>({
     accountData: userAccountDataSchema,
     emailConfirmation: userEmailConfirmationSchema
 })
-const usersWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<UserType>>({
-    pagesCount: Number,
-    page: Number,
-    pageSize: Number,
-    totalCount: Number,
-    items: usersSchema
-})
 
 const commentsSchema = new mongoose.Schema<CommentType>({
     id: String,
@@ -77,13 +57,7 @@ const commentsSchema = new mongoose.Schema<CommentType>({
     userLogin: String,
     addedAt: Date,
 })
-const commentsWithPaginationSchema = new mongoose.Schema<EntityWithPaginationType<CommentType>>({
-    pagesCount: Number,
-    page: Number,
-    pageSize: Number,
-    totalCount: Number,
-    items: commentsSchema
-})
+
 const limitsSchema = new mongoose.Schema<CheckLimitsType>({
     login: [String, null],
     userIp: String,
@@ -99,10 +73,10 @@ const emailsQueueSchema = new mongoose.Schema<EmailConfirmationMessageType>({
 })
 
 //Models
-export const bloggersModel = mongoose.model('Bloggers', bloggersWithPaginationSchema)
-export const postsModel = mongoose.model('Posts', postsWithPaginationSchema)
-export const usersModel = mongoose.model('Users', usersWithPaginationSchema)
-export const commentsModel = mongoose.model('Comments', commentsWithPaginationSchema)
+export const bloggersModel = mongoose.model('Bloggers', bloggersSchema)
+export const postsModel = mongoose.model('Posts', postsSchema)
+export const usersModel = mongoose.model('Users', usersSchema)
+export const commentsModel = mongoose.model('Comments', commentsSchema)
 export const limitsModel = mongoose.model('Limits', limitsSchema)
 export const emailsQueueModel = mongoose.model('EmailsQueue', emailsQueueSchema)
 

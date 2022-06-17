@@ -1,6 +1,6 @@
 import {injectable} from "inversify";
 import {ErrorMessageType} from "../types/types";
-import {LimitsRepository} from "../repositories/limits-db-repository";
+import {LimitsRepository} from "../repositories/mongoDriver/limits-db-repository";
 import "reflect-metadata";
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";

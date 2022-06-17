@@ -1,6 +1,6 @@
-import {CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
+import {CommentType, EntityWithPaginationType, QueryDataType} from "../../types/types";
 import * as MongoClient from 'mongodb';
-import {ICommentRepository} from "../domain/comments-service";
+import {ICommentRepository} from "../../domain/comments-service";
 import {injectable} from "inversify";
 
 @injectable()

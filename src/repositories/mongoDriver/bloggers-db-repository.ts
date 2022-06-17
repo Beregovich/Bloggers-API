@@ -1,6 +1,6 @@
 import * as MongoClient from 'mongodb';
-import {IBloggersRepository} from "../domain/bloggers-service";
-import {BloggerType, EntityWithPaginationType, PostType} from "../types/types";
+import {IBloggersRepository} from "../../domain/bloggers-service";
+import {BloggerType, EntityWithPaginationType, PostType} from "../../types/types";
 import {injectable} from "inversify";
 import "reflect-metadata";
 

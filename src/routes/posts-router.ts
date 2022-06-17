@@ -7,11 +7,11 @@ import {
 } from "../middlewares/input-validator-middleware";
 import {check} from "express-validator";
 
-import {getPaginationData} from "../repositories/db";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {CommentType, EntityWithPaginationType, PostType} from "../types/types";
 import {bloggersService, commentsService, postsService} from "../IoCContainer";
+import {getPaginationData} from "../application/common";
 
 export const postsRouter = Router()
 

@@ -1,4 +1,4 @@
-import {UsersRepository} from "../repositories/users-db-repository";
+import {UsersRepository} from "../repositories/mongoDriver/users-db-repository";
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, UserType} from "../types/types";
 import {addHours} from "date-fns";
@@ -24,7 +24,7 @@ export class UsersService  {
                 passwordHash,
                 createdAt: new Date()
             },
-            loginAttempts: [],
+           // loginAttempts: [],
             emailConfirmation: {
                 sentEmails: [],
                 confirmationCode: uuidv4(),

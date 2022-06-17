@@ -1,4 +1,4 @@
-import {CommentsRepository} from "../repositories/comments-db-repository";
+import {CommentsRepository} from "../repositories/mongoDriver/comments-db-repository";
 import {v4 as uuidv4} from "uuid";
 import { CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
 import {commentsRepository} from "../IoCContainer";

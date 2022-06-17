@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid'
-import {EntityWithPaginationType, UserType} from "../types/types";
+import {EntityWithPaginationType, UserType} from "../../types/types";
 import * as MongoClient from "mongodb";
-import {IUsersRepository} from "../domain/users-service";
+import {IUsersRepository} from "../../domain/users-service";
 import {addHours} from "date-fns";
 import {injectable} from "inversify";
 
