@@ -1,8 +1,8 @@
-import {CommentsRepository} from "../repositories/mongoDriver/comments-db-repository";
+
 import {v4 as uuidv4} from "uuid";
 import { CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
-import {commentsRepository} from "../IoCContainer";
 import {injectable} from "inversify";
+import {CommentsRepository} from "../repositories/mongoose/comments-mongoose-repository";
 
 @injectable()
  export class CommentsService  {

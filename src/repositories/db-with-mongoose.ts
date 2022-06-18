@@ -58,8 +58,7 @@ const commentsSchema = new mongoose.Schema<CommentType>({
     addedAt: Date,
 })
 
-const limitsSchema = new mongoose.Schema<CheckLimitsType>({
-    login: [String, null],
+const limitsSchema = new mongoose.Schema<LimitsControlType>({
     userIp: String,
     url: String,
     time: Date

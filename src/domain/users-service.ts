@@ -1,10 +1,11 @@
-import {UsersRepository} from "../repositories/mongoDriver/users-db-repository";
+
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, UserType} from "../types/types";
 import {addHours} from "date-fns";
 import {emailTemplateService} from "./notification-service";
 import {authService, emailService} from "../IoCContainer";
 import {injectable} from "inversify";
+import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
 
 @injectable()
 export class UsersService  {

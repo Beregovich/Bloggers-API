@@ -73,6 +73,12 @@ export type LimitsControlType = {
     url: string;
     time: Date;
 }
+export type CheckLimitsType = {
+    login: string | null;
+    userIp: string;
+    url: string;
+    time: Date;
+}
 
 export type EmailConfirmationMessageType = {
     email: string;
@@ -81,11 +87,6 @@ export type EmailConfirmationMessageType = {
     isSent: boolean;
     createdAt: Date;
 }
-export type CheckLimitsType = {
-    login: string | null;
-    userIp: string;
-    url: string;
-    time: Date;
-}
+
 
 

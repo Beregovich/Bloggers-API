@@ -39,7 +39,7 @@ app.get('/*', (req: Request, res: Response) => {
 
 async function startServer() {
     await runDb()
-    //await scheduler.emailSenderRun()
+    await scheduler.emailSenderRun()
     await app.listen(port, () => {
         console.log(`App listening on port ${port}`)
     })

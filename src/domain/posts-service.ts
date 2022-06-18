@@ -1,7 +1,7 @@
-import {PostsRepository} from "../repositories/mongoDriver/posts-db-repository";
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, PostType} from "../types/types";
 import {injectable} from "inversify";
+import {PostsRepository} from "../repositories/mongoose/posts-mongoose-repository";
 
 @injectable()
 export class PostsService {

@@ -6,6 +6,7 @@ import {
     requestCollection,
     usersCollection
 } from "../repositories/db";
+import {bloggersModel, commentsModel, limitsModel, postsModel, usersModel} from "../repositories/db-with-mongoose";
 
 export const getPaginationData = (query: any) => {
     const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
@@ -15,10 +16,9 @@ export const getPaginationData = (query: any) => {
 }
 
 export async function removeAll() {
-    await bloggersCollection.deleteMany({})
-    await postsCollection.deleteMany({})
-    await requestCollection.deleteMany({})
-    await usersCollection.deleteMany({})
-    await commentsCollection.deleteMany({})
-    await limitsCollection.deleteMany({})
+    await bloggersModel.deleteMany({})
+    await postsModel.deleteMany({})
+    await usersModel.deleteMany({})
+    await commentsModel.deleteMany({})
+    await limitsModel.deleteMany({})
 }

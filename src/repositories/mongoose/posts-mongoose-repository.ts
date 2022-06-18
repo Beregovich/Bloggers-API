@@ -18,7 +18,7 @@ export class PostsRepository implements IPostsRepository {
         const totalCount = await this.postsModel.countDocuments(filter)
         const pagesCount = Math.ceil(totalCount / pageSize)
         const allPosts = await this.postsModel
-            .find(filter, {projection: {_id: 0}})
+            .find(filter, {_id: 0, __v: 0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .lean()
@@ -32,7 +32,7 @@ export class PostsRepository implements IPostsRepository {
     }
 
     async getPostById(id: string) {
-        const post = await this.postsModel.findOne({id}, {projection: {_id: 0}})
+        const post = await this.postsModel.findOne({id}, {_id: 0, __v: 0})
         if (!post) return false
         const blogger = await this.bloggersRepository.getBloggerById(post.bloggerId)
         if (!blogger) return false
@@ -54,7 +54,7 @@ export class PostsRepository implements IPostsRepository {
             ...newPost,
             bloggerName: blogger.name
         })
-        const postToReturn = await this.postsModel.findOne({id: newPost.id}, {projection: {_id: 0}})
+        const postToReturn = await this.postsModel.findOne({id: newPost.id}, {_id: 0, __v: 0})
         return (postToReturn)
     }
 
