@@ -3,11 +3,12 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import {bloggersRouter} from "./routes/bloggers-router";
 import {postsRouter} from "./routes/posts-router";
-import {runDb} from "./repositories/db";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
 import {removeAll} from "./application/common";
+import {scheduler} from "./IoCContainer";
+import {runDb} from "./repositories/db-with-mongoose";
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000
@@ -38,6 +39,7 @@ app.get('/*', (req: Request, res: Response) => {
 
 async function startServer() {
     await runDb()
+    //await scheduler.emailSenderRun()
     await app.listen(port, () => {
         console.log(`App listening on port ${port}`)
     })

@@ -32,7 +32,6 @@ export class EmailService  {
     }
     async addMessageInQueue(message: EmailConfirmationMessageType){
         const result = await notificationRepository.enqueueMessage(message)
-        if(result) await scheduler.emailSenderRun()
         return result
     }
 }
