@@ -3,7 +3,7 @@ import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, UserType} from "../types/types";
 import {addHours} from "date-fns";
 import {emailTemplateService} from "./notification-service";
-import {authService, emailService} from "../IoCContainer";
+import {authService, emailService} from "../IocContainer";
 import {injectable} from "inversify";
 import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
 

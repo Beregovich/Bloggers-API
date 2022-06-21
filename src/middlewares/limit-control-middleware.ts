@@ -4,7 +4,7 @@ import {ErrorMessageType} from "../types/types";
 import "reflect-metadata";
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
-import {usersRepository} from "../IoCContainer";
+import {usersRepository} from "../IocContainer";
 import {LimitsRepository} from "../repositories/mongoose/limits-mongoose-repository";
 
 @injectable()

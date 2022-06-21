@@ -1,11 +1,13 @@
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, PostType} from "../types/types";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {PostsRepository} from "../repositories/mongoose/posts-mongoose-repository";
+import {TYPES} from "../iocTYPES";
+import {IBloggersRepository} from "./bloggers-service";
 
 @injectable()
 export class PostsService {
-    constructor(private postsRepository: PostsRepository) {
+    constructor(@inject<IPostsRepository>(TYPES.IPostsRepository) private postsRepository: IPostsRepository) {
     }
     async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {
         const postsToSend = await this.postsRepository.getPosts(page, pageSize, searchNameTerm, bloggerId)

@@ -6,7 +6,7 @@ import {
     userValidationRules
 } from "../middlewares/input-validator-middleware";
 import {body} from "express-validator";
-import {authService, limitsControl, usersService} from "../IoCContainer";
+import {authService, limitsControl, usersService} from "../IocContainer";
 
 export const authRouter = Router({})
 authRouter

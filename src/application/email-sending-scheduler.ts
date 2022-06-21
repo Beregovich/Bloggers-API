@@ -1,5 +1,5 @@
 import {EmailService} from "../domain/notification-service";
-import {notificationRepository} from "../IoCContainer";
+import {notificationRepository} from "../IocContainer";
 import {injectable} from "inversify";
 
 @injectable()

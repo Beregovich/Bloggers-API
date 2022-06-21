@@ -5,13 +5,17 @@ import {
     paginationRules,
     postValidationRules
 } from "../middlewares/input-validator-middleware";
-import {check} from "express-validator";
-
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {CommentType, EntityWithPaginationType, PostType} from "../types/types";
-import {bloggersService, commentsService, postsService} from "../IoCContainer";
+import { commentsService, myContainer} from "../IocContainer";
 import {getPaginationData} from "../application/common";
+import {TYPES} from "../iocTYPES";
+import {PostsService} from "../domain/posts-service";
+import {BloggersService} from "../domain/bloggers-service";
+
+const postsService = myContainer.get<PostsService>(TYPES.PostsService)
+const bloggersService = myContainer.get<BloggersService>(TYPES.BloggersService)
 
 export const postsRouter = Router()
 

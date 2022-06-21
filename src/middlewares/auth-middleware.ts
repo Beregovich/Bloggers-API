@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import {UserType} from "../types/types";
-import {usersRepository} from "../IoCContainer";
+import {usersRepository} from "../IocContainer";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers || !req.headers.authorization) {

@@ -7,7 +7,7 @@ import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
 import {removeAll} from "./application/common";
-import {scheduler} from "./IoCContainer";
+import {scheduler} from "./IocContainer";
 import {runDb} from "./repositories/db-with-mongoose";
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()

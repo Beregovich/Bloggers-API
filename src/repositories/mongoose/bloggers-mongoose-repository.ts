@@ -1,16 +1,16 @@
 import {IBloggersRepository} from "../../domain/bloggers-service";
 import {BloggerType, EntityWithPaginationType, PostType} from "../../types/types";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import "reflect-metadata";
 import mongoose from 'mongoose'
+import {TYPES} from "../../iocTYPES";
 
 
 @injectable()
 export class BloggersRepository implements IBloggersRepository {
-    constructor(private bloggersModel: mongoose.Model<BloggerType>,
-                private postsModel: mongoose.Model<PostType>) {
+    constructor(@inject(TYPES.bloggersModel) private bloggersModel: mongoose.Model<BloggerType>,
+                @inject(TYPES.postsModel) private postsModel: mongoose.Model<PostType>) {
     }
-
     async getBloggers(page: number,
                       pageSize: number,
                       searchNameTerm: string): Promise<EntityWithPaginationType<BloggerType[]>> {

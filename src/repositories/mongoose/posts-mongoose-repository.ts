@@ -1,14 +1,16 @@
 import {IPostsRepository} from "../../domain/posts-service";
+import {IBloggersRepository} from "../../domain/bloggers-service";
 import {BloggerType, PostType} from "../../types/types";
-import {injectable} from "inversify";
-import {BloggersRepository} from "./bloggers-mongoose-repository";
+import {inject, injectable} from "inversify";
 import mongoose from "mongoose";
+import {TYPES} from "../../iocTYPES";
+
 
 @injectable()
 export class PostsRepository implements IPostsRepository {
-    constructor(private postsModel: mongoose.Model<PostType>,
-                private bloggersModel: mongoose.Model<BloggerType>,
-                private bloggersRepository: BloggersRepository) {
+    constructor(@inject<mongoose.Model<PostType>>(TYPES.postsModel) private postsModel: mongoose.Model<PostType>,
+                @inject<mongoose.Model<BloggerType>>(TYPES.bloggersModel) private bloggersModel: mongoose.Model<BloggerType>,
+                @inject<IBloggersRepository>(TYPES.IBloggersRepository) private bloggersRepository: IBloggersRepository) {
     }
 
     async getPosts(page: number, pageSize: number, searchNameTerm: string, bloggerId: string | null) {

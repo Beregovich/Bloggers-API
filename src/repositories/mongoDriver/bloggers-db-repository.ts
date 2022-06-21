@@ -4,7 +4,7 @@ import {BloggerType, EntityWithPaginationType, PostType} from "../../types/types
 import {injectable} from "inversify";
 import "reflect-metadata";
 
-@injectable()
+
 export class BloggersRepository implements IBloggersRepository {
     constructor(private bloggersCollection: MongoClient.Collection<BloggerType>,
                 private postsCollection: MongoClient.Collection<PostType>) {

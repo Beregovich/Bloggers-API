@@ -3,7 +3,7 @@ import {commentValidationRules, inputValidatorMiddleware} from "../middlewares/i
 import {check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {checkOwnership} from "../middlewares/check-ownership-middleware";
-import {commentsService} from "../IoCContainer";
+import {commentsService} from "../IocContainer";
 
 export const commentsRouter = Router()
 commentsRouter

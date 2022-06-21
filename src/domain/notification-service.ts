@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import {EmailConfirmationMessageType} from "../types/types";
-import {notificationRepository, scheduler} from "../IoCContainer";
+import {notificationRepository, scheduler} from "../IocContainer";
 import {injectable} from "inversify";
 
 export const emailTemplateService = {

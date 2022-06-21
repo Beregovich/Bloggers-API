@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { isAfter} from 'date-fns'
 import {EmailService, emailTemplateService} from "./notification-service";
 import {injectable} from "inversify";
-import {usersRepository} from "../IoCContainer";
+import {usersRepository} from "../IocContainer";
 
 @injectable()
 export class AuthService  {

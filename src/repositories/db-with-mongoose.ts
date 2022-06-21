@@ -13,19 +13,19 @@ import {
 const mongoUri = process.env.mongoURI || ""
 
 //Schemas
-const bloggersSchema = new mongoose.Schema<BloggerType>({
+export const bloggersSchema = new mongoose.Schema<BloggerType>({
     id: String,
     name: String,
     youtubeUrl: String,
 })
 
-const postsSchema = new mongoose.Schema<PostType>({
+export const postsSchema = new mongoose.Schema<PostType>({
     id: String,
-    title: [String, null],
-    shortDescription: [String, null],
-    content: [String, null],
+    title: String,
+    shortDescription: String,
+    content: String,
     bloggerId: String,
-    bloggerName: [String, null]
+    bloggerName: String
 })
 
 const userAccountDataSchema = new mongoose.Schema<UserAccountType>({
@@ -72,6 +72,7 @@ const emailsQueueSchema = new mongoose.Schema<EmailConfirmationMessageType>({
 })
 
 //Models
+
 export const bloggersModel = mongoose.model('Bloggers', bloggersSchema)
 export const postsModel = mongoose.model('Posts', postsSchema)
 export const usersModel = mongoose.model('Users', usersSchema)
