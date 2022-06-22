@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken";
 import {UserType} from "../types/types";
 import {myContainer} from "../IocContainer";
 import {TYPES} from "../iocTYPES";
-import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
+import {IUsersRepository} from "../domain/users-service";
 
-const usersRepository = myContainer.get<UsersRepository>(TYPES.UsersRepository)
+const usersRepository = myContainer.get<IUsersRepository>(TYPES.IUsersRepository)
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers || !req.headers.authorization) {
         res.send(401)

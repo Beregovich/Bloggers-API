@@ -16,8 +16,6 @@ export class EmailService  {
     constructor(
         @inject<NotificationRepository>(TYPES.NotificationRepository)
         private notificationRepository: NotificationRepository,
-        @inject<Scheduler>(TYPES.Scheduler)
-        private scheduler: Scheduler
     ) {
     }
     async sendEmail(email: string, subject: string, message: string) {

@@ -18,7 +18,7 @@ export const TYPES = {
     PostsRepository: Symbol.for("PostsRepository"),
     //users
     IUsersRepository: Symbol.for("IUsersRepository"),
-    UsersRepository: Symbol.for("UsersRepository"),
+   // UsersRepository: Symbol.for("UsersRepository"),
     UsersService: Symbol.for("UsersService"),
     //comments
     CommentsService: Symbol.for("CommentsService"),

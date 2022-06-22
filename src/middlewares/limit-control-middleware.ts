@@ -11,7 +11,7 @@ import {UsersRepository} from "../repositories/mongoose/users-mongoose-repositor
 export class LimitsControlMiddleware {
     constructor(@inject<LimitsRepository>(TYPES.LimitsRepository)
                 private limitsRepository: LimitsRepository,
-                @inject<UsersRepository>(TYPES.UsersRepository)
+                @inject<UsersRepository>(TYPES.IUsersRepository)
                 private usersRepository: UsersRepository) {
     }
 

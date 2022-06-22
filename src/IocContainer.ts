@@ -24,7 +24,14 @@ import {CommentsRepository} from "./repositories/mongoose/comments-mongoose-repo
 import {PostsRepository} from "./repositories/mongoose/posts-mongoose-repository";
 import {NotificationRepository} from "./repositories/mongoose/notification-mongoose-repository";
 import mongoose from "mongoose";
-import {BloggerType, CommentType, LimitsControlType, PostType, UserType} from "./types/types";
+import {
+    BloggerType,
+    CommentType,
+    EmailConfirmationMessageType,
+    LimitsControlType,
+    PostType,
+    UserType
+} from "./types/types";
 
 export const myContainer = new Container();
 //Models
@@ -34,20 +41,6 @@ const usersModel = mongoose.model('Users', usersSchema)
 const commentsModel = mongoose.model('Comments', commentsSchema)
 const limitsModel = mongoose.model('Limits', limitsSchema)
 const emailsQueueModel = mongoose.model('EmailsQueue', emailsQueueSchema)
-// //Repositories
-// export const limitsRepository = new LimitsRepository(limitsModel)
-// //export const usersRepository = new UsersRepository(usersModel)
-// export const commentsRepository = new CommentsRepository(commentsModel)
-// export const notificationRepository = new NotificationRepository(emailsQueueModel)
-// //Services
-// export const emailService = new EmailService()
-// //export const usersService = new UsersService(usersRepository)
-// export const authService = new AuthService(emailService)
-// export const commentsService = new CommentsService(commentsRepository)
-// //Other
-// export const scheduler = new Scheduler(emailService)
-// export const limitsControl = new LimitsControlMiddleware(limitsRepository)
-
 
 //bloggers
 myContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository);
@@ -56,8 +49,8 @@ myContainer.bind<BloggersService>(TYPES.BloggersService).to(BloggersService);
 myContainer.bind<IPostsRepository>(TYPES.IPostsRepository).to(PostsRepository);
 myContainer.bind<PostsService>(TYPES.PostsService).to(PostsService);
 //users
-myContainer.bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository);
-myContainer.bind<UsersRepository>(TYPES.UsersRepository).to(UsersRepository);
+myContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository);
+//myContainer.bind<UsersRepository>(TYPES.UsersRepository).to(UsersRepository);
 myContainer.bind<UsersService>(TYPES.UsersService).to(UsersService);
 //comments
 myContainer.bind<ICommentRepository>(TYPES.CommentsRepository).to(CommentsRepository);
@@ -78,4 +71,4 @@ myContainer.bind<mongoose.Model<PostType>>(TYPES.postsModel).toConstantValue(pos
 myContainer.bind<mongoose.Model<UserType>>(TYPES.usersModel).toConstantValue(usersModel);
 myContainer.bind<mongoose.Model<CommentType>>(TYPES.commentsModel).toConstantValue(commentsModel);
 myContainer.bind<mongoose.Model<LimitsControlType>>(TYPES.limitsModel).toConstantValue(limitsModel);
-//myContainer.bind<mongoose.Model<emailsQueueModel>>(TYPES.emailsQueueModel).toConstantValue(emailsQueueModel);
+myContainer.bind<mongoose.Model<EmailConfirmationMessageType>>(TYPES.emailsQueueModel).toConstantValue(emailsQueueModel);

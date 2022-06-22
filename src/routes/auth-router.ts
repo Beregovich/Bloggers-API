@@ -10,10 +10,11 @@ import {myContainer} from "../IocContainer";
 import {UsersService} from "../domain/users-service";
 import {AuthService} from "../domain/auth-service";
 import {LimitsControlMiddleware} from "../middlewares/limit-control-middleware";
+import {TYPES} from "../iocTYPES";
 
-const usersService = myContainer.get<UsersService>(UsersService)
-const authService = myContainer.get<AuthService>(AuthService)
-const limitsControl = myContainer.get<LimitsControlMiddleware>(LimitsControlMiddleware)
+const usersService = myContainer.get<UsersService>(TYPES.UsersService)
+const authService = myContainer.get<AuthService>(TYPES.AuthService)
+const limitsControl = myContainer.get<LimitsControlMiddleware>(TYPES.LimitsControlMiddleware)
 
 export const authRouter = Router({})
 authRouter

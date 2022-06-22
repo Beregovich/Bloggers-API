@@ -67,7 +67,8 @@ export interface IUsersRepository {
 
     createUser(newUser: UserType): Promise<UserType | null>,
 
-    deleteUserById(id: string): Promise<boolean>
+    deleteUserById(id: string): Promise<boolean>,
+    findUserById(id: string): Promise<UserType | null>
 }
 
 

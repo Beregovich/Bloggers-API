@@ -10,7 +10,7 @@ import {UsersRepository} from "../repositories/mongoose/users-mongoose-repositor
 export class AuthService  {
     constructor(@inject<EmailService>(TYPES.EmailService)
                 private emailService: EmailService,
-                @inject(TYPES.UsersRepository)
+                @inject(TYPES.IUsersRepository)
     private usersRepository: UsersRepository)
 {
     }
