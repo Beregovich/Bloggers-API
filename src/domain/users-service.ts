@@ -1,22 +1,29 @@
-
 import {v4 as uuidv4} from "uuid";
 import {EntityWithPaginationType, UserType} from "../types/types";
 import {addHours} from "date-fns";
-import {emailTemplateService} from "./notification-service";
-import {authService, emailService} from "../IocContainer";
-import {injectable} from "inversify";
+import {EmailService, emailTemplateService} from "./notification-service";
+import {inject, injectable} from "inversify";
 import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
+import {TYPES} from "../iocTYPES";
+import {AuthService} from "./auth-service";
 
 @injectable()
-export class UsersService  {
-    constructor(private usersRepository: UsersRepository, ) {
+export class UsersService {
+    constructor(@inject<IUsersRepository>(TYPES.IUsersRepository)
+                private usersRepository: IUsersRepository,
+                @inject<AuthService>(TYPES.AuthService)
+                private authService: AuthService,
+                @inject<EmailService>(TYPES.EmailService)
+                private emailService: EmailService) {
     }
+
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
         const users = await this.usersRepository.getUsers(page, pageSize, searchNameTerm)
         return users
     }
+
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
-        const passwordHash = await authService._generateHash(password)
+        const passwordHash = await this.authService._generateHash(password)
         const newUser: UserType = {
             accountData: {
                 id: uuidv4(),
@@ -25,7 +32,7 @@ export class UsersService  {
                 passwordHash,
                 createdAt: new Date()
             },
-           // loginAttempts: [],
+            // loginAttempts: [],
             emailConfirmation: {
                 sentEmails: [],
                 confirmationCode: uuidv4(),
@@ -34,9 +41,9 @@ export class UsersService  {
             }
         }
         const createdUser = await this.usersRepository.createUser(newUser)
-        if(createdUser){
+        if (createdUser) {
             let messageBody = emailTemplateService.getEmailConfirmationMessage(createdUser.emailConfirmation.confirmationCode)
-            await emailService.addMessageInQueue({
+            await this.emailService.addMessageInQueue({
                 email: newUser.accountData.email,
                 message: messageBody,
                 subject: "E-mail confirmation ",
@@ -44,18 +51,22 @@ export class UsersService  {
                 createdAt: new Date()
             })
             return createdUser
-        }else {
+        } else {
             return null
         }
 
     }
+
     async deleteUserById(id: string): Promise<boolean> {
         return await this.usersRepository.deleteUserById(id)
     }
 }
+
 export interface IUsersRepository {
     getUsers(page: number, pageSize: number, searchNameTerm: string): Promise<EntityWithPaginationType<UserType[]>>,
+
     createUser(newUser: UserType): Promise<UserType | null>,
+
     deleteUserById(id: string): Promise<boolean>
 }
 

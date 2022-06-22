@@ -1,8 +1,11 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import {UserType} from "../types/types";
-import {usersRepository} from "../IocContainer";
+import {myContainer} from "../IocContainer";
+import {TYPES} from "../iocTYPES";
+import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
 
+const usersRepository = myContainer.get<UsersRepository>(TYPES.UsersRepository)
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers || !req.headers.authorization) {
         res.send(401)

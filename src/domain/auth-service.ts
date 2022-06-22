@@ -2,15 +2,20 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { isAfter} from 'date-fns'
 import {EmailService, emailTemplateService} from "./notification-service";
-import {injectable} from "inversify";
-import {usersRepository} from "../IocContainer";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../iocTYPES";
+import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
 
 @injectable()
 export class AuthService  {
-    constructor(private emailService: EmailService) {
+    constructor(@inject<EmailService>(TYPES.EmailService)
+                private emailService: EmailService,
+                @inject(TYPES.UsersRepository)
+    private usersRepository: UsersRepository)
+{
     }
     async checkCredentials(login: string, password: string) {
-        const user = await usersRepository.findUserByLogin(login)
+        const user = await this.usersRepository.findUserByLogin(login)
         if (!user || !user.emailConfirmation.isConfirmed) return {
             resultCode: 1,
             data: {
@@ -44,20 +49,20 @@ export class AuthService  {
         return isEqual
     }
     async confirmEmail(code: string): Promise<boolean> {
-        let user = await usersRepository.findUserByConfirmationCode(code)
+        let user = await this.usersRepository.findUserByConfirmationCode(code)
         if(!user || user.emailConfirmation.isConfirmed) return false
         let dbCode =  user.emailConfirmation.confirmationCode
         let dateIsExpired = isAfter(user.emailConfirmation.expirationDate, new Date())
         if(dbCode === code && dateIsExpired ){
-            let result = await usersRepository.updateConfirmation(user.accountData.id)
+            let result = await this.usersRepository.updateConfirmation(user.accountData.id)
             return result
         }
         return false
     }
     async resendCode(email: string) {
-        let user = await usersRepository.findUserByEmail(email)
+        let user = await this.usersRepository.findUserByEmail(email)
         if(!user || user.emailConfirmation.isConfirmed) return null
-            let updatedUser = await usersRepository.updateConfirmationCode(user.accountData.id)
+            let updatedUser = await this.usersRepository.updateConfirmationCode(user.accountData.id)
             if(updatedUser){
                 let messageBody = emailTemplateService
                     .getEmailConfirmationMessage(updatedUser.emailConfirmation.confirmationCode)

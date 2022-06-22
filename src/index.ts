@@ -7,13 +7,15 @@ import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
 import {removeAll} from "./application/common";
-import {scheduler} from "./IocContainer";
+import {myContainer} from "./IocContainer";
 import {runDb} from "./repositories/db-with-mongoose";
+import {TYPES} from "./iocTYPES";
+import {Scheduler} from "./application/email-sending-scheduler";
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000
 //const urlValidator = /^(http(s)?:\/\/)?([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+\/[/a-zA-Z0-9_-]+$/
-
+const scheduler = myContainer.get<Scheduler>(TYPES.Scheduler)
 app.set('trust proxy', true);
 app.use(jsonBodyMiddleware)
 app.use(cors())

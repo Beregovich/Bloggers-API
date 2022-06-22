@@ -1,7 +1,9 @@
 import nodemailer from "nodemailer";
 import {EmailConfirmationMessageType} from "../types/types";
-import {notificationRepository, scheduler} from "../IocContainer";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../iocTYPES";
+import {NotificationRepository} from "../repositories/mongoose/notification-mongoose-repository";
+import {Scheduler} from "../application/email-sending-scheduler";
 
 export const emailTemplateService = {
     getEmailConfirmationMessage(confirmationCode: string){
@@ -11,6 +13,13 @@ export const emailTemplateService = {
 }
 @injectable()
 export class EmailService  {
+    constructor(
+        @inject<NotificationRepository>(TYPES.NotificationRepository)
+        private notificationRepository: NotificationRepository,
+        @inject<Scheduler>(TYPES.Scheduler)
+        private scheduler: Scheduler
+    ) {
+    }
     async sendEmail(email: string, subject: string, message: string) {
         let transporter = nodemailer.createTransport({
             service: 'gmail',                              // the service used
@@ -31,7 +40,7 @@ export class EmailService  {
         }
     }
     async addMessageInQueue(message: EmailConfirmationMessageType){
-        const result = await notificationRepository.enqueueMessage(message)
+        const result = await this.notificationRepository.enqueueMessage(message)
         return result
     }
 }

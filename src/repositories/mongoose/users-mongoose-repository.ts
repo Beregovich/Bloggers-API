@@ -3,13 +3,13 @@ import {EntityWithPaginationType, UserType} from "../../types/types";
 import * as MongoClient from "mongodb";
 import {IUsersRepository} from "../../domain/users-service";
 import {addHours} from "date-fns";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import mongoose from "mongoose";
-import {usersModel} from "../db-with-mongoose";
+import {TYPES} from "../../iocTYPES";
 
 @injectable()
 export class UsersRepository implements IUsersRepository {
-    constructor(private usersModel: mongoose.Model<UserType>) {
+    constructor(@inject(TYPES.usersModel)private usersModel: mongoose.Model<UserType>) {
     }
 
     async getUsers(page: number,

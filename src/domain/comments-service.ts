@@ -1,12 +1,14 @@
 
 import {v4 as uuidv4} from "uuid";
 import { CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {CommentsRepository} from "../repositories/mongoose/comments-mongoose-repository";
+import {TYPES} from "../iocTYPES";
 
 @injectable()
  export class CommentsService  {
-     constructor(private commentsRepository: CommentsRepository) {
+     constructor(@inject<CommentsRepository>(TYPES.CommentsRepository)
+                 private commentsRepository: CommentsRepository) {
      }
     async getComments(paginationData: QueryDataType, PostId: string | null) {
         const comments = await this.commentsRepository.getComments(paginationData, PostId)

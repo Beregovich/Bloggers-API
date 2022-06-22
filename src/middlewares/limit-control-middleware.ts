@@ -1,15 +1,18 @@
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {ErrorMessageType} from "../types/types";
-
 import "reflect-metadata";
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
-import {usersRepository} from "../IocContainer";
 import {LimitsRepository} from "../repositories/mongoose/limits-mongoose-repository";
+import {TYPES} from "../iocTYPES";
+import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
 
 @injectable()
 export class LimitsControlMiddleware {
-    constructor(private limitsRepository: LimitsRepository) {
+    constructor(@inject<LimitsRepository>(TYPES.LimitsRepository)
+                private limitsRepository: LimitsRepository,
+                @inject<UsersRepository>(TYPES.UsersRepository)
+                private usersRepository: UsersRepository) {
     }
 
     private limitInterval = 10 * 1000 //10sec 1000ms
@@ -32,8 +35,8 @@ export class LimitsControlMiddleware {
         const login = req.body.login
         const email = req.body.email
         let errors: ErrorMessageType[] = [];
-        const userWithExistingEmail = await usersRepository.findUserByEmail(email)
-        const userWithExistingLogin = await usersRepository.findUserByLogin(login)
+        const userWithExistingEmail = await this.usersRepository.findUserByEmail(email)
+        const userWithExistingLogin = await this.usersRepository.findUserByLogin(login)
         if (userWithExistingEmail) errors.push({message: "email already exist", field: "email"});
         if (userWithExistingLogin) errors.push({message: "login already exist", field: "login"});
         if (errors.length < 1) return next()

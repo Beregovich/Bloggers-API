@@ -44,12 +44,12 @@ const userEmailConfirmationSchema = new mongoose.Schema<EmailConfirmationType>({
     expirationDate: Date,
     sentEmails: userSentConfirmationEmailSchema
 })
-const usersSchema = new mongoose.Schema<UserType>({
+export const usersSchema = new mongoose.Schema<UserType>({
     accountData: userAccountDataSchema,
     emailConfirmation: userEmailConfirmationSchema
 })
 
-const commentsSchema = new mongoose.Schema<CommentType>({
+export const commentsSchema = new mongoose.Schema<CommentType>({
     id: String,
     content: String,
     postId: String,
@@ -58,12 +58,12 @@ const commentsSchema = new mongoose.Schema<CommentType>({
     addedAt: Date,
 })
 
-const limitsSchema = new mongoose.Schema<LimitsControlType>({
+export const limitsSchema = new mongoose.Schema<LimitsControlType>({
     userIp: String,
     url: String,
     time: Date
 })
-const emailsQueueSchema = new mongoose.Schema<EmailConfirmationMessageType>({
+export const emailsQueueSchema = new mongoose.Schema<EmailConfirmationMessageType>({
     email: String,
     message: String,
     subject: String,
