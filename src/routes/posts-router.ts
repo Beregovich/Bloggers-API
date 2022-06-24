@@ -19,7 +19,6 @@ const postsService = myContainer.get<PostsService>(TYPES.PostsService)
 const bloggersService = myContainer.get<BloggersService>(TYPES.BloggersService)
 const commentsService = myContainer.get<CommentsService>(TYPES.CommentsService)
 export const postsRouter = Router()
-
 postsRouter
     //Returns all posts
     .get('/',

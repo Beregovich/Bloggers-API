@@ -3,7 +3,6 @@ import {EntityWithPaginationType, UserType} from "../types/types";
 import {addHours} from "date-fns";
 import {EmailService, emailTemplateService} from "./notification-service";
 import {inject, injectable} from "inversify";
-import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
 import {TYPES} from "../iocTYPES";
 import {AuthService} from "./auth-service";
 
@@ -68,6 +67,7 @@ export interface IUsersRepository {
     createUser(newUser: UserType): Promise<UserType | null>,
 
     deleteUserById(id: string): Promise<boolean>,
+
     findUserById(id: string): Promise<UserType | null>
 }
 

@@ -11,6 +11,7 @@ import {myContainer} from "./IocContainer";
 import {runDb} from "./repositories/db-with-mongoose";
 import {TYPES} from "./iocTYPES";
 import {Scheduler} from "./application/email-sending-scheduler";
+
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
 const port = process.env.PORT || 5000
@@ -26,7 +27,7 @@ app.use('/api/comments', commentsRouter)
 app.use('/api/auth', authRouter)
 
 app.delete('/api/testing/all-data', (req: Request, res: Response) => {
-    removeAll().then(()=>res.sendStatus(204))
+    removeAll().then(() => res.sendStatus(204))
 })
 //Home
 app.get('/*', (req: Request, res: Response) => {
@@ -38,7 +39,6 @@ app.get('/*', (req: Request, res: Response) => {
     })
 })
 
-
 async function startServer() {
     await runDb()
     await scheduler.emailSenderRun()
@@ -47,4 +47,4 @@ async function startServer() {
     })
 }
 
-startServer()
+startServer().then(() => console.log('Done'))

@@ -14,11 +14,7 @@ import {BloggersService} from "../domain/bloggers-service";
 
 const postsService = myContainer.get<PostsService>(TYPES.PostsService)
 const bloggersService = myContainer.get<BloggersService>(TYPES.BloggersService)
-
-
-
 export const bloggersRouter = Router()
-
 bloggersRouter
     //Returns all bloggers
     .get('/',

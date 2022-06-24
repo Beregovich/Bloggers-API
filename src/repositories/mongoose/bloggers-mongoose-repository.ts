@@ -11,6 +11,7 @@ export class BloggersRepository implements IBloggersRepository {
     constructor(@inject(TYPES.bloggersModel) private bloggersModel: mongoose.Model<BloggerType>,
                 @inject(TYPES.postsModel) private postsModel: mongoose.Model<PostType>) {
     }
+
     async getBloggers(page: number,
                       pageSize: number,
                       searchNameTerm: string): Promise<EntityWithPaginationType<BloggerType[]>> {

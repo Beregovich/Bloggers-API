@@ -50,7 +50,6 @@ myContainer.bind<IPostsRepository>(TYPES.IPostsRepository).to(PostsRepository);
 myContainer.bind<PostsService>(TYPES.PostsService).to(PostsService);
 //users
 myContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository);
-//myContainer.bind<UsersRepository>(TYPES.UsersRepository).to(UsersRepository);
 myContainer.bind<UsersService>(TYPES.UsersService).to(UsersService);
 //comments
 myContainer.bind<ICommentRepository>(TYPES.CommentsRepository).to(CommentsRepository);

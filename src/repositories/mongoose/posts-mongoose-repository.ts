@@ -5,7 +5,6 @@ import {inject, injectable} from "inversify";
 import mongoose from "mongoose";
 import {TYPES} from "../../iocTYPES";
 
-
 @injectable()
 export class PostsRepository implements IPostsRepository {
     constructor(@inject<mongoose.Model<PostType>>(TYPES.postsModel) private postsModel: mongoose.Model<PostType>,

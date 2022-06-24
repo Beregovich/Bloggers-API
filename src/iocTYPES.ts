@@ -1,6 +1,5 @@
 import {IPostsRepository, PostsService} from "./domain/posts-service";
 import {PostsRepository} from "./repositories/mongoose/posts-mongoose-repository";
-//import {commentsModel, emailsQueueModel, limitsModel, usersModel} from "./repositories/db-with-mongoose";
 import {CommentsService} from "./domain/comments-service";
 import {CommentsRepository} from "./repositories/mongoose/comments-mongoose-repository";
 import {LimitsRepository} from "./repositories/mongoose/limits-mongoose-repository";
@@ -18,7 +17,7 @@ export const TYPES = {
     PostsRepository: Symbol.for("PostsRepository"),
     //users
     IUsersRepository: Symbol.for("IUsersRepository"),
-   // UsersRepository: Symbol.for("UsersRepository"),
+    // UsersRepository: Symbol.for("UsersRepository"),
     UsersService: Symbol.for("UsersService"),
     //comments
     CommentsService: Symbol.for("CommentsService"),

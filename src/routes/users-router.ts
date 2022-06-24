@@ -11,7 +11,6 @@ import {UsersService} from "../domain/users-service";
 import {TYPES} from "../iocTYPES";
 
 const usersService = myContainer.get<UsersService>(TYPES.UsersService)
-
 export const usersRouter = Router()
 usersRouter
     //Returns all users

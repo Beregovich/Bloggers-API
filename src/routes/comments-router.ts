@@ -8,7 +8,6 @@ import {TYPES} from "../iocTYPES";
 import {CommentsService} from "../domain/comments-service";
 
 const commentsService  = myContainer.get<CommentsService>(TYPES.CommentsService)
-
 export const commentsRouter = Router()
 commentsRouter
     .get('/:commentId',

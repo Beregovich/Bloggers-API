@@ -1,8 +1,7 @@
 import 'dotenv/config'
 import mongoose from 'mongoose'
-//const {MongoClient} = require('mongodb');
 import {
-    BloggerType, CheckLimitsType,
+    BloggerType,
     CommentType, EmailConfirmationMessageType, EmailConfirmationType,
     LimitsControlType,
     PostType, SentConfirmationEmailType, UserAccountType,
@@ -70,15 +69,6 @@ export const emailsQueueSchema = new mongoose.Schema<EmailConfirmationMessageTyp
     isSent: Boolean,
     createdAt: Date
 })
-
-//Models
-
-export const bloggersModel = mongoose.model('Bloggers', bloggersSchema)
-export const postsModel = mongoose.model('Posts', postsSchema)
-export const usersModel = mongoose.model('Users', usersSchema)
-export const commentsModel = mongoose.model('Comments', commentsSchema)
-export const limitsModel = mongoose.model('Limits', limitsSchema)
-export const emailsQueueModel = mongoose.model('EmailsQueue', emailsQueueSchema)
 
 export async function runDb() {
     try {
