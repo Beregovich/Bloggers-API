@@ -20,6 +20,7 @@ const scheduler = myContainer.get<Scheduler>(TYPES.Scheduler)
 app.set('trust proxy', true);
 app.use(jsonBodyMiddleware)
 app.use(cors())
+//app.use(express.)
 app.use('/api/bloggers', bloggersRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/users', usersRouter)

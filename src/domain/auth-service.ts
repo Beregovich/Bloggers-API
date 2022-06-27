@@ -24,11 +24,14 @@ export class AuthService  {
         }
         const isHashesEquals = await this._isPasswordCorrect(password, user.accountData.passwordHash)
         if (isHashesEquals) {
-            const token = jwt.sign({userId: user.accountData.id}, 'topSecretKey', {expiresIn: '30d'})
+            const secretKey = process.env.JWT_SECRET_KEY || 'topSecretKey1'
+            const accessToken = jwt.sign({userId: user.accountData.id}, secretKey, {expiresIn: '1d'})
+            const refreshToken = jwt.sign({userId: user.accountData.id}, secretKey, {expiresIn: '30d'})
             return {
                 resultCode: 0,
                 data: {
-                    token: token
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
                 }
             }
         } else {

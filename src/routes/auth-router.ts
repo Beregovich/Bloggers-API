@@ -71,3 +71,16 @@ authRouter
                 })
             res.sendStatus(204)
         })
+    .post('/me',
+        limitsControl.checkLimits.bind(limitsControl),
+        async (req: Request, res: Response) => {
+        })
+    .post('/logout',
+        limitsControl.checkLimits.bind(limitsControl),
+        async (req: Request, res: Response) => {
+        })
+    .post('/refresh-token',
+        limitsControl.checkLimits.bind(limitsControl),
+        async (req: Request, res: Response) => {
+
+        })
