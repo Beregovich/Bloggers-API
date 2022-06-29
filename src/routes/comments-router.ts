@@ -3,11 +3,11 @@ import {commentValidationRules, inputValidatorMiddleware} from "../middlewares/i
 import {check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {checkOwnership} from "../middlewares/check-ownership-middleware";
-import {myContainer} from "../IocContainer";
+import {iocContainer} from "../IocContainer";
 import {TYPES} from "../iocTYPES";
 import {CommentsService} from "../domain/comments-service";
 
-const commentsService  = myContainer.get<CommentsService>(TYPES.CommentsService)
+const commentsService  = iocContainer.get<CommentsService>(TYPES.CommentsService)
 export const commentsRouter = Router()
 commentsRouter
     .get('/:commentId',

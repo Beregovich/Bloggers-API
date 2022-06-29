@@ -33,7 +33,7 @@ import {
     UserType
 } from "./types/types";
 
-export const myContainer = new Container();
+export const iocContainer = new Container();
 //Models
 const bloggersModel = mongoose.model('Bloggers', bloggersSchema)
 const postsModel = mongoose.model('Posts', postsSchema)
@@ -43,31 +43,31 @@ const limitsModel = mongoose.model('Limits', limitsSchema)
 const emailsQueueModel = mongoose.model('EmailsQueue', emailsQueueSchema)
 
 //bloggers
-myContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository);
-myContainer.bind<BloggersService>(TYPES.BloggersService).to(BloggersService);
+iocContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository);
+iocContainer.bind<BloggersService>(TYPES.BloggersService).to(BloggersService);
 //posts
-myContainer.bind<IPostsRepository>(TYPES.IPostsRepository).to(PostsRepository);
-myContainer.bind<PostsService>(TYPES.PostsService).to(PostsService);
+iocContainer.bind<IPostsRepository>(TYPES.IPostsRepository).to(PostsRepository);
+iocContainer.bind<PostsService>(TYPES.PostsService).to(PostsService);
 //users
-myContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository);
-myContainer.bind<UsersService>(TYPES.UsersService).to(UsersService);
+iocContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository);
+iocContainer.bind<UsersService>(TYPES.UsersService).to(UsersService);
 //comments
-myContainer.bind<ICommentRepository>(TYPES.CommentsRepository).to(CommentsRepository);
-myContainer.bind<CommentsService>(TYPES.CommentsService).to(CommentsService);
+iocContainer.bind<ICommentRepository>(TYPES.CommentsRepository).to(CommentsRepository);
+iocContainer.bind<CommentsService>(TYPES.CommentsService).to(CommentsService);
 //limits
-myContainer.bind<LimitsRepository>(TYPES.LimitsRepository).to(LimitsRepository);
-myContainer.bind<LimitsControlMiddleware>(TYPES.LimitsControlMiddleware).to(LimitsControlMiddleware);
+iocContainer.bind<LimitsRepository>(TYPES.LimitsRepository).to(LimitsRepository);
+iocContainer.bind<LimitsControlMiddleware>(TYPES.LimitsControlMiddleware).to(LimitsControlMiddleware);
 //emailsQueue
-myContainer.bind<EmailService>(TYPES.EmailService).to(EmailService);
-myContainer.bind<NotificationRepository>(TYPES.NotificationRepository).to(NotificationRepository);
+iocContainer.bind<EmailService>(TYPES.EmailService).to(EmailService);
+iocContainer.bind<NotificationRepository>(TYPES.NotificationRepository).to(NotificationRepository);
 //Scheduler
-myContainer.bind<Scheduler>(TYPES.Scheduler).to(Scheduler);
+iocContainer.bind<Scheduler>(TYPES.Scheduler).to(Scheduler);
 //Auth
-myContainer.bind<AuthService>(TYPES.AuthService).to(AuthService);
+iocContainer.bind<AuthService>(TYPES.AuthService).to(AuthService);
 //models
-myContainer.bind<mongoose.Model<BloggerType>>(TYPES.bloggersModel).toConstantValue(bloggersModel);
-myContainer.bind<mongoose.Model<PostType>>(TYPES.postsModel).toConstantValue(postsModel);
-myContainer.bind<mongoose.Model<UserType>>(TYPES.usersModel).toConstantValue(usersModel);
-myContainer.bind<mongoose.Model<CommentType>>(TYPES.commentsModel).toConstantValue(commentsModel);
-myContainer.bind<mongoose.Model<LimitsControlType>>(TYPES.limitsModel).toConstantValue(limitsModel);
-myContainer.bind<mongoose.Model<EmailConfirmationMessageType>>(TYPES.emailsQueueModel).toConstantValue(emailsQueueModel);
+iocContainer.bind<mongoose.Model<BloggerType>>(TYPES.bloggersModel).toConstantValue(bloggersModel);
+iocContainer.bind<mongoose.Model<PostType>>(TYPES.postsModel).toConstantValue(postsModel);
+iocContainer.bind<mongoose.Model<UserType>>(TYPES.usersModel).toConstantValue(usersModel);
+iocContainer.bind<mongoose.Model<CommentType>>(TYPES.commentsModel).toConstantValue(commentsModel);
+iocContainer.bind<mongoose.Model<LimitsControlType>>(TYPES.limitsModel).toConstantValue(limitsModel);
+iocContainer.bind<mongoose.Model<EmailConfirmationMessageType>>(TYPES.emailsQueueModel).toConstantValue(emailsQueueModel);

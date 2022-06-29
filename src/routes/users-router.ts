@@ -6,11 +6,11 @@ import {
 } from "../middlewares/input-validator-middleware";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 import {getPaginationData} from "../application/common";
-import {myContainer} from "../IocContainer";
+import {iocContainer} from "../IocContainer";
 import {UsersService} from "../domain/users-service";
 import {TYPES} from "../iocTYPES";
 
-const usersService = myContainer.get<UsersService>(TYPES.UsersService)
+const usersService = iocContainer.get<UsersService>(TYPES.UsersService)
 export const usersRouter = Router()
 usersRouter
     //Returns all users

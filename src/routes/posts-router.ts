@@ -8,16 +8,16 @@ import {
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {CommentType, EntityWithPaginationType, PostType} from "../types/types";
-import {myContainer} from "../IocContainer";
+import {iocContainer} from "../IocContainer";
 import {getPaginationData} from "../application/common";
 import {TYPES} from "../iocTYPES";
 import {PostsService} from "../domain/posts-service";
 import {BloggersService} from "../domain/bloggers-service";
 import {CommentsService} from "../domain/comments-service";
 
-const postsService = myContainer.get<PostsService>(TYPES.PostsService)
-const bloggersService = myContainer.get<BloggersService>(TYPES.BloggersService)
-const commentsService = myContainer.get<CommentsService>(TYPES.CommentsService)
+const postsService = iocContainer.get<PostsService>(TYPES.PostsService)
+const bloggersService = iocContainer.get<BloggersService>(TYPES.BloggersService)
+const commentsService = iocContainer.get<CommentsService>(TYPES.CommentsService)
 export const postsRouter = Router()
 postsRouter
     //Returns all posts

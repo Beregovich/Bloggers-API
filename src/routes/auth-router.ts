@@ -6,15 +6,15 @@ import {
     userValidationRules
 } from "../middlewares/input-validator-middleware";
 import {body} from "express-validator";
-import {myContainer} from "../IocContainer";
+import {iocContainer} from "../IocContainer";
 import {UsersService} from "../domain/users-service";
 import {AuthService} from "../domain/auth-service";
 import {LimitsControlMiddleware} from "../middlewares/limit-control-middleware";
 import {TYPES} from "../iocTYPES";
 
-const usersService = myContainer.get<UsersService>(TYPES.UsersService)
-const authService = myContainer.get<AuthService>(TYPES.AuthService)
-const limitsControl = myContainer.get<LimitsControlMiddleware>(TYPES.LimitsControlMiddleware)
+const usersService = iocContainer.get<UsersService>(TYPES.UsersService)
+const authService = iocContainer.get<AuthService>(TYPES.AuthService)
+const limitsControl = iocContainer.get<LimitsControlMiddleware>(TYPES.LimitsControlMiddleware)
 
 export const authRouter = Router({})
 authRouter

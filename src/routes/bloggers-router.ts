@@ -6,14 +6,14 @@ import {
     postValidationRules
 } from "../middlewares/input-validator-middleware";
 import {baseAuthMiddleware, checkHeaders} from "../middlewares/base-auth-middleware";
-import {myContainer} from "../IocContainer";
+import {iocContainer} from "../IocContainer";
 import {getPaginationData} from "../application/common";
 import {TYPES} from "../iocTYPES";
 import {PostsService} from "../domain/posts-service";
 import {BloggersService} from "../domain/bloggers-service";
 
-const postsService = myContainer.get<PostsService>(TYPES.PostsService)
-const bloggersService = myContainer.get<BloggersService>(TYPES.BloggersService)
+const postsService = iocContainer.get<PostsService>(TYPES.PostsService)
+const bloggersService = iocContainer.get<BloggersService>(TYPES.BloggersService)
 export const bloggersRouter = Router()
 bloggersRouter
     //Returns all bloggers
