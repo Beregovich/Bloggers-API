@@ -25,7 +25,8 @@ authRouter
         async (req: Request, res: Response) => {
             const checkResult = await authService.checkCredentials(req.body.login, req.body.password)
             if (checkResult.resultCode === 0) {
-                res.status(200).send(checkResult.data)
+                res.cookie("refreshToken", checkResult.data.refreshToken, {httpOnly: true, secure: true})
+                res.status(200).send(checkResult.data.accessToken)
             } else {
                 res.sendStatus(401)
             }
@@ -71,16 +72,29 @@ authRouter
                 })
             res.sendStatus(204)
         })
-    .post('/me',
-        limitsControl.checkLimits.bind(limitsControl),
-        async (req: Request, res: Response) => {
-        })
-    .post('/logout',
-        limitsControl.checkLimits.bind(limitsControl),
-        async (req: Request, res: Response) => {
-        })
-    .post('/refresh-token',
-        limitsControl.checkLimits.bind(limitsControl),
-        async (req: Request, res: Response) => {
-
-        })
+    // .post('/me',
+    //     limitsControl.checkLimits.bind(limitsControl),
+    //     async (req: Request, res: Response) => {
+    //     })
+    // .post('/logout',
+    //     limitsControl.checkLimits.bind(limitsControl),
+    //     async (req: Request, res: Response) => {
+    //     })
+    // .post('/refresh-token',
+    //     limitsControl.checkLimits.bind(limitsControl),
+    //     async (req: Request, res: Response) => {
+    //         try {
+    //             const refreshToken = req.cookies.refreshToken
+    //             if (!refreshToken) {
+    //                 return res.sendStatus(401)
+    //             }
+    //             const newTokens = await jwtService.getNewRefreshToken(refreshToken)
+    //             if (!newTokens) {
+    //                 return res.sendStatus(401)
+    //             }
+    //             res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
+    //             return res.send({accessToken: newTokens.accessToken})
+    //         } catch (e) {
+    //             console.error(e)
+    //         }
+    //     })
