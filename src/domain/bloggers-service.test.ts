@@ -11,6 +11,10 @@ describe("Integration BloggersService-s tests",()=>{
         const mongoUri = mongoServer.getUri()
         await mongoose.connect(mongoUri)
     })
+    afterAll(async ()=>{
+        await mongoose.disconnect()
+        await mongoServer.stop()
+    })
     const bloggersService = iocContainer.get<BloggersService>(TYPES.BloggersService)
 
     describe("Create blogger", ()=>{
