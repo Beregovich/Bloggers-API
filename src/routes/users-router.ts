@@ -34,7 +34,10 @@ usersRouter
                 req.body.password,
                 req.body.email
             )
-            res.status(201).send(createdUser)
+            res.status(201).send({
+                id: createdUser!.accountData.id,
+                login: createdUser!.accountData.login
+            })
         })
     //Delete user
     .delete('/:userId',
