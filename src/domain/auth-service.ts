@@ -27,7 +27,7 @@ export class AuthService  {
 
     async checkCredentials(login: string, password: string) {
         const user = await this.usersRepository.findUserByLogin(login)
-        if (!user || !user.emailConfirmation.isConfirmed) return {
+        if (!user /*|| !user.emailConfirmation.isConfirmed*/) return {
             resultCode: 1,
             data: {
                     accessToken: null,
