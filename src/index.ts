@@ -11,6 +11,7 @@ import {iocContainer} from "./IocContainer";
 import {runDb} from "./repositories/db-with-mongoose";
 import {TYPES} from "./iocTYPES";
 import {Scheduler} from "./application/email-sending-scheduler";
+import cookieParser from "cookie-parser";
 
 const jsonBodyMiddleware = bodyParser.json()
 const app = express()
@@ -20,7 +21,7 @@ const scheduler = iocContainer.get<Scheduler>(TYPES.Scheduler)
 app.set('trust proxy', true);
 app.use(jsonBodyMiddleware)
 app.use(cors())
-//app.use(express.)
+app.use(cookieParser())
 app.use('/api/bloggers', bloggersRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/users', usersRouter)

@@ -98,10 +98,11 @@ authRouter
         //limitsControl.checkLimits.bind(limitsControl),
         checkRefreshTokenMiddleware.checkToken.bind(checkRefreshTokenMiddleware),
         async (req: Request, res: Response) => {
+        debugger
             try {
                 const refreshToken = req.cookies.refreshToken
                 if (!refreshToken) return res.sendStatus(401)
-                const user = res.locals.user.accountData
+                const user = res.locals.userData.accountData
                 const newTokens = authService.createJwtTokensPair(user.id)
                 if (!newTokens) {
                     return res.sendStatus(401)
