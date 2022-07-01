@@ -66,7 +66,7 @@ export type EmailConfirmationType = {
     isConfirmed: boolean;
     confirmationCode: string;
     expirationDate: Date;
-    sentEmails: SentConfirmationEmailType[];
+    sentEmails?: SentConfirmationEmailType[];
 }
 
 export type LimitsControlType = {

@@ -33,7 +33,7 @@ export class UsersService {
             },
             // loginAttempts: [],
             emailConfirmation: {
-                sentEmails: [],
+                //sentEmails: [],
                 confirmationCode: uuidv4(),
                 expirationDate: addHours(new Date(), 24),
                 isConfirmed: false

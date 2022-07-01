@@ -17,8 +17,8 @@ export class AuthService  {
     createJwtTokensPair(userId: string) {
         const secretKey = process.env.JWT_SECRET_KEY || 'topSecretKey1'
         const payload: {userId: string} = {userId: userId}
-        const accessToken = jwt.sign(payload, secretKey, {expiresIn: '1d'})
-        const refreshToken = jwt.sign(payload, secretKey, {expiresIn: '30d'})
+        const accessToken = jwt.sign(payload, secretKey, {expiresIn: '10s'})
+        const refreshToken = jwt.sign(payload, secretKey, {expiresIn: '20s'})
         return {
             accessToken,
             refreshToken
