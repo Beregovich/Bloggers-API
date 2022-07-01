@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import jwt, {Jwt} from 'jsonwebtoken'
 import { isAfter} from 'date-fns'
 import {EmailService, emailTemplateService} from "./notification-service";
 import {inject, injectable} from "inversify";
@@ -14,31 +14,41 @@ export class AuthService  {
     private usersRepository: UsersRepository)
 {
     }
+    createJwtTokensPair(userId: string) {
+        const secretKey = process.env.JWT_SECRET_KEY || 'topSecretKey1'
+        const payload: {userId: string} = {userId: userId}
+        const accessToken = jwt.sign(payload, secretKey, {expiresIn: '1d'})
+        const refreshToken = jwt.sign(payload, secretKey, {expiresIn: '30d'})
+        return {
+            accessToken,
+            refreshToken
+        }
+    }
+
     async checkCredentials(login: string, password: string) {
         const user = await this.usersRepository.findUserByLogin(login)
         if (!user || !user.emailConfirmation.isConfirmed) return {
             resultCode: 1,
             data: {
-                token: null
+                    accessToken: null,
+                    refreshToken: null
             }
         }
         const isHashesEquals = await this._isPasswordCorrect(password, user.accountData.passwordHash)
         if (isHashesEquals) {
-            const secretKey = process.env.JWT_SECRET_KEY || 'topSecretKey1'
-            const accessToken = jwt.sign({userId: user.accountData.id}, secretKey, {expiresIn: '1d'})
-            const refreshToken = jwt.sign({userId: user.accountData.id}, secretKey, {expiresIn: '30d'})
+            const tokensPair = this.createJwtTokensPair(user.accountData.id)
             return {
                 resultCode: 0,
-                data: {
-                    accessToken: accessToken,
-                    refreshToken: refreshToken
-                }
+                data: tokensPair
             }
         } else {
             return {
                 resultCode: 1,
                 data: {
-                    token: null
+                    token: {
+                        accessToken: null,
+                        refreshToken: null
+                    }
                 }
             }
         }

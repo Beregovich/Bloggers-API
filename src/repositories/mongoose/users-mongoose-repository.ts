@@ -79,7 +79,7 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async updateConfirmationCode(id: string) {
-        let updatedUser = await this.usersModel
+        const updatedUser = await this.usersModel
             .findOneAndUpdate({"accountData.id": id},
                 {
                     $set: {
@@ -88,6 +88,17 @@ export class UsersRepository implements IUsersRepository {
                     }
                 },
                 {returnDocument: "after"})
+        return updatedUser
+    }
+    async addRevokedToken(id: string, token: string): Promise<UserType | null>{
+        const updatedUser = this.usersModel
+            .findOneAndUpdate({"accountData.id": id},
+                {
+                    $push: {
+                        "accountData.revokedTokens": token,
+                    }
+                },
+                {returnDocument: "after"}).lean()
         return updatedUser
     }
 

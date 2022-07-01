@@ -6,7 +6,7 @@ import {addHours} from "date-fns";
 import {injectable} from "inversify";
 
 @injectable()
-export class UsersRepository implements IUsersRepository {
+export class UsersRepository /*implements IUsersRepository*/ {
     constructor(private usersCollection: MongoClient.Collection<UserType>) {
     }
 

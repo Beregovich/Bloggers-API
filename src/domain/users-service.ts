@@ -29,7 +29,7 @@ export class UsersService {
                 login: login,
                 email: email,
                 passwordHash,
-                createdAt: new Date()
+                createdAt: new Date(),
             },
             // loginAttempts: [],
             emailConfirmation: {
@@ -59,6 +59,11 @@ export class UsersService {
     async deleteUserById(id: string): Promise<boolean> {
         return await this.usersRepository.deleteUserById(id)
     }
+
+    async addRevokedToken(id: string, token: string){
+        const updatedUser = this.usersRepository.addRevokedToken
+        return updatedUser
+    }
 }
 
 export interface IUsersRepository {
@@ -69,6 +74,8 @@ export interface IUsersRepository {
     deleteUserById(id: string): Promise<boolean>,
 
     findUserById(id: string): Promise<UserType | null>
+
+    addRevokedToken(id: string, token: string): Promise<UserType | null>
 }
 
 

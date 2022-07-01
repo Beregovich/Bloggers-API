@@ -51,6 +51,7 @@ export type UserAccountType = {
     login: string;
     passwordHash: string;
     createdAt: Date;
+    revokedTokens?: string[] | null
 }
 export type SentConfirmationEmailType = {
     sentDate: Date;

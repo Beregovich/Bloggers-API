@@ -32,7 +32,8 @@ const userAccountDataSchema = new mongoose.Schema<UserAccountType>({
     email: String,
     login: String,
     passwordHash: String,
-    createdAt: Date
+    createdAt: Date,
+    revokedTokens: {type: [String], required: false}
 })
 const userSentConfirmationEmailSchema = new mongoose.Schema<SentConfirmationEmailType>({
     sentDate: Date

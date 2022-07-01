@@ -5,6 +5,7 @@ import {CommentsRepository} from "./repositories/mongoose/comments-mongoose-repo
 import {LimitsRepository} from "./repositories/mongoose/limits-mongoose-repository";
 import {EmailService} from "./domain/notification-service";
 import {LimitsControlMiddleware} from "./middlewares/limit-control-middleware";
+import {CheckRefreshTokenMiddleware} from "./middlewares/check-refresh-token-middleware";
 
 export const TYPES = {
     //bloggers
@@ -32,6 +33,8 @@ export const TYPES = {
     AuthService: Symbol.for("AuthService"),
     //Scheduler
     Scheduler: Symbol.for("Scheduler"),
+    //middlewares
+    CheckRefreshTokenMiddleware: Symbol.for("CheckRefreshTokenMiddleware"),
     //models
     bloggersModel: Symbol.for("bloggersModel"),
     postsModel: Symbol.for("postsModel"),

@@ -32,6 +32,7 @@ import {
     PostType,
     UserType
 } from "./types/types";
+import {CheckRefreshTokenMiddleware} from "./middlewares/check-refresh-token-middleware";
 
 export const iocContainer = new Container();
 //Models
@@ -64,6 +65,8 @@ iocContainer.bind<NotificationRepository>(TYPES.NotificationRepository).to(Notif
 iocContainer.bind<Scheduler>(TYPES.Scheduler).to(Scheduler);
 //Auth
 iocContainer.bind<AuthService>(TYPES.AuthService).to(AuthService);
+//middlewares
+iocContainer.bind<CheckRefreshTokenMiddleware>(TYPES.CheckRefreshTokenMiddleware).to(CheckRefreshTokenMiddleware)
 //models
 iocContainer.bind<mongoose.Model<BloggerType>>(TYPES.bloggersModel).toConstantValue(bloggersModel);
 iocContainer.bind<mongoose.Model<PostType>>(TYPES.postsModel).toConstantValue(postsModel);

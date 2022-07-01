@@ -11,10 +11,13 @@ import {UsersService} from "../domain/users-service";
 import {AuthService} from "../domain/auth-service";
 import {LimitsControlMiddleware} from "../middlewares/limit-control-middleware";
 import {TYPES} from "../iocTYPES";
+import {authMiddleware} from "../middlewares/auth-middleware";
+import {CheckRefreshTokenMiddleware} from "../middlewares/check-refresh-token-middleware";
 
 const usersService = iocContainer.get<UsersService>(TYPES.UsersService)
 const authService = iocContainer.get<AuthService>(TYPES.AuthService)
 const limitsControl = iocContainer.get<LimitsControlMiddleware>(TYPES.LimitsControlMiddleware)
+const checkRefreshTokenMiddleware = iocContainer.get<CheckRefreshTokenMiddleware>(TYPES.CheckRefreshTokenMiddleware)
 
 export const authRouter = Router({})
 authRouter
@@ -24,7 +27,7 @@ authRouter
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
             const checkResult = await authService.checkCredentials(req.body.login, req.body.password)
-            if (checkResult.resultCode === 0) {
+            if (checkResult.resultCode === 0 ) {
                 res.cookie("refreshToken", checkResult.data.refreshToken, {httpOnly: true, secure: true})
                 res.status(200).send(checkResult.data.accessToken)
             } else {
@@ -62,8 +65,8 @@ authRouter
         inputValidatorMiddleware,
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
-            let isResended = await authService.resendCode(req.body.email)
-            if (!isResended) return res.status(400)
+            const isResented = await authService.resendCode(req.body.email)
+            if (!isResented) return res.status(400)
                 .send({
                     errorsMessages: [{
                         message: "email already confirmed or such email not found",
@@ -72,29 +75,40 @@ authRouter
                 })
             res.sendStatus(204)
         })
-    // .post('/me',
-    //     limitsControl.checkLimits.bind(limitsControl),
-    //     async (req: Request, res: Response) => {
-    //     })
-    // .post('/logout',
-    //     limitsControl.checkLimits.bind(limitsControl),
-    //     async (req: Request, res: Response) => {
-    //     })
-    // .post('/refresh-token',
-    //     limitsControl.checkLimits.bind(limitsControl),
-    //     async (req: Request, res: Response) => {
-    //         try {
-    //             const refreshToken = req.cookies.refreshToken
-    //             if (!refreshToken) {
-    //                 return res.sendStatus(401)
-    //             }
-    //             const newTokens = await jwtService.getNewRefreshToken(refreshToken)
-    //             if (!newTokens) {
-    //                 return res.sendStatus(401)
-    //             }
-    //             res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
-    //             return res.send({accessToken: newTokens.accessToken})
-    //         } catch (e) {
-    //             console.error(e)
-    //         }
-    //     })
+    .post('/me',
+        //limitsControl.checkLimits.bind(limitsControl),
+        authMiddleware,
+        async (req: Request, res: Response) => {
+        const userAccountData = res.locals.userData.accountData
+            res.status(200).send({
+                "email": userAccountData.email,
+                "login": userAccountData.login,
+                "userId": userAccountData.id
+            })
+        })
+    .post('/logout',
+        //limitsControl.checkLimits.bind(limitsControl),
+        checkRefreshTokenMiddleware.checkToken.bind(checkRefreshTokenMiddleware),
+        async (req: Request, res: Response) => {
+       const userId = res.locals.userData.accountData.userId
+            const result = await usersService.addRevokedToken(userId, req.cookies.refreshToken)//return updated user
+            res.sendStatus(204)
+        })
+    .post('/refresh-token',
+        //limitsControl.checkLimits.bind(limitsControl),
+        checkRefreshTokenMiddleware.checkToken.bind(checkRefreshTokenMiddleware),
+        async (req: Request, res: Response) => {
+            try {
+                const refreshToken = req.cookies.refreshToken
+                if (!refreshToken) return res.sendStatus(401)
+                const user = res.locals.user.accountData
+                const newTokens = authService.createJwtTokensPair(user.id)
+                if (!newTokens) {
+                    return res.sendStatus(401)
+                }
+                res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
+                return res.send({accessToken: newTokens.accessToken})
+            } catch (e) {
+                console.error(e)
+            }
+        })
