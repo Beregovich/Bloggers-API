@@ -29,9 +29,9 @@ authRouter
             const checkResult = await authService.checkCredentials(req.body.login, req.body.password)
             if (checkResult.resultCode === 0 ) {
                 res.cookie("refreshToken", checkResult.data.refreshToken, {httpOnly: true, secure: true})
-                res.status(200).send(checkResult.data.accessToken)
+                return res.status(200).send({accessToken: checkResult.data.accessToken})
             } else {
-                res.sendStatus(401)
+                return res.sendStatus(401)
             }
         })
     .post('/registration',
