@@ -111,10 +111,14 @@ authRouter
         async (req: Request, res: Response) => {
             try {
                 const refreshToken = req.cookies.refreshToken
-                if (!refreshToken) return res.sendStatus(401)
+                if (!refreshToken) {
+                    console.log('NoTokens in cookie')
+                    return res.sendStatus(401)
+                }
                 const user = res.locals.userData.accountData
                 const newTokens = authService.createJwtTokensPair(user.id)
                 if (!newTokens) {
+                    console.log('No created Tokens\n')
                     return res.sendStatus(401)
                 }
                 res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})

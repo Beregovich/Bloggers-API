@@ -23,9 +23,10 @@ export class CheckRefreshTokenMiddleware {
             const decoded: any = jwt.verify(token, secretKey!)
             const user: UserType | null = await this.usersRepository.findUserById(decoded.userId)
             if (!user) {
-                res.status(404).send("user from jwt data not found")
+                res.status(404).send("user from jwt data not found\n")
                 return
             }else if(user.accountData.revokedTokens?.includes(token)){
+                console.log('Token revoked\n')
                 return res.sendStatus(401)
             }
             req.user = user
