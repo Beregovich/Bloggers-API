@@ -109,7 +109,6 @@ authRouter
         //limitsControl.checkLimits.bind(limitsControl),
         checkRefreshTokenMiddleware.checkToken.bind(checkRefreshTokenMiddleware),
         async (req: Request, res: Response) => {
-        debugger
             try {
                 const refreshToken = req.cookies.refreshToken
                 if (!refreshToken) return res.sendStatus(401)

@@ -20,11 +20,8 @@ export class CheckRefreshTokenMiddleware {
         try {
             const secretKey = process.env.JWT_SECRET_KEY
             const token = req.cookies.refreshToken
-
             const decoded: any = jwt.verify(token, secretKey!)
-
             const user: UserType | null = await this.usersRepository.findUserById(decoded.userId)
-
             if (!user) {
                 res.status(404).send("user from jwt data not found")
                 return
