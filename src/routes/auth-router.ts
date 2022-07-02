@@ -86,6 +86,17 @@ authRouter
                 "userId": userAccountData.id
             })
         })
+    .post('/me',
+        //limitsControl.checkLimits.bind(limitsControl),
+        authMiddleware,
+        async (req: Request, res: Response) => {
+            const userAccountData = res.locals.userData.accountData
+            res.status(200).send({
+                "email": userAccountData.email,
+                "login": userAccountData.login,
+                "userId": userAccountData.id
+            })
+        })
     .post('/logout',
         //limitsControl.checkLimits.bind(limitsControl),
         checkRefreshTokenMiddleware.checkToken.bind(checkRefreshTokenMiddleware),
