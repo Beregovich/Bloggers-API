@@ -118,11 +118,10 @@ authRouter
                 const user = res.locals.userData.accountData
                 const newTokens = authService.createJwtTokensPair(user.id)
                 if (!newTokens) {
-                    console.log('No created Tokens\n')
                     return res.sendStatus(401)
                 }
                 res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
-                await usersService.addRevokedToken(user.accountData.id, refreshToken)
+                await usersService.addRevokedToken(user.id, refreshToken)
                 return res.send({accessToken: newTokens.accessToken})
             } catch (e) {
                 console.error(e)
