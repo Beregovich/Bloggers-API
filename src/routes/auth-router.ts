@@ -75,7 +75,8 @@ authRouter
                 })
             res.sendStatus(204)
         })
-    .post('/me',
+    .get('/me',
+
         //limitsControl.checkLimits.bind(limitsControl),
         authMiddleware,
         async (req: Request, res: Response) => {
