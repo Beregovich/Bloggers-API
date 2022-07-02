@@ -27,7 +27,7 @@ authRouter
         limitsControl.checkLimits.bind(limitsControl),
         async (req: Request, res: Response) => {
             const checkResult = await authService.checkCredentials(req.body.login, req.body.password)
-            if (checkResult.resultCode === 0 ) {
+            if (checkResult.resultCode === 0) {
                 res.cookie("refreshToken", checkResult.data.refreshToken, {httpOnly: true, secure: true})
                 return res.status(200).send({accessToken: checkResult.data.accessToken})
             } else {
@@ -79,7 +79,7 @@ authRouter
         //limitsControl.checkLimits.bind(limitsControl),
         authMiddleware,
         async (req: Request, res: Response) => {
-        const userAccountData = res.locals.userData.accountData
+            const userAccountData = res.locals.userData.accountData
             res.status(200).send({
                 "email": userAccountData.email,
                 "login": userAccountData.login,
@@ -101,9 +101,13 @@ authRouter
         //limitsControl.checkLimits.bind(limitsControl),
         checkRefreshTokenMiddleware.checkToken.bind(checkRefreshTokenMiddleware),
         async (req: Request, res: Response) => {
-       const userId = res.locals.userData.accountData.id
-            const result = await usersService.addRevokedToken(userId, req.cookies.refreshToken)//return updated user
-            res.sendStatus(204)
+            //const userId = res.locals.userData.accountData.id
+            const result = await usersService.addRevokedToken(req.cookies.refreshToken)//return updated user
+            if (result) {
+                return res.sendStatus(204)
+            } else {
+                return res.sendStatus(401)
+            }
         })
     .post('/refresh-token',
         //limitsControl.checkLimits.bind(limitsControl),
@@ -121,7 +125,7 @@ authRouter
                     return res.sendStatus(401)
                 }
                 res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
-                //await usersService.addRevokedToken(user.id, refreshToken)
+                await usersService.addRevokedToken(refreshToken)
                 return res.send({accessToken: newTokens.accessToken})
             } catch (e) {
                 console.error(e)

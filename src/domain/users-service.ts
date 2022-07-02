@@ -5,6 +5,7 @@ import {EmailService, emailTemplateService} from "./notification-service";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../iocTYPES";
 import {AuthService} from "./auth-service";
+import jwt from "jsonwebtoken";
 
 @injectable()
 export class UsersService {
@@ -60,9 +61,16 @@ export class UsersService {
         return await this.usersRepository.deleteUserById(id)
     }
 
-    async addRevokedToken(id: string, token: string){
-        const updatedUser = this.usersRepository.addRevokedToken(id, token)
-        return updatedUser
+    async addRevokedToken(token: string){
+        const secretKey = process.env.JWT_SECRET_KEY
+        try{
+            const decoded: any = jwt.verify(token, secretKey!)
+            const updatedUser = this.usersRepository.addRevokedToken(decoded.userId, token)
+            return updatedUser
+        }catch (e){
+            console.log('Decoding error: e')
+            return null
+        }
     }
 }
 
