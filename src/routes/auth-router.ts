@@ -101,7 +101,7 @@ authRouter
         //limitsControl.checkLimits.bind(limitsControl),
         checkRefreshTokenMiddleware.checkToken.bind(checkRefreshTokenMiddleware),
         async (req: Request, res: Response) => {
-       const userId = res.locals.userData.accountData.userId
+       const userId = res.locals.userData.accountData.id
             const result = await usersService.addRevokedToken(userId, req.cookies.refreshToken)//return updated user
             res.sendStatus(204)
         })

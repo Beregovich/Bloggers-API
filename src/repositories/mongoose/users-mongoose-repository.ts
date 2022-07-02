@@ -95,11 +95,11 @@ export class UsersRepository implements IUsersRepository {
             .findOneAndUpdate({"accountData.id": id},
                 {
                     $push: {
-                        "accountData.revokedTokens": token,
+                        "accountData.revokedTokens": token.toString(),
                     }
                 },
-                {returnDocument: "after"}).lean()
-        return updatedUser
+                {returnDocument: "after"})
+        return updatedUser.lean()
     }
 
     async findExistingUser(login: string, email: string) {
