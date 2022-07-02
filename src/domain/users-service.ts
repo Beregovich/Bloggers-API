@@ -61,7 +61,7 @@ export class UsersService {
     }
 
     async addRevokedToken(id: string, token: string){
-        const updatedUser = this.usersRepository.addRevokedToken
+        const updatedUser = this.usersRepository.addRevokedToken(id, token)
         return updatedUser
     }
 }

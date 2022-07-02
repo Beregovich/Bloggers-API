@@ -26,7 +26,6 @@ export class CheckRefreshTokenMiddleware {
                 res.status(404).send("user from jwt data not found\n")
                 return
             }else if(user.accountData.revokedTokens?.includes(token)){
-                console.log('Token revoked\n')
                 return res.sendStatus(401)
             }
             req.user = user
