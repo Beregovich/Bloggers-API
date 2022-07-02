@@ -121,7 +121,7 @@ authRouter
                     return res.sendStatus(401)
                 }
                 res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
-                await usersService.addRevokedToken(user.id, refreshToken)
+                //await usersService.addRevokedToken(user.id, refreshToken)
                 return res.send({accessToken: newTokens.accessToken})
             } catch (e) {
                 console.error(e)
