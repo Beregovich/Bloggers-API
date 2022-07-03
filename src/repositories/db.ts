@@ -1,26 +1,84 @@
 import 'dotenv/config'
+import mongoose from 'mongoose'
+import {
+    BloggerType,
+    CommentType, EmailConfirmationMessageType, EmailConfirmationType,
+    LimitsControlType,
+    PostType, SentConfirmationEmailType, UserAccountType,
+    UserType
+} from "../types/types";
 
-const {MongoClient} = require('mongodb');
 
-const mongoUri = process.env.mongoURI
-export const client = new MongoClient(mongoUri)
-export const bloggersCollection = client.db("bloggersDB").collection("bloggers")
-export const postsCollection = client.db("bloggersDB").collection("posts")
-export const requestCollection = client.db("bloggersDB").collection("requests")
-export const usersCollection = client.db("bloggersDB").collection("users")
-export const commentsCollection = client.db("bloggersDB").collection("comments")
-export const limitsCollection = client.db("bloggersDB").collection("limits")
-export const emailToSendQueueCollection = client.db("bloggersDB").collection("emailsToSend")
+const mongoUri = process.env.mongoURI || ""
 
+//Schemas
+export const bloggersSchema = new mongoose.Schema<BloggerType>({
+    id: String,
+    name: String,
+    youtubeUrl: String,
+})
+
+export const postsSchema = new mongoose.Schema<PostType>({
+    id: String,
+    title: String,
+    shortDescription: String,
+    content: String,
+    bloggerId: String,
+    bloggerName: String
+})
+
+const userAccountDataSchema = new mongoose.Schema<UserAccountType>({
+    id: String,
+    email: String,
+    login: String,
+    passwordHash: String,
+    createdAt: Date,
+    revokedTokens: {type: [String], required: false}
+})
+const userSentConfirmationEmailSchema = new mongoose.Schema<SentConfirmationEmailType>({
+    sentDate: Date
+})
+const userEmailConfirmationSchema = new mongoose.Schema<EmailConfirmationType>({
+    isConfirmed: Boolean,
+    confirmationCode: String,
+    expirationDate: Date,
+    //sentEmails: userSentConfirmationEmailSchema
+    sentEmails: {type: [Date], required: false}
+})
+export const usersSchema = new mongoose.Schema<UserType>({
+    accountData: userAccountDataSchema,
+    emailConfirmation: userEmailConfirmationSchema
+})
+
+export const commentsSchema = new mongoose.Schema<CommentType>({
+    id: String,
+    content: String,
+    postId: String,
+    userId: String,
+    userLogin: String,
+    addedAt: Date,
+})
+
+export const limitsSchema = new mongoose.Schema<LimitsControlType>({
+    userIp: String,
+    url: String,
+    time: Date
+})
+export const emailsQueueSchema = new mongoose.Schema<EmailConfirmationMessageType>({
+    email: String,
+    message: String,
+    subject: String,
+    isSent: Boolean,
+    createdAt: Date
+})
 
 export async function runDb() {
     try {
-        await client.connect()
-        await client.db("bloggersDB").command({ping: 1})
-        console.log("Connection complete")
+        await mongoose.connect(mongoUri)
+        const connectionId = mongoose.connection.id
+        console.log("Mongoose connection complete with id: ", connectionId)
     } catch (e) {
-        await client.close()
-        console.log("no connection")
+        console.log("No connection, error: ", e)
     }
 }
 

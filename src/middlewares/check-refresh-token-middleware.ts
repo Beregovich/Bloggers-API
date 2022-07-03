@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import {UserType} from "../types/types";
 import {TYPES} from "../iocTYPES";
 import {IUsersRepository} from "../domain/users-service";
-import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
+import {UsersRepository} from "../repositories/users-mongoose-repository";
 import {inject, injectable} from "inversify";
 import {iocContainer} from "../IocContainer";
 import {log} from "util";

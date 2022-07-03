@@ -4,7 +4,7 @@ import { isAfter} from 'date-fns'
 import {EmailService, emailTemplateService} from "./notification-service";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../iocTYPES";
-import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
+import {UsersRepository} from "../repositories/users-mongoose-repository";
 
 @injectable()
 export class AuthService  {

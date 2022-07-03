@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from "uuid";
 import { CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
 import {inject, injectable} from "inversify";
-import {CommentsRepository} from "../repositories/mongoose/comments-mongoose-repository";
+import {CommentsRepository} from "../repositories/comments-mongoose-repository";
 import {TYPES} from "../iocTYPES";
 
 @injectable()

@@ -1,8 +1,8 @@
-import {CommentType, EntityWithPaginationType, QueryDataType} from "../../types/types";
-import {ICommentRepository} from "../../domain/comments-service";
+import {CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
+import {ICommentRepository} from "../domain/comments-service";
 import {inject, injectable} from "inversify";
 import mongoose from "mongoose";
-import {TYPES} from "../../iocTYPES";
+import {TYPES} from "../iocTYPES";
 
 @injectable()
 export class CommentsRepository implements ICommentRepository {

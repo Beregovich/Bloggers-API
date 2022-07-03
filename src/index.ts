@@ -8,7 +8,7 @@ import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
 import {removeAll} from "./application/common";
 import {iocContainer} from "./IocContainer";
-import {runDb} from "./repositories/db-with-mongoose";
+import {runDb} from "./repositories/db";
 import {TYPES} from "./iocTYPES";
 import {Scheduler} from "./application/email-sending-scheduler";
 import cookieParser from "cookie-parser";

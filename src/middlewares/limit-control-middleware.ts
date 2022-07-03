@@ -3,9 +3,9 @@ import {ErrorMessageType} from "../types/types";
 import "reflect-metadata";
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
-import {LimitsRepository} from "../repositories/mongoose/limits-mongoose-repository";
+import {LimitsRepository} from "../repositories/limits-mongoose-repository";
 import {TYPES} from "../iocTYPES";
-import {UsersRepository} from "../repositories/mongoose/users-mongoose-repository";
+import {UsersRepository} from "../repositories/users-mongoose-repository";
 
 @injectable()
 export class LimitsControlMiddleware {

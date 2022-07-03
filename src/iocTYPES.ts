@@ -1,8 +1,8 @@
 import {IPostsRepository, PostsService} from "./domain/posts-service";
-import {PostsRepository} from "./repositories/mongoose/posts-mongoose-repository";
+import {PostsRepository} from "./repositories/posts-mongoose-repository";
 import {CommentsService} from "./domain/comments-service";
-import {CommentsRepository} from "./repositories/mongoose/comments-mongoose-repository";
-import {LimitsRepository} from "./repositories/mongoose/limits-mongoose-repository";
+import {CommentsRepository} from "./repositories/comments-mongoose-repository";
+import {LimitsRepository} from "./repositories/limits-mongoose-repository";
 import {EmailService} from "./domain/notification-service";
 import {LimitsControlMiddleware} from "./middlewares/limit-control-middleware";
 import {CheckRefreshTokenMiddleware} from "./middlewares/check-refresh-token-middleware";

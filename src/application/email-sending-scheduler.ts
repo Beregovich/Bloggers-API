@@ -1,7 +1,7 @@
 import {EmailService} from "../domain/notification-service";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../iocTYPES";
-import {NotificationRepository} from "../repositories/mongoose/notification-mongoose-repository";
+import {NotificationRepository} from "../repositories/notification-mongoose-repository";
 
 
 @injectable()

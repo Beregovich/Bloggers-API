@@ -1,10 +1,10 @@
 import {v4 as uuidv4} from 'uuid'
-import {EntityWithPaginationType, UserType} from "../../types/types";
-import {IUsersRepository} from "../../domain/users-service";
+import {EntityWithPaginationType, UserType} from "../types/types";
+import {IUsersRepository} from "../domain/users-service";
 import {addHours} from "date-fns";
 import {inject, injectable} from "inversify";
 import mongoose from "mongoose";
-import {TYPES} from "../../iocTYPES";
+import {TYPES} from "../iocTYPES";
 
 @injectable()
 export class UsersRepository implements IUsersRepository {

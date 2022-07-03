@@ -9,7 +9,7 @@ import {CommentsService, ICommentRepository} from "./domain/comments-service";
 import {EmailService} from "./domain/notification-service";
 import {IPostsRepository, PostsService} from "./domain/posts-service";
 import {LimitsControlMiddleware} from "./middlewares/limit-control-middleware";
-import {BloggersRepository} from "./repositories/mongoose/bloggers-mongoose-repository";
+import {BloggersRepository} from "./repositories/bloggers-mongoose-repository";
 import {
     bloggersSchema,
     commentsSchema,
@@ -17,12 +17,12 @@ import {
     limitsSchema,
     postsSchema,
     usersSchema
-} from "./repositories/db-with-mongoose";
-import {LimitsRepository} from "./repositories/mongoose/limits-mongoose-repository";
-import {UsersRepository} from "./repositories/mongoose/users-mongoose-repository";
-import {CommentsRepository} from "./repositories/mongoose/comments-mongoose-repository";
-import {PostsRepository} from "./repositories/mongoose/posts-mongoose-repository";
-import {NotificationRepository} from "./repositories/mongoose/notification-mongoose-repository";
+} from "./repositories/db";
+import {LimitsRepository} from "./repositories/limits-mongoose-repository";
+import {UsersRepository} from "./repositories/users-mongoose-repository";
+import {CommentsRepository} from "./repositories/comments-mongoose-repository";
+import {PostsRepository} from "./repositories/posts-mongoose-repository";
+import {NotificationRepository} from "./repositories/notification-mongoose-repository";
 import mongoose from "mongoose";
 import {
     BloggerType,

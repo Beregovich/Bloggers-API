@@ -1,8 +1,8 @@
-import {EmailConfirmationMessageType} from "../../types/types";
+import {EmailConfirmationMessageType} from "../types/types";
 import {ObjectId} from 'mongodb';
 import {inject, injectable} from "inversify";
 import mongoose from "mongoose";
-import {TYPES} from "../../iocTYPES";
+import {TYPES} from "../iocTYPES";
 
 @injectable()
 export class NotificationRepository {
