@@ -1,4 +1,3 @@
-import * as MongoClient from 'mongodb';
 import "reflect-metadata";
 import {LimitsControlType} from "../types/types";
 import {inject, injectable} from "inversify";
@@ -9,7 +8,7 @@ import {TYPES} from "../iocTYPES";
 
 @injectable()
 export class LimitsRepository implements ILimitsRepository {
-    constructor(@inject(TYPES.limitsModel)private limitsModel: mongoose.Model<LimitsControlType>) {
+    constructor(@inject(TYPES.limitsModel) private limitsModel: mongoose.Model<LimitsControlType>) {
     }
 
     async addAttempt(ip: string, url: string, time: Date) {

@@ -8,7 +8,7 @@ import {TYPES} from "../iocTYPES";
 
 @injectable()
 export class UsersRepository implements IUsersRepository {
-    constructor(@inject(TYPES.usersModel)private usersModel: mongoose.Model<UserType>) {
+    constructor(@inject(TYPES.usersModel) private usersModel: mongoose.Model<UserType>) {
     }
 
     async getUsers(page: number,
@@ -90,7 +90,8 @@ export class UsersRepository implements IUsersRepository {
                 {returnDocument: "after"})
         return updatedUser
     }
-    async addRevokedToken(id: string, token: string): Promise<UserType | null>{
+
+    async addRevokedToken(id: string, token: string): Promise<UserType | null> {
         const updatedUser = this.usersModel
             .findOneAndUpdate({"accountData.id": id},
                 {

@@ -61,13 +61,13 @@ export class UsersService {
         return await this.usersRepository.deleteUserById(id)
     }
 
-    async addRevokedToken(token: string){
+    async addRevokedToken(token: string) {
         const secretKey = process.env.JWT_SECRET_KEY
-        try{
+        try {
             const decoded: any = jwt.verify(token, secretKey!)
             const updatedUser = this.usersRepository.addRevokedToken(decoded.userId, token)
             return updatedUser
-        }catch (e){
+        } catch (e) {
             console.log('Decoding error: e')
             return null
         }

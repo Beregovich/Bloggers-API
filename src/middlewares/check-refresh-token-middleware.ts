@@ -5,10 +5,6 @@ import {TYPES} from "../iocTYPES";
 import {IUsersRepository} from "../domain/users-service";
 import {UsersRepository} from "../repositories/users-mongoose-repository";
 import {inject, injectable} from "inversify";
-import {iocContainer} from "../IocContainer";
-import {log} from "util";
-
-
 
 @injectable()
 export class CheckRefreshTokenMiddleware {
@@ -25,7 +21,7 @@ export class CheckRefreshTokenMiddleware {
             if (!user) {
                 res.status(404).send("user from jwt data not found\n")
                 return
-            }else if(user.accountData.revokedTokens?.includes(token)){
+            } else if (user.accountData.revokedTokens?.includes(token)) {
                 return res.sendStatus(401)
             }
             req.user = user

@@ -1,27 +1,31 @@
 import {v4 as uuidv4} from "uuid";
-import { CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
+import {CommentType, EntityWithPaginationType, QueryDataType} from "../types/types";
 import {inject, injectable} from "inversify";
 import {CommentsRepository} from "../repositories/comments-mongoose-repository";
 import {TYPES} from "../iocTYPES";
 
 @injectable()
- export class CommentsService  {
-     constructor(@inject<CommentsRepository>(TYPES.CommentsRepository)
-                 private commentsRepository: CommentsRepository) {
-     }
+export class CommentsService {
+    constructor(@inject<CommentsRepository>(TYPES.CommentsRepository)
+                private commentsRepository: CommentsRepository) {
+    }
+
     async getComments(paginationData: QueryDataType, PostId: string | null) {
         const comments = await this.commentsRepository.getComments(paginationData, PostId)
         return comments
     }
+
     async getCommentById(commentId: string) {
         const result = await this.commentsRepository.getCommentById(commentId)
         return result
     }
+
     async updateCommentById(commentId: string, content: string) {
         const comment = await this.commentsRepository.updateCommentById(commentId, content)
         return comment
     }
-    async createComment(content: string, postId: string, userLogin: string, userId:string) {
+
+    async createComment(content: string, postId: string, userLogin: string, userId: string) {
         const newComment = {
             id: uuidv4(),
             content,
@@ -33,15 +37,21 @@ import {TYPES} from "../iocTYPES";
         const result = await this.commentsRepository.createComment(newComment)
         return result
     }
-     async deleteComment(id: string): Promise<boolean> {
-         return await this.commentsRepository.deleteComment(id)
-     }
+
+    async deleteComment(id: string): Promise<boolean> {
+        return await this.commentsRepository.deleteComment(id)
+    }
 }
-export interface ICommentRepository{
+
+export interface ICommentRepository {
     getComments(paginationData: QueryDataType, PostId: string | null): Promise<EntityWithPaginationType<CommentType[]>>,
+
     getCommentById(commentId: string): Promise<CommentType | null>,
+
     updateCommentById(commentId: string, content: string): any,
-    createComment(newComment: CommentType ): Promise<CommentType | null>,
+
+    createComment(newComment: CommentType): Promise<CommentType | null>,
+
     deleteComment(id: string): Promise<boolean>,
 }
 
