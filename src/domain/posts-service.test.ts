@@ -1,10 +1,10 @@
 import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 import {iocContainer} from "../IocContainer";
-import {BloggersService} from "./bloggers-service";
 import {TYPES} from "../iocTYPES";
+import {PostsService} from "./posts-service";
 
-describe("Integration BloggersService-s tests",()=>{
+describe("Integration PostsService-s tests",()=>{
     let mongoServer: MongoMemoryServer;
     beforeAll(async ()=>{
         mongoServer = await MongoMemoryServer.create()
@@ -15,13 +15,11 @@ describe("Integration BloggersService-s tests",()=>{
         await mongoose.disconnect()
         await mongoServer.stop()
     })
-    const bloggersService = iocContainer.get<BloggersService>(TYPES.BloggersService)
+    const postsService = iocContainer.get<PostsService>(TYPES.PostsService)
 
-    describe("Create blogger", ()=>{
-        it("should return new blogger",async ()=>{
-            const newBlogger = await bloggersService.createBlogger("Vasya", "https://youtube.com")
-            expect(newBlogger.name).toBe("Vasya")
-            expect(newBlogger.youtubeUrl).toBe("https://youtube.com")
+    describe("Create post", ()=>{
+        it("should return new post",async ()=>{
+
         })
     })
 })
