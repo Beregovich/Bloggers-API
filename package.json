@@ -35,8 +35,8 @@
     "watch": "tsc -w",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "jest --config src/jest.config.js",
-    "test-w": "jest --config src/jest.config.js --watch"
+    "test": "jest --config jest.config.js",
+    "test-w": "jest --config jest.config.js --watch"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
